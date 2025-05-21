@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="497dp" android:height="390dp" android:viewportWidth="497" android:viewportHeight="390">
+
+    <!-- This is a placeholder vector drawable for the illustration.
+         In a real app, you would use an actual image from your designer.
+         Since we can't directly download from Figma without authorization,
+         you should replace this with the actual illustration from the design. -->
+    <path android:fillColor="@color/primary" android:pathData="M248.5,195m-150,0a150,150 0,1 1,300 0a150,150 0,1 1,-300 0" android:alpha="0.1"/>
+
+    <path android:fillColor="@color/primary" android:pathData="M248.5,185m-100,0a100,100 0,1 1,200 0a100,100 0,1 1,-200 0" android:alpha="0.2"/>
+
+    <path android:fillColor="@color/primary" android:pathData="M223,195a25,35 0,1 0,50 0a25,35 0,1 0,-50 0z" android:alpha="0.7"/>
+
+    <path android:fillColor="#FFFFFF" android:pathData="M238.5,185m-8,0a8,8 0,1 1,16 0a8,8 0,1 1,-16 0" android:alpha="0.9"/>
+</vector>
