@@ -14,7 +14,7 @@
     </LinearLayout>
 
     <!-- Sign Up Data Container -->
-    <LinearLayout  android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:fillViewport="true" app:layout_constraintTop_toBottomOf="@id/title_container" app:layout_constraintBottom_toBottomOf="parent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_marginTop="0dp" android:layout_marginBottom="0dp" android:fillViewport="true" app:layout_constraintTop_toBottomOf="@id/title_container" app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout android:id="@+id/signup_data_container" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:gravity="center" android:paddingHorizontal="24dp" android:paddingBottom="24dp">
 
@@ -31,7 +31,7 @@
                     <!-- Gender Dropdown -->
                     <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.4" android:layout_marginEnd="8dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:hintEnabled="false">
 
-                        <AutoCompleteTextView android:id="@+id/edt_gender" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Gen" android:inputType="none"  android:textAlignment="textStart" android:textSize="16sp" android:paddingVertical="10dp" android:paddingHorizontal="20dp" android:textColor="@color/primary" android:textColorHint="#7B6BA8" android:fontFamily="sans-serif-medium" />
+                        <AutoCompleteTextView android:id="@+id/edt_gender" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Gen" android:inputType="none" android:textAlignment="textStart" android:textSize="16sp" android:paddingVertical="10dp" android:paddingHorizontal="20dp" android:textColor="@color/primary" android:textColorHint="#7B6BA8" android:fontFamily="sans-serif-medium" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <!-- Birthday Input with DatePicker -->
@@ -57,10 +57,8 @@
                 <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_username" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="User name" android:inputType="text" android:textAlignment="textStart" android:textSize="16sp" android:paddingVertical="10dp" android:paddingHorizontal="20dp" android:textColor="@color/primary" android:textColorHint="#7B6BA8" android:fontFamily="sans-serif-medium" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <!-- Password Input -->
-                <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:hintEnabled="false" app:passwordToggleEnabled="true" app:passwordToggleTint="#A095C1">
+                </com.google.android.material.textfield.TextInputLayout>                <!-- Password Input with integrated strength meter -->
+                <com.google.android.material.textfield.TextInputLayout android:id="@+id/password_layout" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:hintEnabled="false" app:passwordToggleEnabled="true" app:passwordToggleTint="#A095C1" app:helperTextEnabled="true" app:helperTextTextAppearance="@style/TextAppearance.MaterialComponents.Caption">
 
                     <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_password" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Password" android:inputType="textPassword" android:textAlignment="textStart" android:textSize="16sp" android:paddingVertical="10dp" android:paddingHorizontal="20dp" android:textColor="@color/primary" android:textColorHint="#7B6BA8" android:fontFamily="sans-serif-medium" />
                 </com.google.android.material.textfield.TextInputLayout>
