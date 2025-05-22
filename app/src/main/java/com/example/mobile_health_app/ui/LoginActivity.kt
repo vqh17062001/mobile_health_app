@@ -1,8 +1,12 @@
-package com.example.mobile_health_app
+package com.example.mobile_health_app.ui
+import com.example.mobile_health_app.ui.SignupActivity as SignupActivity
+import com.example.mobile_health_app.ui.StartActivity as StartActivity
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mobile_health_app.MainActivity
+import com.example.mobile_health_app.R
 import com.example.mobile_health_app.databinding.LoginBinding
 
 class LoginActivity : AppCompatActivity() {    private lateinit var binding: LoginBinding
@@ -30,9 +34,10 @@ class LoginActivity : AppCompatActivity() {    private lateinit var binding: Log
         
         // Handle Sign Up text click
         binding.txtSignUp.setOnClickListener {
-            // Handle sign up action - can redirect to signup page
-            // For now, just show a toast message
-            android.widget.Toast.makeText(this, "Sign Up clicked", android.widget.Toast.LENGTH_SHORT).show()
+            // Navigate to SignupActivity
+            val intent = Intent(this, SignupActivity::class.java)
+            startActivity(intent)
+            // Not calling finish() here so user can navigate back to login
         }
         
         // Handle Forgot Password click
