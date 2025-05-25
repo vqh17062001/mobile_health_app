@@ -27,15 +27,24 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "17"
     }
     buildFeatures {
         viewBinding = true
     }
+
+    android {
+        packaging {
+            resources {
+                excludes.add("META-INF/native-image/**")
+            }
+        }
+    }
+
 }
 
 dependencies {
@@ -49,8 +58,13 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     // Password strength checker library
-
     implementation("com.nulab-inc:zxcvbn:1.9.0")
+
+    // MongoDB dependencies
+    implementation(platform("org.mongodb:mongodb-driver-bom:5.5.0"))
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
+    implementation("org.mongodb:bson-kotlinx:5.5.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

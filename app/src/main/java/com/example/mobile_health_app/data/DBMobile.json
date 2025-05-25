@@ -1,0 +1,141 @@
+{
+  "collections": [
+    {
+
+
+
+      "name": "users",
+      "schema": {
+        "_id": "ObjectId",
+        "username": "String (unique)",
+        "passwordHash": "String",
+        "fullName": "String",
+	"gender": "String",
+	"Dob": "ISODate",
+        "role": "String (hocvien|capquanly)",
+        "academy": "String",
+        "email": "String (encrypted)",
+        "phone": "String (encrypted)",
+        "managerIds": ["ObjectId"],
+        "createdAt": "ISODate",
+        "updatedAt": "ISODate"
+      },
+      "indexes": [
+        { "fields": { "username": 1 }, "unique": true },
+        { "fields": { "email": 1 }, "unique": true }
+      ]
+    },
+
+
+
+    {
+      "name": "devices",
+      "schema": {
+        "_id": "ObjectId",
+        "deviceId": "String (unique)",
+        "ownerId": "ObjectId",
+        "model": "String",
+        "osVersion": "String",
+        "sdkVersion": "String",
+        "registeredAt": "ISODate",
+        "lastSyncAt": "ISODate",
+        "status": "String (online|offline)"
+      },
+      "indexes": [
+        { "fields": { "deviceId": 1 }, "unique": true },
+        { "fields": { "ownerId": 1 }, "unique": false }
+      ]
+    },
+
+
+
+    {
+      "name": "sensor_readings",
+      "options": {
+        "timeseries": {
+          "timeField": "timestamp",
+          "metaField": "metadata",
+          "granularity": "seconds"
+        }
+      },
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "required": ["timestamp", "metadata", "readings"],
+          "properties": {
+            "timestamp": { "bsonType": "date" },
+            "metadata": {
+              "bsonType": "object",
+              "required": ["userId", "deviceId"],
+              "properties": {
+                "userId": { "bsonType": "objectId" },
+                "deviceId": { "bsonType": "string" },
+                "sensorType": { "bsonType": "string" }
+              }
+            },
+            "readings": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "object",
+                "required": ["key", "value"],
+                "properties": {
+                  "key": { "bsonType": "string" },
+                  "value": { "bsonType": ["int", "double", "string", "bool"] }
+                }
+              }
+            }
+          }
+        }
+      },
+      "indexes": [
+        { "fields": { "metadata.userId": 1 }, "unique": false },
+        { "fields": { "readings.key": 1 }, "unique": false }
+      ]
+    },
+
+
+
+    {
+      "name": "alerts",
+      "schema": {
+        "_id": "ObjectId",
+        "userId": "ObjectId",
+        "deviceId": "String",
+        "sensorType": "String",
+        "measuredAt": "ISODate",
+        "alertType": "String",
+        "thresholdValue": "Number",
+        "actualValue": "Number",
+        "isRead": "Boolean",
+        "createdAt": "ISODate"
+      },
+      "indexes": [
+        { "fields": { "userId": 1, "isRead": 1 }, "unique": false }
+      ]
+    },
+
+
+
+
+    {
+      "name": "audit_logs",
+      "schema": {
+        "_id": "ObjectId",
+        "eventAt": "ISODate",
+        "userId": "ObjectId",
+        "action": "String",
+        "resource": "String",
+        "resourceId": "ObjectId",
+        "ipAddress": "String",
+        "detail": "Object"
+      },
+      "indexes": [
+        { "fields": { "eventAt": 1 }, "unique": false },
+        { "fields": { "userId": 1 }, "unique": false }
+      ]
+    }
+  
+
+
+]
+}

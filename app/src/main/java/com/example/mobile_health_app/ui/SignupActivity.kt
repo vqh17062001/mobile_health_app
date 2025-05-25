@@ -61,7 +61,8 @@ class SignupActivity : AppCompatActivity() {
     
     /**
      * Sets up password strength checker that provides real-time feedback
-     */    private fun setupPasswordStrengthChecker() {
+     */
+    private fun setupPasswordStrengthChecker() {
         binding.edtPassword.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             
