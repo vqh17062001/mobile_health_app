@@ -11,11 +11,16 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
+
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        flatDir {
+            dirs("$rootDir/mobile_health_app/app/libs")
+        }
     }
 }
 

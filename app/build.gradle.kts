@@ -45,7 +45,15 @@ android {
         }
     }
 
+
 }
+
+
+
+
+
+
+
 
 dependencies {
 
@@ -64,6 +72,12 @@ dependencies {
     implementation(platform("org.mongodb:mongodb-driver-bom:5.5.0"))
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
     implementation("org.mongodb:bson-kotlinx:5.5.0")
+
+
+    // chỉ include đúng file AAR:
+    implementation(files("libs/samsung-health-data-1.5.1.aar"))
+    //implementation(name = "samsung-health-data-api-1.5.1", ext = "aar")
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
