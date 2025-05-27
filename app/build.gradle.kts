@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id ("io.realm.kotlin") version ("2.3.0")
+
 }
 
 android {
@@ -45,15 +47,7 @@ android {
         }
     }
 
-
 }
-
-
-
-
-
-
-
 
 dependencies {
 
@@ -72,6 +66,10 @@ dependencies {
     implementation(platform("org.mongodb:mongodb-driver-bom:5.5.0"))
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
     implementation("org.mongodb:bson-kotlinx:5.5.0")
+
+    implementation ("io.realm.kotlin:library-base:2.3.0")
+
+    implementation("io.realm.kotlin:library-sync:2.3.0")
 
 
     // chỉ include đúng file AAR:

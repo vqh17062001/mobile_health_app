@@ -4,12 +4,21 @@ import com.example.mobile_health_app.ui.StartActivity as StartActivity
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.MainActivity
 import com.example.mobile_health_app.R
+import com.example.mobile_health_app.data.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.LoginBinding
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import android.widget.Toast
 
-class LoginActivity : AppCompatActivity() {    private lateinit var binding: LoginBinding
+class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: LoginBinding
+    private lateinit var userViewModel: UserViewModel
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,12 +33,47 @@ class LoginActivity : AppCompatActivity() {    private lateinit var binding: Log
         binding = LoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
         
+        // Initialize ViewModel
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        
+        // Setup observers for loading and error states
+        lifecycleScope.launch {
+            userViewModel.isLoading.collectLatest { isLoading ->
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+        
+        lifecycleScope.launch {
+            userViewModel.errorMessage.collectLatest { message ->
+                message?.let {
+                    Toast.makeText(this@LoginActivity, it, Toast.LENGTH_SHORT).show()
+                    userViewModel.clearError()
+                }
+            }
+        }
+        
+        // Observe current user state
+        lifecycleScope.launch {
+            userViewModel.currentUser.collectLatest { user ->
+                if (user != null) {
+                    // Navigate to MainActivity after successful login
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                    startActivity(intent)
+                    finish() // Close the login activity
+                }
+            }
+        }
+        
         // Handle Login button click
         binding.buttonLogin.setOnClickListener {
-            // Navigate to MainActivity after successful login
-            val intent = Intent(this, MainActivity::class.java)
-            startActivity(intent)
-            finish() // Close the login activity
+            val username = binding.edtUsername.text.toString().trim()
+            val password = binding.edtPass.text.toString()
+            
+            if (username.isNotEmpty() && password.isNotEmpty()) {
+                userViewModel.login(username, password)
+            } else {
+                Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show()
+            }
         }
         
         // Handle Sign Up text click
@@ -43,7 +87,7 @@ class LoginActivity : AppCompatActivity() {    private lateinit var binding: Log
         // Handle Forgot Password click
         binding.txtForgotPassword.setOnClickListener {
             // Handle forgot password action
-            android.widget.Toast.makeText(this, "Forgot Password clicked", android.widget.Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Forgot Password clicked", Toast.LENGTH_SHORT).show()
         }
     }
 }

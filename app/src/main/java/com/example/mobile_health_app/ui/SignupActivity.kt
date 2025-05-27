@@ -5,17 +5,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
+import com.example.mobile_health_app.data.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.SignupBinding
 import com.nulabinc.zxcvbn.Strength
 import com.nulabinc.zxcvbn.Zxcvbn
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: SignupBinding
+    private lateinit var userViewModel: UserViewModel
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,8 +33,28 @@ class SignupActivity : AppCompatActivity() {
         // Set the status bar to light color with dark icons
         window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or 
                 android.view.View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-          binding = SignupBinding.inflate(layoutInflater)
+        
+        binding = SignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        
+        // Initialize ViewModel
+        userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
+        
+        // Setup observers for loading and error states
+        lifecycleScope.launch {
+            userViewModel.isLoading.collectLatest { isLoading ->
+                binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+            }
+        }
+        
+        lifecycleScope.launch {
+            userViewModel.errorMessage.collectLatest { message ->
+                message?.let {
+                    Toast.makeText(this@SignupActivity, it, Toast.LENGTH_SHORT).show()
+                    userViewModel.clearError()
+                }
+            }
+        }
         
         // Setup gender dropdown
         setupGenderDropdown()
@@ -39,17 +66,30 @@ class SignupActivity : AppCompatActivity() {
         binding.buttonSignup.setOnClickListener {
             // Here you would validate the form fields
             if (validateForm()) {
-                // Navigate to MainActivity or LoginActivity after successful signup
-                // For now just show a toast message
+                // Register the user using ViewModel
+                userViewModel.register(
+                    username = binding.edtUsername.text.toString().trim(),
+                    password = binding.edtPassword.text.toString(),
+                    fullName = binding.edtFullName.text.toString().trim(),
+                    gender = binding.edtGender.text.toString().trim(),
+                    dob = binding.edtBirthday.text.toString().trim(),
+                    email = binding.edtEmail.text.toString().trim(),
+                    phone = binding.edtPhone.text.toString().trim()
+                )
+                
+                // Show success message
                 Toast.makeText(this, "Sign Up successful!", Toast.LENGTH_SHORT).show()
-                  // Navigate to Login screen after successful registration
+                
+                // Navigate to Login screen after successful registration
                 val intent = Intent(this, com.example.mobile_health_app.ui.LoginActivity::class.java)
                 startActivity(intent)
                 finish() // Close the signup activity
             }
         }
-          // Handle Login text click
-        binding.txtLogin.setOnClickListener {            // Navigate to Login screen
+        
+        // Handle Login text click
+        binding.txtLogin.setOnClickListener {
+            // Navigate to Login screen
             val intent = Intent(this, com.example.mobile_health_app.ui.LoginActivity::class.java)
             startActivity(intent)
             finish() // Close the signup activity
@@ -139,7 +179,8 @@ class SignupActivity : AppCompatActivity() {
         
         return feedback.toString()
     }
-      /**
+    
+    /**
      * Sets up the gender dropdown with options from string resources
      */
     private fun setupGenderDropdown() {
