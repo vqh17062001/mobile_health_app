@@ -1,26 +1,25 @@
 package com.example.mobile_health_app.data.model
-import io.realm.kotlin.types.RealmObject
-import io.realm.kotlin.types.annotations.PrimaryKey
 
 
-import org.mongodb.kbson.ObjectId
+import org.bson.types.ObjectId
+import kotlinx.serialization.Serializable
 
-class User : RealmObject {
-    @PrimaryKey
-    var _id: ObjectId = ObjectId()
-    var username: String = ""
-    var passwordHash: String = ""
-    var fullName: String = ""
-    var gender: String = ""
-    var Dob: String = ""
-    var role: String = ""
-    var department: String = ""
-    var email: String = ""
-    var phone: String = ""
-    var managerIds: String = ""
-    var createdAt: String = ""
-    var updatedAt: String = ""
-}
+//Serializable
+data class User(
+    val _id: ObjectId = ObjectId(),
+    val username: String = "",
+    val passwordHash: String = "",
+    val fullName: String = "",
+    val gender: String = "",
+    val Dob: String = "", // ISODate dạng string ISO 8601
+    val role: String = "",
+    val department: String = "",
+    val email: String = "",
+    val phone: String = "",
+    val managerIds:String = "",
+    val createdAt: String = "",
+    val updatedAt: String = ""
+)
 
 /*
     "name": "users",

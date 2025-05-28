@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     id ("io.realm.kotlin") version ("2.3.0")
-
+    kotlin("plugin.serialization")
 }
 
 android {
@@ -66,6 +66,8 @@ dependencies {
     implementation(platform("org.mongodb:mongodb-driver-bom:5.5.0"))
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine")
     implementation("org.mongodb:bson-kotlinx:5.5.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 
     implementation ("io.realm.kotlin:library-base:2.3.0")
 

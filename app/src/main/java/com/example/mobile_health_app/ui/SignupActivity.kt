@@ -12,13 +12,16 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
-import com.example.mobile_health_app.data.viewmodel.UserViewModel
+import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.SignupBinding
 import com.nulabinc.zxcvbn.Strength
 import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class SignupActivity : AppCompatActivity() {
     private lateinit var binding: SignupBinding
@@ -44,6 +47,9 @@ class SignupActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.isLoading.collectLatest { isLoading ->
                 binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+                // Disable buttons during loading
+                binding.buttonSignup.isEnabled = !isLoading
+                binding.txtLogin.isEnabled = !isLoading
             }
         }
         
@@ -56,6 +62,20 @@ class SignupActivity : AppCompatActivity() {
             }
         }
         
+        lifecycleScope.launch {
+            userViewModel.registrationSuccess.collectLatest { success ->
+                if (success) {
+                    Toast.makeText(this@SignupActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
+                    userViewModel.resetRegistrationState()
+                    
+                    // Navigate to Login screen after successful registration
+                    val intent = Intent(this@SignupActivity, LoginActivity::class.java)
+                    startActivity(intent)
+                    finish() // Close the signup activity
+                }
+            }
+        }
+        
         // Setup gender dropdown
         setupGenderDropdown()
         
@@ -64,39 +84,43 @@ class SignupActivity : AppCompatActivity() {
         
         // Handle Sign Up button click
         binding.buttonSignup.setOnClickListener {
-            // Here you would validate the form fields
+            // Validate form fields
             if (validateForm()) {
-                // Register the user using ViewModel
-                userViewModel.register(
+                // Register using enhanced method
+                userViewModel.registerUser(
                     username = binding.edtUsername.text.toString().trim(),
                     password = binding.edtPassword.text.toString(),
                     fullName = binding.edtFullName.text.toString().trim(),
                     gender = binding.edtGender.text.toString().trim(),
-                    dob = binding.edtBirthday.text.toString().trim(),
+                    dob = formatDateForDb(binding.edtBirthday.text.toString().trim()),
                     email = binding.edtEmail.text.toString().trim(),
                     phone = binding.edtPhone.text.toString().trim()
                 )
-                
-                // Show success message
-                Toast.makeText(this, "Sign Up successful!", Toast.LENGTH_SHORT).show()
-                
-                // Navigate to Login screen after successful registration
-                val intent = Intent(this, com.example.mobile_health_app.ui.LoginActivity::class.java)
-                startActivity(intent)
-                finish() // Close the signup activity
             }
         }
         
         // Handle Login text click
         binding.txtLogin.setOnClickListener {
             // Navigate to Login screen
-            val intent = Intent(this, com.example.mobile_health_app.ui.LoginActivity::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
             finish() // Close the signup activity
         }
         
         // Add password strength checker as TextWatcher
         setupPasswordStrengthChecker()
+    }
+    
+    // Format date from UI format (DD/MM/YYYY) to ISO format (YYYY-MM-DDT00:00:00Z)
+    private fun formatDateForDb(uiDate: String): String {
+        try {
+            val inputFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+            val outputFormat = SimpleDateFormat("yyyy-MM-dd'T'00:00:00'Z'", Locale.US)
+            val date = inputFormat.parse(uiDate)
+            return outputFormat.format(date ?: Date())
+        } catch (e: Exception) {
+            return uiDate // Return original if parsing fails
+        }
     }
     
     /**

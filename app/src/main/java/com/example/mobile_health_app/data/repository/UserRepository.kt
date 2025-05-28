@@ -1,272 +1,178 @@
 package com.example.mobile_health_app.data.repository
 
+import android.util.Log
 import com.example.mobile_health_app.data.RealmConfig
-import io.realm.kotlin.Realm
-import io.realm.kotlin.ext.query
+import com.example.mobile_health_app.data.model.User
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.bson.Document
+import org.bson.types.ObjectId
 import io.realm.kotlin.mongodb.Credentials
-import io.realm.kotlin.mongodb.User as RealmUser
-import io.realm.kotlin.mongodb.sync.SyncConfiguration
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
-import org.mongodb.kbson.ObjectId
-import com.example.mobile_health_app.data.model.*
+import io.realm.kotlin.mongodb.ext.insertOne
+import io.realm.kotlin.mongodb.ext.findOne
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import org.mongodb.kbson.ExperimentalKBsonSerializerApi
+import java.security.MessageDigest
+import org.mongodb.kbson.BsonDocument
+import org.mongodb.kbson.BsonString
+import org.mongodb.kbson.*
 
+
+@OptIn(ExperimentalKBsonSerializerApi::class)
 class UserRepository {
-    private val app = RealmConfig.app
-    private lateinit var realm: Realm
-    private var currentUser: RealmUser? = null
-
-    // Khởi tạo kết nối
-    suspend fun initialize(): Boolean {
-        return try {
-            // Đăng nhập anonymous (hoặc sử dụng phương thức xác thực khác)
-            currentUser = app.login(Credentials.anonymous())
-
-            // Cấu hình Realm với sync
-            val config = SyncConfiguration.Builder(
-                currentUser!!,
-                setOf(User::class)
-            ).build()
-
-            realm = Realm.open(config)
-            true
-        } catch (e: Exception) {
-            println("Lỗi khởi tạo: ${e.message}")
-            false
-        }
-    }
-
-    // Đăng nhập người dùng bằng username và password
-    suspend fun loginUser(username: String, password: String): User? {
-        return try {
-            // Trong thực tế, bạn cần mã hóa password và so sánh với passwordHash
-            // Đây chỉ là ví dụ đơn giản
-            val hashedPassword = hashPassword(password) // Implement hashing function
-            realm.query<User>("username == $0 AND passwordHash == $1", 
-                username, hashedPassword).first().find()
-        } catch (e: Exception) {
-            println("Lỗi đăng nhập: ${e.message}")
-            null
-        }
-    }
-
-    // Hàm mã hóa password (cần triển khai theo thuật toán an toàn)
+    private val TAG = "UserRepository"
+    
+    // Helper method to hash passwords
     private fun hashPassword(password: String): String {
-        // Implement a secure password hashing algorithm
-        // For example, use BCrypt or PBKDF2
-        return password // placeholder, replace with actual hashing
+        val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
+        return bytes.fold("") { str, it -> str + "%02x".format(it) }
+    }
+    
+    // Helper method to get current ISO timestamp
+    private fun getCurrentTimestamp(): String {
+        val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+        return sdf.format(Date())
     }
 
-    // CREATE - Đăng ký người dùng mới
+    // Check if username already exists
+    suspend fun checkUsernameExists(username: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient("mongodb-atlas")
+            val db = mgcli.database("health_monitor")
+            val users = db.collection("users")
+
+            val query = BsonDocument("username", BsonString(username))
+
+            val user = users.findOne(query)
+            
+            return@withContext user != null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error checking username: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    // Register new user with complete information
     suspend fun registerUser(
-        username: String, 
+        username: String,
         password: String,
         fullName: String,
         gender: String,
         dob: String,
         email: String,
         phone: String,
-        role: String = "hocvien", // Default role
+        role: String = "hocvien",
         department: String = ""
-    ): Boolean {
-        return try {
-            // Kiểm tra username đã tồn tại chưa
-            val existingUser = realm.query<User>("username == $0", username).first().find()
-            if (existingUser != null) {
-                println("Username đã tồn tại")
-                return false
+    ): Boolean = withContext(Dispatchers.IO) {
+        try {
+            // Check if username already exists
+            if (checkUsernameExists(username)) {
+                Log.w(TAG, "Username already exists: $username")
+                return@withContext false
+            }
+            
+            val timestamp = getCurrentTimestamp()
+            val hashedPassword = hashPassword(password)
+            
+            val user = User(
+                _id = ObjectId(),
+                username = username,
+                passwordHash = hashedPassword,
+                fullName = fullName,
+                gender = gender,
+                Dob = dob,
+                role = role,
+                department = department,
+                email = email,
+                phone = phone,
+
+                createdAt = timestamp,
+                updatedAt = timestamp
+            )
+            
+            insertUser(user)
+            return@withContext true
+        } catch (e: Exception) {
+            Log.e(TAG, "Registration failed: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    suspend fun insertUser(user: User): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient("mongodb-atlas")
+            val db = mgcli.database("health_monitor")
+            val users = db.collection("users")
+            val timestamp = getCurrentTimestamp()
+            val doc = BsonDocument().apply {
+                                   // ObjectId
+                put("username", BsonString(user.username))
+                put("passwordHash", BsonString(user.passwordHash))
+                put("fullName", BsonString(user.fullName))
+                put("gender", BsonString(user.gender))
+                put("Dob", BsonString(user.Dob))                  // Date → millis
+                put("role", BsonString(user.role))
+                put("department", BsonString(user.department))
+                put("email", BsonString(user.email))
+                put("phone", BsonString(user.phone))
+                put("managerIds", BsonString(user.managerIds) ) // List<ObjectId>
+                put("createdAt", BsonString(timestamp))
+                put("updatedAt", BsonString(timestamp))
             }
 
-            val currentTime = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                .format(Date())
 
-            realm.write {
-                val newUser = User().apply {
-                    this.username = username
-                    this.passwordHash = hashPassword(password)
-                    this.fullName = fullName
-                    this.gender = gender
-                    this.Dob = dob
-                    this.role = role
-                    this.department = department
-                    this.email = email
-                    this.phone = phone
-                    this.managerIds = "" // Placeholder, should be handled better
-                    this.createdAt = currentTime
-                    this.updatedAt = currentTime
-                }
-                copyToRealm(newUser)
+            users.insertOne(doc)
+            Log.d(TAG, "User inserted successfully: ${user.username}")
+            return@withContext true
+        } catch (e: Exception) {
+            Log.e(TAG, "Insert failed: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    // Method to authenticate user (for future use)
+    suspend fun loginUser(username: String, password: String): User? = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient("mongodb-atlas")
+            val db = mgcli.database("health_monitor")
+            val users = db.collection("users")
+            
+            val hashedPassword = hashPassword(password)
+            val query = BsonDocument().apply {
+                put("username", BsonString(username))
+                put("passwordHash",BsonString( hashedPassword))
             }
-            true
-        } catch (e: Exception) {
-            println("Lỗi tạo user: ${e.message}")
-            false
-        }
-    }
-
-    // READ - Lấy tất cả users (Real-time)
-    fun getAllUsers(): Flow<List<User>> {
-        return realm.query<User>()
-            .asFlow()
-            .map { results -> results.list.toList() }
-    }
-
-    // READ - Lấy user theo ID
-    suspend fun getUserById(id: ObjectId): User? {
-        return try {
-            realm.query<User>("_id == $0", id).first().find()
-        } catch (e: Exception) {
-            println("Lỗi lấy user theo ID: ${e.message}")
-            null
-        }
-    }
-
-    // READ - Tìm kiếm user theo username
-    suspend fun getUserByUsername(username: String): User? {
-        return try {
-            realm.query<User>("username == $0", username).first().find()
-        } catch (e: Exception) {
-            println("Lỗi lấy user theo username: ${e.message}")
-            null
-        }
-    }
-
-    // READ - Tìm kiếm user theo tên đầy đủ
-    fun getUsersByFullName(fullName: String): Flow<List<User>> {
-        return realm.query<User>("fullName CONTAINS[c] $0", fullName)
-            .asFlow()
-            .map { results -> results.list.toList() }
-    }
-
-    // READ - Lấy users theo vai trò
-    fun getUsersByRole(role: String): Flow<List<User>> {
-        return realm.query<User>("role == $0", role)
-            .asFlow()
-            .map { results -> results.list.toList() }
-    }
-
-    // READ - Lấy users theo phòng ban
-    fun getUsersByDepartment(department: String): Flow<List<User>> {
-        return realm.query<User>("department == $0", department)
-            .asFlow()
-            .map { results -> results.list.toList() }
-    }
-
-    // READ - Lấy user theo email
-    suspend fun getUserByEmail(email: String): User? {
-        return try {
-            realm.query<User>("email == $0", email).first().find()
-        } catch (e: Exception) {
-            println("Lỗi lấy user theo email: ${e.message}")
-            null
-        }
-    }
-
-    // UPDATE - Cập nhật thông tin người dùng
-    suspend fun updateUser(id: ObjectId, updates: Map<String, Any>): Boolean {
-        return try {
-            realm.write {
-                val user = query<User>("_id == $0", id).first().find()
-                user?.let { foundUser ->
-                    updates.forEach { (key, value) ->
-                        when (key) {
-                            "username" -> foundUser.username = value as String
-                            "passwordHash" -> foundUser.passwordHash = value as String
-                            "fullName" -> foundUser.fullName = value as String
-                            "gender" -> foundUser.gender = value as String
-                            "Dob" -> foundUser.Dob = value as String
-                            "role" -> foundUser.role = value as String
-                            "department" -> foundUser.department = value as String
-                            "email" -> foundUser.email = value as String
-                            "phone" -> foundUser.phone = value as String
-                            "managerIds" -> foundUser.managerIds = value as String
-                        }
-                    }
-                    
-                    // Update the updatedAt timestamp
-                    foundUser.updatedAt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                        .format(Date())
-                }
+            
+            val doc = users.findOne(query)
+            if (doc != null) {
+                // Convert Document to User
+                return@withContext User(
+                    _id = doc["_id"] as ObjectId,
+                    username = doc["username"] as String,
+                    passwordHash = doc["passwordHash"] as String,
+                    fullName = doc["fullName"] as String,
+                    gender = doc["gender"] as String,
+                    Dob = doc["Dob"] as String,
+                    role = doc["role"] as String,
+                    department = doc["department"] as String,
+                    email = doc["email"] as String,
+                    phone = doc["phone"] as String,
+                    createdAt = doc["createdAt"] as String,
+                    updatedAt = doc["updatedAt"] as String
+                )
             }
-            true
+            return@withContext null
         } catch (e: Exception) {
-            println("Lỗi cập nhật user: ${e.message}")
-            false
-        }
-    }
-
-    // UPDATE - Đổi mật khẩu người dùng
-    suspend fun changePassword(id: ObjectId, oldPassword: String, newPassword: String): Boolean {
-        return try {
-            val user = getUserById(id)
-            if (user != null && user.passwordHash == hashPassword(oldPassword)) {
-                realm.write {
-                    val realmUser = query<User>("_id == $0", id).first().find()
-                    realmUser?.let {
-                        it.passwordHash = hashPassword(newPassword)
-                        it.updatedAt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            .format(Date())
-                    }
-                }
-                true
-            } else {
-                println("Mật khẩu cũ không đúng")
-                false
-            }
-        } catch (e: Exception) {
-            println("Lỗi đổi mật khẩu: ${e.message}")
-            false
-        }
-    }
-
-    // DELETE - Xóa user theo ID
-    suspend fun deleteUser(id: ObjectId): Boolean {
-        return try {
-            realm.write {
-                val user = query<User>("_id == $0", id).first().find()
-                user?.let { delete(it) }
-            }
-            true
-        } catch (e: Exception) {
-            println("Lỗi xóa user: ${e.message}")
-            false
-        }
-    }
-
-    // DELETE - Xóa user theo username
-    suspend fun deleteUserByUsername(username: String): Boolean {
-        return try {
-            realm.write {
-                val user = query<User>("username == $0", username).first().find()
-                user?.let { delete(it) }
-            }
-            true
-        } catch (e: Exception) {
-            println("Lỗi xóa user theo username: ${e.message}")
-            false
-        }
-    }
-
-    // DELETE - Xóa tất cả users
-    suspend fun deleteAllUsers(): Boolean {
-        return try {
-            realm.write {
-                val users = query<User>().find()
-                delete(users)
-            }
-            true
-        } catch (e: Exception) {
-            println("Lỗi xóa tất cả users: ${e.message}")
-            false
-        }
-    }
-
-    // Đóng kết nối
-    fun close() {
-        if (::realm.isInitialized) {
-            realm.close()
+            Log.e(TAG, "Login failed: ${e.message}")
+            return@withContext null
         }
     }
 }

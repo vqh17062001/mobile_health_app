@@ -1,0 +1,114 @@
+package com.example.mobile_health_app.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.mobile_health_app.data.model.User
+import com.example.mobile_health_app.data.repository.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class UserViewModel : ViewModel() {
+    private val repo = UserRepository()
+    
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+    
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    
+    private val _registrationSuccess = MutableStateFlow(false)
+    val registrationSuccess: StateFlow<Boolean> = _registrationSuccess.asStateFlow()
+    
+    private val _currentUser = MutableStateFlow<User?>(null)
+    val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+
+    // Add new user directly (basic method)
+    fun addNewUser(user: User) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val success = repo.insertUser(user)
+                if (success) {
+                    _registrationSuccess.value = true
+                } else {
+                    _errorMessage.value = "Failed to register user"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    // Enhanced registration method with complete details
+    fun registerUser(
+        username: String,
+        password: String,
+        fullName: String,
+        gender: String,
+        dob: String,
+        email: String,
+        phone: String,
+        role: String = "hocvien",
+        department: String = ""
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Check if username exists
+                if (repo.checkUsernameExists(username)) {
+                    _errorMessage.value = "Username already exists. Please choose another."
+                    _isLoading.value = false
+                    return@launch
+                }
+                
+                val success = repo.registerUser(
+                    username, password, fullName, gender, dob,
+                    email, phone, role, department
+                )
+                
+                if (success) {
+                    _registrationSuccess.value = true
+                } else {
+                    _errorMessage.value = "Registration failed. Please try again."
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    // Login method for future use
+    fun loginUser(username: String, password: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val user = repo.loginUser(username, password)
+                if (user != null) {
+                    _currentUser.value = user
+                } else {
+                    _errorMessage.value = "Invalid username or password"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Login error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    // Reset state
+    fun resetRegistrationState() {
+        _registrationSuccess.value = false
+    }
+    
+    // Clear error
+    fun clearError() {
+        _errorMessage.value = null
+    }
+}

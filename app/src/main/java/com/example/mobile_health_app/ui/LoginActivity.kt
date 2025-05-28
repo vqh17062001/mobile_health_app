@@ -1,6 +1,4 @@
 package com.example.mobile_health_app.ui
-import com.example.mobile_health_app.ui.SignupActivity as SignupActivity
-import com.example.mobile_health_app.ui.StartActivity as StartActivity
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +8,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.MainActivity
 import com.example.mobile_health_app.R
-import com.example.mobile_health_app.data.viewmodel.UserViewModel
+import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.LoginBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -70,7 +68,7 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.edtPass.text.toString()
             
             if (username.isNotEmpty() && password.isNotEmpty()) {
-                userViewModel.login(username, password)
+                userViewModel.loginUser(username, password)
             } else {
                 Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show()
             }
