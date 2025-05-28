@@ -1,8 +1,9 @@
 package com.example.mobile_health_app.data.model
 
 
-import org.bson.types.ObjectId
+//import org.bson.types.ObjectId
 import kotlinx.serialization.Serializable
+import org.mongodb.kbson.*
 
 //Serializable
 data class User(

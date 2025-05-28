@@ -6,7 +6,7 @@ import com.example.mobile_health_app.data.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.bson.Document
-import org.bson.types.ObjectId
+//import org.bson.types.ObjectId
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.ext.insertOne
 import io.realm.kotlin.mongodb.ext.findOne
@@ -18,6 +18,8 @@ import java.security.MessageDigest
 import org.mongodb.kbson.BsonDocument
 import org.mongodb.kbson.BsonString
 import org.mongodb.kbson.*
+
+
 
 
 @OptIn(ExperimentalKBsonSerializerApi::class)
@@ -148,25 +150,26 @@ class UserRepository {
             val hashedPassword = hashPassword(password)
             val query = BsonDocument().apply {
                 put("username", BsonString(username))
-                put("passwordHash",BsonString( hashedPassword))
+                put("passwordHash",BsonString(hashedPassword))
             }
             
             val doc = users.findOne(query)
             if (doc != null) {
+
                 // Convert Document to User
                 return@withContext User(
-                    _id = doc["_id"] as ObjectId,
-                    username = doc["username"] as String,
-                    passwordHash = doc["passwordHash"] as String,
-                    fullName = doc["fullName"] as String,
-                    gender = doc["gender"] as String,
-                    Dob = doc["Dob"] as String,
-                    role = doc["role"] as String,
-                    department = doc["department"] as String,
-                    email = doc["email"] as String,
-                    phone = doc["phone"] as String,
-                    createdAt = doc["createdAt"] as String,
-                    updatedAt = doc["updatedAt"] as String
+                    _id = doc["_id"]!!.asObjectId(),
+                    username = doc["username"] .toString(),
+                    passwordHash = doc["passwordHash"] .toString(),
+                    fullName = doc["fullName"] .toString(),
+                    gender = doc["gender"] .toString(),
+                    Dob = doc["Dob"] .toString(),
+                    role = doc["role"] .toString(),
+                    department = doc["department"] .toString(),
+                    email = doc["email"] .toString(),
+                    phone = doc["phone"] .toString(),
+                    createdAt = doc["createdAt"] .toString(),
+                    updatedAt = doc["updatedAt"].toString()
                 )
             }
             return@withContext null
