@@ -63,14 +63,14 @@ class DeviceRepository {
             val docs = devices.find(query).toList()
             docs.forEach { doc ->
                 try {
-                    val _deviceId = doc["deviceId"]?.asString()?.value ?: ""
-                    val _ownerId = doc["ownerId"] as? ObjectId ?: ownerId
-                    val _model = doc["model"]?.asString()?.value ?: ""
-                    val _osVersion = doc["osVersion"]?.asString()?.value ?: ""
-                    val _sdkVersion = doc["sdkVersion"]?.asString()?.value ?: ""
-                    val _registeredAt = doc["registeredAt"]?.asString()?.value ?: ""
-                    val _lastSyncAt = doc["lastSyncAt"]?.asString()?.value ?: ""
-                    val _status = doc["status"]?.asString()?.value ?: ""
+                    val _deviceId = doc["deviceId"].toString()
+                    val _ownerId = doc["ownerId"]!!.asObjectId()
+                    val _model = doc["model"].toString()
+                    val _osVersion = doc["osVersion"].toString()
+                    val _sdkVersion = doc["sdkVersion"].toString()
+                    val _registeredAt = doc["registeredAt"].toString()
+                    val _lastSyncAt = doc["lastSyncAt"].toString()
+                    val _status = doc["status"].toString()
 
                     val device = Device(
                         deviceId = _deviceId,
@@ -107,14 +107,14 @@ class DeviceRepository {
             val doc = devices.findOne(query)
             if (doc != null) {
                 return@withContext Device(
-                    deviceId = doc["deviceId"]?.asString()?.value ?: "",
-                    ownerId = doc["ownerId"] as? ObjectId ?: ObjectId(),
-                    model = doc["model"]?.asString()?.value ?: "",
-                    osVersion = doc["osVersion"]?.asString()?.value ?: "",
-                    sdkVersion = doc["sdkVersion"]?.asString()?.value ?: "",
-                    registeredAt = doc["registeredAt"]?.asString()?.value ?: "",
-                    lastSyncAt = doc["lastSyncAt"]?.asString()?.value ?: "",
-                    status = doc["status"]?.asString()?.value ?: ""
+                    deviceId = doc["deviceId"].toString(),
+                    ownerId = doc["ownerId"]!!.asObjectId(),
+                    model = doc["model"].toString(),
+                    osVersion = doc["osVersion"].toString(),
+                    sdkVersion = doc["sdkVersion"].toString(),
+                    registeredAt = doc["registeredAt"].toString(),
+                    lastSyncAt = doc["lastSyncAt"].toString(),
+                    status = doc["status"].toString()
                 )
             }
             return@withContext null
