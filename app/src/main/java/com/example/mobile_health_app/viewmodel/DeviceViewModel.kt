@@ -64,11 +64,11 @@ class DeviceViewModel : ViewModel() {
     }
 
     // Lấy device theo deviceId
-    fun fetchDeviceById(deviceId: String) {
+    fun fetchDeviceById(deviceId: String, ownerId: ObjectId? = null) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val device = repo.getDeviceById(deviceId)
+                val device = repo.getDeviceById(deviceId, ownerId)
                 _currentDevice.value = device
             } catch (e: Exception) {
                 _errorMessage.value = "Lỗi lấy thông tin thiết bị: ${e.message}"

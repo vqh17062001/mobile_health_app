@@ -16,6 +16,10 @@ import kotlinx.coroutines.launch
 import android.widget.Toast
 import com.example.mobile_health_app.data.model.Device
 import com.example.mobile_health_app.viewmodel.DeviceViewModel
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withTimeoutOrNull
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
@@ -73,20 +77,26 @@ class LoginActivity : AppCompatActivity() {
                     )
 
                     // 2. Gọi tới DeviceViewModel để kiểm tra/thêm/cập nhật thiết bị
-                    deviceViewModel.fetchDeviceById(deviceId)
-                    // Quan sát currentDevice để quyết định thêm/cập nhật
-                    deviceViewModel.currentDevice.collectLatest { dvc ->
-                        if (dvc == null) {
-                            deviceViewModel.insertDevice(device)
-                        } else {
-                            deviceViewModel.updateDeviceStatus(deviceId, "online")
-                        }
+                    deviceViewModel.fetchDeviceById(deviceId, user._id)
+
+                    val existedDevice = withTimeoutOrNull(4000) {
+                        deviceViewModel.currentDevice
+                            .filterNotNull()
+                            .first()
+                    }
+
+                    // 3. Xử lý tiếp
+                    if (existedDevice == null) {
+                        deviceViewModel.insertDevice(device)
+                    } else {
+                        deviceViewModel.updateDeviceStatus(deviceId, "online")
+                    }
 
                         // 3. Chuyển sang MainActivity sau khi xong (bạn có thể show loading cho đẹp)
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
                         startActivity(intent)
                         finish()
-                    }
+
                 }
             }
         }

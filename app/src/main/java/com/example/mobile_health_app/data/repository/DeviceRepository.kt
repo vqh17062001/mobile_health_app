@@ -95,7 +95,7 @@ class DeviceRepository {
     }
 
     // Lấy device theo deviceId
-    suspend fun getDeviceById(deviceId: String): Device? = withContext(Dispatchers.IO) {
+    suspend fun getDeviceById(deviceId: String ,  ownerId: ObjectId? = null): Device? = withContext(Dispatchers.IO) {
         try {
             val app = RealmConfig.app
             val userAuth = app.login(Credentials.anonymous())
@@ -103,7 +103,10 @@ class DeviceRepository {
             val db = mgcli.database(databaseName)
             val devices = db.collection(collectionName)
 
-            val query = BsonDocument("deviceId", BsonString(deviceId))
+            val query = BsonDocument().apply {
+                put("deviceId", BsonString(deviceId))
+                ownerId?.let { put("ownerId", it) } // Chỉ add nếu ownerId khác null
+            }
             val doc = devices.findOne(query)
             if (doc != null) {
                 return@withContext Device(
