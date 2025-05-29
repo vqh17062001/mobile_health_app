@@ -1,5 +1,6 @@
 package com.example.mobile_health_app.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -13,11 +14,14 @@ import com.example.mobile_health_app.databinding.LoginBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import com.example.mobile_health_app.data.model.Device
+import com.example.mobile_health_app.viewmodel.DeviceViewModel
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private lateinit var userViewModel: UserViewModel
-    
+    private lateinit var deviceViewModel: DeviceViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -33,7 +37,8 @@ class LoginActivity : AppCompatActivity() {
         
         // Initialize ViewModel
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
-        
+        deviceViewModel = ViewModelProvider(this)[DeviceViewModel::class.java]
+
         // Setup observers for loading and error states
         lifecycleScope.launch {
             userViewModel.isLoading.collectLatest { isLoading ->
@@ -54,14 +59,39 @@ class LoginActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.currentUser.collectLatest { user ->
                 if (user != null) {
-                    // Navigate to MainActivity after successful login
-                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish() // Close the login activity
+                    // 1. Lấy deviceId và thông tin thiết bị
+                    val deviceId = getCurrentDeviceId()
+                    val device = Device(
+                        deviceId = deviceId,
+                        ownerId = user._id,
+                        model = android.os.Build.MODEL ?: "",
+                        osVersion = android.os.Build.VERSION.RELEASE ?: "",
+                        sdkVersion = android.os.Build.VERSION.SDK_INT.toString(),
+                        registeredAt = getCurrentTimeISO(),
+                        lastSyncAt = getCurrentTimeISO(),
+                        status = "online"
+                    )
+
+                    // 2. Gọi tới DeviceViewModel để kiểm tra/thêm/cập nhật thiết bị
+                    deviceViewModel.fetchDeviceById(deviceId)
+                    // Quan sát currentDevice để quyết định thêm/cập nhật
+                    deviceViewModel.currentDevice.collectLatest { dvc ->
+                        if (dvc == null) {
+                            deviceViewModel.insertDevice(device)
+                        } else {
+                            deviceViewModel.updateDeviceStatus(deviceId, "online")
+                        }
+
+                        // 3. Chuyển sang MainActivity sau khi xong (bạn có thể show loading cho đẹp)
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
                 }
             }
         }
-        
+
+
         // Handle Login button click
         binding.buttonLogin.setOnClickListener {
             val username = binding.edtUsername.text.toString().trim()
@@ -88,4 +118,18 @@ class LoginActivity : AppCompatActivity() {
             Toast.makeText(this, "Forgot Password clicked", Toast.LENGTH_SHORT).show()
         }
     }
+
+    @SuppressLint("HardwareIds")
+    private fun getCurrentDeviceId(): String {
+        // Android ID - ổn định cho mỗi thiết bị + app install
+        return android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID)
+    }
+
+
+    private fun getCurrentTimeISO(): String {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US)
+        sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        return sdf.format(java.util.Date())
+    }
+
 }
