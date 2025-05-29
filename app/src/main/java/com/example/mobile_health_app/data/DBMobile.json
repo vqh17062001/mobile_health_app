@@ -13,7 +13,7 @@
 	"gender": "String",
 	"Dob": "ISODate",
         "role": "String (hocvien|capquanly)",
-        "academy": "String",
+        "department": "String",
         "email": "String (encrypted)",
         "phone": "String (encrypted)",
         "managerIds": ["ObjectId"],
@@ -58,6 +58,7 @@
           "granularity": "seconds"
         }
       },
+
       "validator": {
         "$jsonSchema": {
           "bsonType": "object",

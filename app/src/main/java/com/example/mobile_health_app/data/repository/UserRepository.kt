@@ -26,6 +26,11 @@ import org.mongodb.kbson.*
 class UserRepository {
     private val TAG = "UserRepository"
     
+
+    val mongoClient = "mongodb-atlas"
+    val databaseName = "health_monitor"
+    val collectionName = "users"
+
     // Helper method to hash passwords
     private fun hashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
@@ -43,9 +48,9 @@ class UserRepository {
         try {
             val app = RealmConfig.app
             val userAuth = app.login(Credentials.anonymous())
-            val mgcli = userAuth.mongoClient("mongodb-atlas")
-            val db = mgcli.database("health_monitor")
-            val users = db.collection("users")
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
 
             val query = BsonDocument("username", BsonString(username))
 
@@ -143,9 +148,9 @@ class UserRepository {
         try {
             val app = RealmConfig.app
             val userAuth = app.login(Credentials.anonymous())
-            val mgcli = userAuth.mongoClient("mongodb-atlas")
-            val db = mgcli.database("health_monitor")
-            val users = db.collection("users")
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
             
             val hashedPassword = hashPassword(password)
             val query = BsonDocument().apply {
