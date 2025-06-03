@@ -79,6 +79,11 @@ dependencies {
     //implementation(name = "samsung-health-data-api-1.5.1", ext = "aar")
 
 
+    // OkHttp for network requests
+    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
+
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -30,7 +30,7 @@ class AuditLogRepository {
 
             val doc = BsonDocument().apply {
                 put("eventAt", BsonString(auditLog.eventAt))
-                put("userId", auditLog.userId)
+                auditLog.userId?.let { put("userId", it) }
                 put("action", BsonString(auditLog.action))
                 put("resource", BsonString(auditLog.resource))
                 auditLog.resourceId?.let { put("resourceId", it) }

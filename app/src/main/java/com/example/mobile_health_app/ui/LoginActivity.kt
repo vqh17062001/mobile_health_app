@@ -14,17 +14,25 @@ import com.example.mobile_health_app.databinding.LoginBinding
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.widget.Toast
+import com.example.mobile_health_app.data.model.AuditLog
 import com.example.mobile_health_app.data.model.Device
+import com.example.mobile_health_app.viewmodel.AuditLogViewModel
 import com.example.mobile_health_app.viewmodel.DeviceViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
-
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.mongodb.kbson.ObjectId
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: LoginBinding
     private lateinit var userViewModel: UserViewModel
     private lateinit var deviceViewModel: DeviceViewModel
+    private lateinit var auditLogViewModel: AuditLogViewModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +50,7 @@ class LoginActivity : AppCompatActivity() {
         // Initialize ViewModel
         userViewModel = ViewModelProvider(this)[UserViewModel::class.java]
         deviceViewModel = ViewModelProvider(this)[DeviceViewModel::class.java]
+        auditLogViewModel = ViewModelProvider(this)[AuditLogViewModel::class.java]
 
         // Setup observers for loading and error states
         lifecycleScope.launch {
@@ -92,11 +101,46 @@ class LoginActivity : AppCompatActivity() {
                         deviceViewModel.updateDeviceStatus(deviceId, "online")
                     }
 
-                        // 3. Chuyển sang MainActivity sau khi xong (bạn có thể show loading cho đẹp)
-                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
 
+                    /// 4. Ghi log đăng nhập
+                    val ipAddress = getPublicIpAddress() ?: "unknown"
+                    val auditLog = AuditLog(
+                        userId = user._id,
+                        eventAt = getCurrentTimeISO(),
+                        action = "login",
+                        resource = "users",
+                        resourceId = user._id,
+                        ipAddress = ipAddress, // Bạn có thể lấy IP nếu cần
+                        detail = mapOf("deviceId" to deviceId, "deviceModel" to device.model)
+                    )
+                    auditLogViewModel.insertLog(auditLog)
+
+                    // 5. Chuyển sang MainActivity sau khi xong (bạn có thể show loading cho đẹp)
+                    val intent = Intent(this@LoginActivity, MainActivity::class.java)
+
+                    intent.putExtra("deviceId", deviceId)
+                    intent.putExtra("userId", user._id.toString())
+                    intent.putExtra("userFullName", bsonStringToValue(user.fullName.toString()) ?: "")
+                    intent.putExtra("userEmail",bsonStringToValue(user.email.toString()) ?: "")
+                    intent.putExtra("userName", bsonStringToValue(user.username.toString() )?: "")
+
+                    startActivity(intent)
+                    finish()
+
+                }else {
+                    /// 4. Ghi log đăng nhập thất bại
+                    val ipAddress = getPublicIpAddress() ?: "unknown"
+                    val auditLog = AuditLog(
+
+                        eventAt = getCurrentTimeISO(),
+                        action = "login-failed",
+                        resource = "users",
+
+                        ipAddress = ipAddress,
+                        detail = mapOf("reason" to "login failed")
+                    )
+
+                    auditLogViewModel.insertLog(auditLog)
                 }
             }
         }
@@ -140,6 +184,28 @@ class LoginActivity : AppCompatActivity() {
         val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", java.util.Locale.US)
         sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
         return sdf.format(java.util.Date())
+    }
+
+    fun bsonStringToValue(s: String): String {
+        return if (s.startsWith("BsonString(value='")) {
+            s.removePrefix("BsonString(value='").removeSuffix("')")
+        } else s
+    }
+    suspend fun getPublicIpAddress(): String? = withContext(Dispatchers.IO){
+       try {
+           val client = OkHttpClient()
+           val request = Request.Builder()
+               .url("https://api.ipify.org")
+               .build()
+           val response = client.newCall(request).execute()
+
+
+           return@withContext response.body.string()
+        } catch (e: Exception) {
+            e.printStackTrace()
+           return@withContext e.message
+        }
+
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.mobile_health_app
 
 import android.os.Bundle
 import android.view.Menu
+import android.widget.TextView
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -18,11 +19,19 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        var username = intent.getStringExtra("userName")
+        var userId = intent.getStringExtra("userId")
+        var userEmail = intent.getStringExtra("userEmail")
+        var userFullName = intent.getStringExtra("userFullName")
+
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -43,6 +52,11 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        val textViewUserName = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewUserName)
+        textViewUserName.text = userFullName ?: "Guest"
+        val textViewUserEmail = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewEmail)
+        textViewUserEmail.text = userEmail ?: "No Email"
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
