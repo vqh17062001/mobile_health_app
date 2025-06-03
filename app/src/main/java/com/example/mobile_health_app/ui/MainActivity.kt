@@ -1,25 +1,29 @@
-package com.example.mobile_health_app
+package com.example.mobile_health_app.ui
 
 import android.os.Bundle
 import android.view.Menu
 import android.widget.TextView
-import com.google.android.material.snackbar.Snackbar
-import com.google.android.material.navigation.NavigationView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
-import androidx.appcompat.app.AppCompatActivity
+import com.example.mobile_health_app.R
 import com.example.mobile_health_app.databinding.ActivityMainBinding
+import com.example.mobile_health_app.ui.account.AccountFragment
+import com.example.mobile_health_app.ui.features.FeaturesFragment
+import com.example.mobile_health_app.ui.qrscan.QrScanFragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,10 +57,41 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        // Set up user info in the nav header
         val textViewUserName = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewUserName)
         textViewUserName.text = userFullName ?: "Guest"
         val textViewUserEmail = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewEmail)
         textViewUserEmail.text = userEmail ?: "No Email"
+
+        // Set up bottom navigation
+        setupBottomNavigation()
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.nav_host_fragment_content_main, FeaturesFragment())
+                .commit()
+        }
+    }
+
+    private fun setupBottomNavigation() {
+        val bottomNavigation = binding.bottomNavigation
+        bottomNavigation.setOnItemSelectedListener { item ->
+            val fragment = when (item.itemId) {
+                R.id.navigation_features -> FeaturesFragment()
+                R.id.navigation_qr_scan -> QrScanFragment()
+                R.id.navigation_account -> AccountFragment()
+                else -> FeaturesFragment()
+            }
+            replaceFragment(fragment)
+            true
+        }
+    }
+
+    private fun replaceFragment(fragment: Fragment) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, fragment)
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -7,7 +7,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.mobile_health_app.MainActivity
+import com.example.mobile_health_app.ui.MainActivity
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.LoginBinding
