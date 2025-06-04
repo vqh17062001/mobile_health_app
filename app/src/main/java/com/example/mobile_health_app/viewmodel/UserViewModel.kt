@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+import org.mongodb.kbson.ObjectId
+
 class UserViewModel : ViewModel() {
     private val repo = UserRepository()
     
@@ -96,6 +98,44 @@ class UserViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _errorMessage.value = "Login error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    // Load user by ID
+    fun loadUserById(userId: ObjectId) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val user = repo.getUserById(userId)
+                _currentUser.value = user
+                if (user == null) {
+                    _errorMessage.value = "Không tìm thấy thông tin người dùng"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Lỗi tải dữ liệu: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Update user profile
+    fun updateUserProfile(user: User) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val success = repo.updateUser(user)
+                if (success) {
+                    _currentUser.value = user
+                    _errorMessage.value = "Cập nhật thành công!"
+                } else {
+                    _errorMessage.value = "Cập nhật thất bại!"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Lỗi cập nhật: ${e.message}"
             } finally {
                 _isLoading.value = false
             }

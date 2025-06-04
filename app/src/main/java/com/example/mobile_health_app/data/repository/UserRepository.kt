@@ -5,11 +5,11 @@ import com.example.mobile_health_app.data.RealmConfig
 import com.example.mobile_health_app.data.model.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.bson.Document
-//import org.bson.types.ObjectId
+
 import io.realm.kotlin.mongodb.Credentials
 import io.realm.kotlin.mongodb.ext.insertOne
 import io.realm.kotlin.mongodb.ext.findOne
+import io.realm.kotlin.mongodb.ext.updateOne
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -181,6 +181,71 @@ class UserRepository {
         } catch (e: Exception) {
             Log.e(TAG, "Login failed: ${e.message}")
             return@withContext null
+        }
+    }
+
+    // Get user by ID
+    suspend fun getUserById(userId: ObjectId): User? = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
+            
+            val query = BsonDocument("_id", userId)
+            val doc = users.findOne(query)
+            
+            if (doc != null) {
+                return@withContext User(
+                    _id = doc["_id"]!!.asObjectId(),
+                    username = doc["username"].toString(),
+                    passwordHash = doc["passwordHash"].toString(),
+                    fullName = doc["fullName"].toString(),
+                    gender = doc["gender"].toString(),
+                    Dob = doc["Dob"].toString(),
+                    role = doc["role"].toString(),
+                    department = doc["department"].toString(),
+                    email = doc["email"].toString(),
+                    phone = doc["phone"].toString(),
+                    createdAt = doc["createdAt"].toString(),
+                    updatedAt = doc["updatedAt"].toString()
+                )
+            }
+            return@withContext null
+        } catch (e: Exception) {
+            Log.e(TAG, "Error getting user by ID: ${e.message}")
+            return@withContext null
+        }
+    }
+
+    // Update user
+    suspend fun updateUser(user: User): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
+            
+            val query = BsonDocument("_id", user._id)
+            val update = BsonDocument("\$set", BsonDocument().apply {
+                put("fullName", BsonString(user.fullName))
+                put("gender", BsonString(user.gender))
+                put("Dob", BsonString(user.Dob))
+                put("department", BsonString(user.department))
+                put("email", BsonString(user.email))
+                put("phone", BsonString(user.phone))
+                put("updatedAt", BsonString(user.updatedAt))
+            })
+            
+            val result = users.updateOne(query, update)
+            Log.d(TAG, "User updated successfully: ${user.username}")
+
+            return@withContext result.updated
+        } catch (e: Exception) {
+            Log.e(TAG, "Update failed: ${e.message}")
+            return@withContext false
         }
     }
 }

@@ -119,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
                     val intent = Intent(this@LoginActivity, MainActivity::class.java)
 
                     intent.putExtra("deviceId", deviceId)
-                    intent.putExtra("userId", user._id.toString())
+                    intent.putExtra("userId", bsonObjectIdToValue(user._id.toString()))
                     intent.putExtra("userFullName", bsonStringToValue(user.fullName.toString()) ?: "")
                     intent.putExtra("userEmail",bsonStringToValue(user.email.toString()) ?: "")
                     intent.putExtra("userName", bsonStringToValue(user.username.toString() )?: "")
@@ -189,6 +189,12 @@ class LoginActivity : AppCompatActivity() {
     fun bsonStringToValue(s: String): String {
         return if (s.startsWith("BsonString(value='")) {
             s.removePrefix("BsonString(value='").removeSuffix("')")
+        } else s
+    }
+
+    fun bsonObjectIdToValue(s: String): String {
+        return if (s.startsWith("BsonObjectId(") && s.endsWith(")")) {
+            s.removePrefix("BsonObjectId(").removeSuffix(")")
         } else s
     }
     suspend fun getPublicIpAddress(): String? = withContext(Dispatchers.IO){
