@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App theme colors for dark mode -->
+    <color name="primary">#FFBB86FC</color>    <!-- lighter purple for dark mode -->
+    <color name="primary_variant">#FF3700B3</color>
+    <color name="on_primary">#FF000000</color>
+
+    <color name="secondary">#FF03DAC5</color>
+    <color name="secondary_variant">#FF03DAC5</color>    <!-- Same as secondary in dark mode -->
+    <color name="on_secondary">#FF000000</color>
+
+    <color name="surface">#FF121212</color>    <!-- Material dark surface color -->
+    <color name="on_surface">#FFFFFFFF</color>
+    <color name="surface_variant">#FF2D2D2D</color>
+
+    <color name="background">#FF121212</color>    <!-- Material dark background -->
+    <color name="on_background">#FFFFFFFF</color>
+
+    <color name="error">#FFCF6679</color>    <!-- Dark mode error color -->
+    <color name="on_error">#FF000000</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#DEFFFFFF</color>    <!-- 87% opacity -->
+    <color name="text_secondary">#99FFFFFF</color>    <!-- 60% opacity -->
+    <color name="text_hint">#61FFFFFF</color>    <!-- 38% opacity -->
+
+    <!-- UI elements -->
+    <color name="card_background">#FF2D2D2D</color>
+    <color name="divider">#1FFFFFFF</color>    <!-- 12% opacity -->
+    <color name="input_field_bg">#0DFFFFFF</color>    <!-- 5% opacity -->
+    <color name="input_border">#3D3D3D</color>
+</resources>

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Original colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
@@ -7,5 +8,34 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#432C81</color>
+
+    <!-- App theme colors for light mode -->
+    <color name="primary">#FF6200EE</color>
+    <color name="primary_variant">#FF3700B3</color>
+    <color name="on_primary">#FFFFFFFF</color>
+
+    <color name="secondary">#FF03DAC5</color>
+    <color name="secondary_variant">#FF018786</color>
+    <color name="on_secondary">#FF000000</color>
+
+    <color name="surface">#FFFFFFFF</color>
+    <color name="on_surface">#FF000000</color>
+    <color name="surface_variant">#FFF3F3F3</color>
+
+    <color name="background">#FFFFFFFF</color>
+    <color name="on_background">#FF000000</color>
+
+    <color name="error">#FFB00020</color>
+    <color name="on_error">#FFFFFFFF</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#DE000000</color>    <!-- 87% opacity -->
+    <color name="text_secondary">#99000000</color>    <!-- 60% opacity -->
+    <color name="text_hint">#61000000</color>    <!-- 38% opacity -->
+
+    <!-- UI elements -->
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="divider">#1F000000</color>    <!-- 12% opacity -->
+    <color name="input_field_bg">#0D000000</color>    <!-- 5% opacity -->
+    <color name="input_border">#EDECF4</color>
 </resources>
