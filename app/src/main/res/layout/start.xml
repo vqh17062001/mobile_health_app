@@ -22,7 +22,19 @@
         <com.google.android.material.button.MaterialButton android:id="@+id/button_login" android:layout_width="300dp" android:layout_height="wrap_content" android:text="@string/login" android:textSize="14sp" android:textAllCaps="false" android:paddingVertical="15dp" app:cornerRadius="8dp" android:backgroundTint="@android:color/transparent" android:textColor="@color/primary" android:layout_marginTop="16dp" android:fontFamily="sans-serif-medium" android:textStyle="bold" app:elevation="0dp" app:strokeWidth="1dp" app:strokeColor="@color/primary" android:stateListAnimator="@null" app:rippleColor="@android:color/transparent" />
     </LinearLayout>
 
-    <!-- Home Indicator (for newer Android devices that use gesture navigation) -->
-    <Button android:id="@+id/buttonLanguage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/language" android:layout_margin="16dp" style="@style/Widget.MaterialComponents.Button.OutlinedButton" app:layout_constraintTop_toTopOf="parent" app:layout_constraintEnd_toEndOf="parent" />
+    <!-- Language Selector -->
+    <ImageView 
+        android:id="@+id/buttonLanguage"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/language_24"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:contentDescription="@string/language"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
