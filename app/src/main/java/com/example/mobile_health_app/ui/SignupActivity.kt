@@ -210,7 +210,7 @@ class SignupActivity : AppCompatActivity() {
     private fun setupGenderDropdown() {
         val genderOptions = resources.getStringArray(R.array.gender_options)
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, genderOptions)
-        
+
         // Set adapter for AutoCompleteTextView
         (binding.edtGender as? android.widget.AutoCompleteTextView)?.apply {
             setAdapter(adapter)
@@ -237,7 +237,7 @@ class SignupActivity : AppCompatActivity() {
                 this,
                 { _, selectedYear, selectedMonth, selectedDay ->
                     // Format the date and set it in the field
-                    val selectedDate = "%02d/%02d/%d".format(selectedDay, selectedMonth + 1, selectedYear)
+                    val selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
                     binding.edtBirthday.setText(selectedDate)
                 },
                 year,

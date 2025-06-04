@@ -1,6 +1,7 @@
 package com.example.mobile_health_app.ui
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import com.example.mobile_health_app.ui.MainActivity
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.example.mobile_health_app.databinding.LoginBinding
+import com.example.mobile_health_app.util.LocaleHelper
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import android.widget.Toast
@@ -33,6 +35,12 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var deviceViewModel: DeviceViewModel
     private lateinit var auditLogViewModel: AuditLogViewModel
 
+
+    override fun attachBaseContext(base: Context) {
+        // Apply saved language
+        val language = LocaleHelper.getLanguage(base)
+        super.attachBaseContext(LocaleHelper.setLocale(base, language))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

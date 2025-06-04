@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Health Check</string>
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+    <string name="nav_header_title">Профиль пользователя</string>
+    <string name="nav_header_subtitle">user@example.com</string>
+    <string name="nav_header_desc">Заголовок навигации</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="menu_home">Главная</string>
+    <string name="menu_gallery">Галерея</string>
+    <string name="menu_slideshow">Слайдшоу</string>
+
+    <!-- Start screen -->
+    <string name="welcome_to">Добро пожаловать в</string>
+    <string name="app_name_display">Health check</string>
+    <string name="sign_up">Регистрация</string>
+    <string name="login">Войти</string>
+    <string name="language">Язык</string>
+
+    <!-- Sign up screen -->
+    <string name="hello_beautiful">Здравствуйте</string>
+    <string name="full_name">Полное имя</string>
+    <string name="gender">Пол</string>
+    <string name="birthday">Дата рождения</string>
+    <string name="phone">Телефон</string>
+    <string name="email">Электронная почта</string>
+    <string name="username">Имя пользователя</string>
+    <string name="password">Пароль</string>
+    <string name="retype_password">Повторите пароль</string>
+    <string name="already_have_account">Уже есть аккаунт?</string>
+
+    <!-- Login screen -->
+    <string name="welcome_back">Добро пожаловать назад</string>
+    <string name="forgot_password">Забыли пароль?</string>
+    <string name="dont_have_account">Нет аккаунта?</string>
+    <string name="logout">Выйти</string>
+
+    <!-- QR Scan fragment -->
+    <string name="scan_qr">Сканировать QR</string>
+
+    <!-- Features fragment -->
+    <string name="features">Функции</string>
+
+    <!-- Account fragment -->
+    <string name="account_info">Информация аккаунта</string>
+    <string name="full_name_label">Полное имя</string>
+    <string name="email_label">Электронная почта</string>
+    <string name="phone_label">Телефон</string>
+    <string name="gender_label">Пол</string>
+    <string name="birthday_label">Дата рождения</string>
+    <string name="department">Отдел</string>
+    <string name="role">Роль</string>
+    <string name="change_password">Изменить пароль</string>
+    <string name="save_info">Сохранить информацию</string>
+
+    <!-- Language selection -->
+    <string name="language_selection">Выберите язык</string>
+    <string name="english">Английский</string>
+    <string name="vietnamese">Вьетнамский</string>
+    <string name="russian">Русский</string>
+    <string name="save">Сохранить</string>
+    <string name="cancel">Отмена</string>
+
+    <!-- Gender options for signup -->
+    <string-array name="gender_options">
+        <item>Мужской</item>
+        <item>Женский</item>
+        <item>Другой</item>
+    </string-array>
+
+    <!-- Bottom Navigation Menu -->
+    <string name="menu_features">Функции</string>
+    <string name="menu_qr_scan">Сканировать QR</string>
+    <string name="menu_account">Аккаунт</string>
+
+    <!-- Additional array for direct reference -->
+
+    <!-- Common error messages -->
+
+    <!-- Button texts -->
+
+    <!-- Health related strings -->
+
+    <!-- Progress indicators -->
+
+    <!-- Dialog messages -->
+</resources>

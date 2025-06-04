@@ -4,7 +4,7 @@
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
 
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Thông tin tài khoản" android:textSize="24sp" android:textStyle="bold" android:textColor="?attr/colorPrimary" android:gravity="center" android:layout_marginBottom="24dp" />
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/account_info" android:textSize="24sp" android:textStyle="bold" android:textColor="?attr/colorPrimary" android:gravity="center" android:layout_marginBottom="24dp" />
 
         <!-- Profile Image -->
         <androidx.cardview.widget.CardView android:layout_width="120dp" android:layout_height="120dp" app:cardCornerRadius="60dp" android:layout_gravity="center" android:layout_marginBottom="16dp" app:cardBackgroundColor="?attr/colorSurface">
@@ -14,25 +14,25 @@
         </androidx.cardview.widget.CardView>
 
         <!-- Username (Not editable) -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="@color/input_border" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Tên đăng nhập">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="@color/input_border" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/username">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_username" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:enabled="false" android:textColor="?attr/colorPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Full Name -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Họ và tên">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/full_name_label">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_full_name" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPersonName" android:textColor="@color/primary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Email -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Email">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/email_label">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_email" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textEmailAddress" android:textColor="@color/primary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Phone -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Số điện thoại">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/phone_label">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_phone" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="phone" android:textColor="@color/primary" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -41,36 +41,36 @@
         <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="8dp">
 
             <!-- Gender Dropdown -->
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="4dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Giới tính">
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginEnd="4dp" style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/gender_label">
 
                 <AutoCompleteTextView android:id="@+id/edt_gender" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:textColor="@color/primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Birthday with DatePicker -->
-            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.5" android:layout_marginStart="4dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:endIconMode="custom" app:endIconDrawable="@android:drawable/ic_menu_today" android:hint="Ngày sinh">
+            <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1.5" android:layout_marginStart="4dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" app:endIconMode="custom" app:endIconDrawable="@android:drawable/ic_menu_today" android:hint="@string/birthday_label">
 
                 <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_birthday" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="none" android:focusable="false" android:clickable="true" android:textColor="@color/primary" />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
         <!-- Department -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Phòng ban">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/department">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_department" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:textColor="@color/primary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <!-- Role (Not editable) -->
-        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="Vai trò">
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="#EDECF4" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/role">
 
             <com.google.android.material.textfield.TextInputEditText android:id="@+id/edt_role" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" android:enabled="false" android:textColor="@color/primary" />
         </com.google.android.material.textfield.TextInputLayout>
 
 
         <!-- Change Password Button -->
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_change_password" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="Đổi mật khẩu" android:textAllCaps="false" app:cornerRadius="8dp" android:backgroundTint="@color/primary" android:padding="12dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_change_password" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/change_password" android:textAllCaps="false" app:cornerRadius="8dp" android:backgroundTint="@color/primary" android:padding="12dp" />
 
         <!-- Save Button -->
-        <com.google.android.material.button.MaterialButton android:id="@+id/btn_save_profile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="24dp" android:text="Lưu thông tin" android:textAllCaps="false" app:cornerRadius="8dp" android:backgroundTint="@color/primary" android:padding="12dp" />
+        <com.google.android.material.button.MaterialButton android:id="@+id/btn_save_profile" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:layout_marginBottom="24dp" android:text="@string/save_info" android:textAllCaps="false" app:cornerRadius="8dp" android:backgroundTint="@color/primary" android:padding="12dp" />
 
         <!-- Progress Bar -->
         <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:visibility="gone" />

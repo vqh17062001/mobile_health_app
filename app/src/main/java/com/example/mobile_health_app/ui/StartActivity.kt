@@ -1,5 +1,6 @@
 package com.example.mobile_health_app.ui
 import com.example.mobile_health_app.ui.SignupActivity as SignupActivity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -7,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.databinding.StartBinding
+import com.example.mobile_health_app.util.LocaleHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -15,6 +17,13 @@ import kotlinx.coroutines.withContext
 class StartActivity : AppCompatActivity() {
 
     private lateinit var binding: StartBinding
+    
+    override fun attachBaseContext(base: Context) {
+        // Apply saved language
+        val language = LocaleHelper.getLanguage(base)
+        super.attachBaseContext(LocaleHelper.setLocale(base, language))
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
@@ -28,13 +37,8 @@ class StartActivity : AppCompatActivity() {
         binding = StartBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         // Handle Sign Up button click
         binding.buttonSignup.setOnClickListener {
-
-
-
             // Navigate to SignupActivity to show signup screen
             val intent = Intent(this, SignupActivity::class.java)
             startActivity(intent)
@@ -48,7 +52,12 @@ class StartActivity : AppCompatActivity() {
             startActivity(intent)
             // Not calling finish() here so user can go back to start screen if needed
         }
+        
+        // Handle Language button click
+        binding.buttonLanguage.setOnClickListener {
+            // Navigate to LanguageActivity to select language
+            val intent = Intent(this, LanguageActivity::class.java)
+            startActivity(intent)
+        }
     }
-
-
 }

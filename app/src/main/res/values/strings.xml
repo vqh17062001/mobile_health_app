@@ -1,17 +1,78 @@
 <resources>
-    <string name="app_name">mobile_health_app</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
-    <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <!-- Existing strings should be preserved -->
+    <string name="app_name">Health Check</string>
 
+    <!-- Start screen -->
+    <string name="welcome_to">Welcome to</string>
+    <string name="app_name_display">Health check</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="language">Language</string>
+
+    <!-- Sign up screen -->
+    <string name="hello_beautiful">Hello Beautiful</string>
+    <string name="full_name">Full Name</string>
+    <string name="gender">Gender</string>
+    <string name="birthday">Birth day</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="username">User name</string>
+    <string name="password">Password</string>
+    <string name="retype_password">Retype password</string>
+    <string name="already_have_account">Already have an account?</string>
+
+    <!-- Login screen -->
+    <string name="welcome_back">Welcome Back</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="dont_have_account">Don\'t have an account?</string>
+
+    <!-- Navigation header -->
+    <string name="logout">Logout</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="nav_header_title">User Profile</string>
+    <string name="nav_header_subtitle">user@example.com</string>
+
+    <!-- Navigation items -->
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+    <string name="action_settings">Settings</string>
 
-    <!-- Gender options for signup -->
+    <!-- App behaviors -->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- QR Scan fragment -->
+    <string name="scan_qr">Scan QR</string>
+
+    <!-- Features fragment -->
+    <string name="features">Features</string>
+
+    <!-- Account fragment -->
+    <string name="account_info">Account infomation</string>
+    <string name="full_name_label">Full name</string>
+    <string name="email_label">Email</string>
+    <string name="phone_label">"Phone "</string>
+    <string name="gender_label">Gender</string>
+    <string name="birthday_label">Day of birth</string>
+    <string name="department">Department</string>
+    <string name="role">Role</string>
+    <string name="change_password">Change password</string>
+    <string name="save_info">Save infomation</string>
+
+    <!-- Language selection -->
+    <string name="language_selection">Select Language</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="russian">Russian</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Bottom Navigation Menu -->
+    <string name="menu_features">Features</string>
+    <string name="menu_qr_scan">QR Scan</string>
+    <string name="menu_account">Account</string>
+
     <string-array name="gender_options">
         <item>Male</item>
         <item>Female</item>

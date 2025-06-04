@@ -84,7 +84,7 @@ class AccountFragment : Fragment() {
                 requireContext(),
                 { _, selectedYear, selectedMonth, selectedDay ->
                     // Format the date and set it in the field
-                    val selectedDate = "%02d/%02d/%d".format(selectedDay, selectedMonth + 1, selectedYear)
+                    val selectedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, selectedMonth + 1, selectedYear)
                     binding.edtBirthday.setText(selectedDate)
                 },
                 year,

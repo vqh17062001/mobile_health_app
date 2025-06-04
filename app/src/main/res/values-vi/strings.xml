@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Health Check</string>
+
+    <!-- Start screen -->
+    <string name="welcome_to">Chào mừng đến với</string>
+    <string name="app_name_display">Health check</string>
+    <string name="sign_up">Đăng ký</string>
+    <string name="login">Đăng nhập</string>
+    <string name="language">Ngôn ngữ</string>
+
+    <!-- Sign up screen -->
+    <string name="hello_beautiful">Xin chào</string>
+    <string name="full_name">Họ và tên</string>
+    <string name="gender">Giới tính</string>
+    <string name="birthday">Ngày sinh</string>
+    <string name="phone">Số điện thoại</string>
+    <string name="email">Email</string>
+    <string name="username">Tên đăng nhập</string>
+    <string name="password">Mật khẩu</string>
+    <string name="retype_password">Nhập lại mật khẩu</string>
+    <string name="already_have_account">Đã có tài khoản?</string>
+
+    <!-- Login screen -->
+    <string name="welcome_back">Chào mừng trở lại</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="dont_have_account">Chưa có tài khoản?</string>
+
+    <!-- Navigation header -->
+    <string name="logout">Đăng xuất</string>
+    <string name="nav_header_desc">Tiêu đề điều hướng</string>
+    <string name="nav_header_title">Hồ sơ người dùng</string>
+    <string name="nav_header_subtitle">user@example.com</string>
+
+    <!-- Navigation items -->
+    <string name="menu_home">Trang chủ</string>
+    <string name="menu_gallery">Thư viện</string>
+    <string name="menu_slideshow">Trình chiếu</string>
+    <string name="action_settings">Cài đặt</string>
+
+    <!-- App behaviors -->
+    <string name="navigation_drawer_open">Mở ngăn điều hướng</string>
+    <string name="navigation_drawer_close">Đóng ngăn điều hướng</string>
+
+    <!-- QR Scan fragment -->
+    <string name="scan_qr">Quét QR</string>
+
+    <!-- Features fragment -->
+    <string name="features">Chức năng</string>
+
+    <!-- Account fragment -->
+    <string name="account_info">Thông tin tài khoản</string>
+    <string name="full_name_label">Họ và tên</string>
+    <string name="email_label">Email</string>
+    <string name="phone_label">Số điện thoại</string>
+    <string name="gender_label">Giới tính</string>
+    <string name="birthday_label">Ngày sinh</string>
+    <string name="department">Phòng ban</string>
+    <string name="role">Vai trò</string>
+    <string name="change_password">Đổi mật khẩu</string>
+    <string name="save_info">Lưu thông tin</string>
+
+    <!-- Language selection -->
+    <string name="language_selection">Chọn ngôn ngữ</string>
+    <string name="english">Tiếng Anh</string>
+    <string name="vietnamese">Tiếng Việt</string>
+    <string name="russian">Tiếng Nga</string>
+    <string name="save">Lưu</string>
+    <string name="cancel">Hủy</string>
+
+    <!-- Bottom Navigation Menu -->
+    <string name="menu_features">Chức năng</string>
+    <string name="menu_qr_scan">Quét QR</string>
+    <string name="menu_account">Tài khoản</string>
+
+    <!-- Gender related strings -->
+
+
+
+    <!-- Gender options array -->
+    <string-array name="gender_options">
+        <item>Nam</item>
+        <item>Nữ</item>
+        <item>Khác</item>
+    </string-array>
+
+    <!-- Additional array for direct reference, if needed -->
+
+</resources>
