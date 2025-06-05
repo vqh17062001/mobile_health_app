@@ -1,19 +1,34 @@
 package com.example.mobile_health_app.ui.account
 
+import android.Manifest
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.data.model.AuditLog
 import com.example.mobile_health_app.databinding.FragmentAccountBinding
+import com.example.mobile_health_app.ui.LoginActivity
 import com.example.mobile_health_app.viewmodel.AuditLogViewModel
 import com.example.mobile_health_app.viewmodel.UserViewModel
 import kotlinx.coroutines.Dispatchers
@@ -23,11 +38,13 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.mongodb.kbson.ObjectId
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
-import com.example.mobile_health_app.ui.account.ChangePasswordFragment
 
 class AccountFragment : Fragment() {
 
@@ -36,6 +53,45 @@ class AccountFragment : Fragment() {
 
     private lateinit var userViewModel: UserViewModel
     private lateinit var auditLogViewModel: AuditLogViewModel
+    private var currentPhotoPath: String? = null
+    private var userId: String? = null
+
+    // Register activity result for gallery image selection
+    private val selectImageFromGallery = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            result.data?.data?.let { uri ->
+                // Save and display the selected image
+                saveAndDisplaySelectedImage(uri)
+            }
+        }
+    }
+    
+    // Register activity result for camera image capture
+    private val takePicture = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            currentPhotoPath?.let { path ->
+                // Save and display the captured image
+                val bitmap = BitmapFactory.decodeFile(path)
+                saveImageToInternalStorage(bitmap)
+                binding.profileImage.setImageBitmap(bitmap)
+            }
+        }
+    }
+    
+    // Permission request for camera
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            showImageSourceDialog()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Camera permission is required to take pictures",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,13 +106,208 @@ class AccountFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         userViewModel = ViewModelProvider(requireActivity())[UserViewModel::class.java]
         auditLogViewModel = ViewModelProvider(requireActivity())[AuditLogViewModel::class.java]
-
+        
+        userId = activity?.intent?.getStringExtra("userId")
         
         setupGenderDropdown()
         setupDatePicker()
         setupButtons()
         loadUserData()
         observeUserViewModel()
+        
+        // Load profile image if exists
+        loadProfileImage()
+        
+        // Setup profile image click
+        binding.profileImage.setOnClickListener {
+            checkCameraPermissionAndProceed()
+        }
+        
+        binding.cameraIcon.setOnClickListener {
+            checkCameraPermissionAndProceed()
+        }
+        
+        // Setup logout click
+        binding.txtLogout.setOnClickListener {
+            showLogoutConfirmationDialog()
+        }
+    }
+    
+    private fun loadProfileImage() {
+        try {
+            userId?.let { id ->
+                val imageFile = File(requireContext().filesDir, "profile_$id.jpg")
+                if (imageFile.exists()) {
+                    val bitmap = BitmapFactory.decodeFile(imageFile.absolutePath)
+                    binding.profileImage.setImageBitmap(bitmap)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    
+    private fun checkCameraPermissionAndProceed() {
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                showImageSourceDialog()
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+                // Show explanation why camera permission is needed
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Camera Permission Required")
+                    .setMessage("This app needs camera access to take profile pictures")
+                    .setPositiveButton("Allow") { _, _ ->
+                        requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .create()
+                    .show()
+            }
+            else -> {
+                // Request permission
+                requestPermissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
+    }
+    
+    private fun showImageSourceDialog() {
+        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        AlertDialog.Builder(requireContext())
+            .setTitle("Select Profile Picture")
+            .setItems(options) { _, which ->
+                when (which) {
+                    0 -> takePhotoWithCamera()
+                    1 -> pickImageFromGallery()
+                    2 -> { /* cancel */ }
+                }
+            }
+            .show()
+    }
+    
+    private fun takePhotoWithCamera() {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    createImageFile()
+                } catch (ex: IOException) {
+                    // Error occurred while creating the File
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    val photoURI: Uri = FileProvider.getUriForFile(
+                        requireContext(),
+                        "com.example.mobile_health_app.fileprovider",
+                        it
+                    )
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    takePicture.launch(takePictureIntent)
+                }
+            }
+        }
+    }
+    
+    private fun pickImageFromGallery() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        selectImageFromGallery.launch(intent)
+    }
+    
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.US).format(Date())
+        val storageDir: File = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)!!
+        return File.createTempFile(
+            "JPEG_${timeStamp}_", /* prefix */
+            ".jpg", /* suffix */
+            storageDir /* directory */
+        ).apply {
+            // Save a file: path for use with ACTION_VIEW intents
+            currentPhotoPath = absolutePath
+        }
+    }
+    
+    private fun saveAndDisplaySelectedImage(uri: Uri) {
+        val bitmap = MediaStore.Images.Media.getBitmap(requireActivity().contentResolver, uri)
+        saveImageToInternalStorage(bitmap)
+        binding.profileImage.setImageBitmap(bitmap)
+    }
+    
+    private fun saveImageToInternalStorage(bitmap: Bitmap) {
+        try {
+            userId?.let { id ->
+                val file = File(requireContext().filesDir, "profile_$id.jpg")
+                FileOutputStream(file).use { out ->
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Toast.makeText(
+                requireContext(),
+                "Failed to save profile image",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    
+    private fun showLogoutConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Logout")
+            .setMessage("Are you sure you want to logout?")
+            .setPositiveButton("Logout") { _, _ ->
+                performLogout()
+            }
+            .setNegativeButton("Cancel", null)
+            .create()
+            .show()
+    }
+    
+    private fun performLogout() {
+        // Log the logout event
+        viewLifecycleOwner.lifecycleScope.launch {
+            try {
+                userId?.let { id ->
+                    val objectId = ObjectId(id)
+                    val ipAddress = getPublicIpAddress() ?: "unknown"
+                    val auditLog = AuditLog(
+                        userId = objectId,
+                        eventAt = getCurrentTimeISO(),
+                        action = "logout",
+                        resource = "users",
+                        resourceId = objectId,
+                        ipAddress = ipAddress,
+                        detail = mapOf("method" to "user-initiated")
+                    )
+                    auditLogViewModel.insertLog(auditLog)
+                }
+
+                // Clear any saved credentials or tokens
+                val preferences = requireActivity().getSharedPreferences(
+                    "app_preferences",
+                    Context.MODE_PRIVATE
+                )
+                preferences.edit().remove("user_id").apply()
+
+                // Return to login screen
+                val intent = Intent(requireActivity(), LoginActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                startActivity(intent)
+                requireActivity().finish()
+            } catch (e: Exception) {
+                Toast.makeText(
+                    requireContext(),
+                    "Logout failed: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
     
     private fun setupGenderDropdown() {
