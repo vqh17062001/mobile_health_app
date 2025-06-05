@@ -84,6 +84,13 @@
         <item>Khác</item>
     </string-array>
 
+    <!-- Change Password feature -->
+    <string name="current_password">Mật khẩu hiện tại</string>
+    <string name="new_password">Mật khẩu mới</string>
+    <string name="confirm_password">Xác nhận mật khẩu</string>
+    <string name="save_changes">Lưu thay đổi</string>
+    <!-- cancel string already exists in Vietnamese -->
+
     <!-- Additional array for direct reference, if needed -->
 
 </resources>

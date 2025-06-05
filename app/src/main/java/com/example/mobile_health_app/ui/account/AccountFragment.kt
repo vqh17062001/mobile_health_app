@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.data.model.AuditLog
 import com.example.mobile_health_app.databinding.FragmentAccountBinding
@@ -27,6 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import com.example.mobile_health_app.ui.account.ChangePasswordFragment
 
 class AccountFragment : Fragment() {
 
@@ -267,11 +269,15 @@ class AccountFragment : Fragment() {
     }
     
     private fun showChangePasswordDialog() {
-        // Create a dialog to change password
-        Toast.makeText(requireContext(), "Tính năng đổi mật khẩu sẽ được cập nhật sau", Toast.LENGTH_SHORT).show()
-        
-        // You would implement a dialog here with current password, new password and confirm password fields
+        // Navigate to ChangePasswordFragment using Navigation Components
+        // Replace with direct fragment transaction since the navigation ID doesn't exist
+        val changePasswordFragment = ChangePasswordFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, changePasswordFragment)
+            .addToBackStack(null)
+            .commit()
     }
+
     
     // Format date from UI format (DD/MM/YYYY) to ISO format (YYYY-MM-DDT00:00:00Z)
     private fun formatDateForDb(uiDate: String): String {

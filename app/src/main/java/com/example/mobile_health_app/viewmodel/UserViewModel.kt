@@ -25,6 +25,10 @@ class UserViewModel : ViewModel() {
     
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+    
+    // New StateFlow for password change success status
+    private val _passwordChangeSuccessful = MutableStateFlow(false)
+    val passwordChangeSuccessful: StateFlow<Boolean> = _passwordChangeSuccessful.asStateFlow()
 
     // Add new user directly (basic method)
     fun addNewUser(user: User) {
@@ -140,6 +144,30 @@ class UserViewModel : ViewModel() {
                 _isLoading.value = false
             }
         }
+    }
+    
+    // New method for changing password
+    fun changePassword(userId: ObjectId, currentPassword: String, newPassword: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val success = repo.changeUserPassword(userId, currentPassword, newPassword)
+                if (success) {
+                    _passwordChangeSuccessful.value = true
+                } else {
+                    _errorMessage.value = "Mật khẩu hiện tại không đúng"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Lỗi đổi mật khẩu: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
+    // Reset password change status
+    fun resetPasswordChangeStatus() {
+        _passwordChangeSuccessful.value = false
     }
     
     // Reset state

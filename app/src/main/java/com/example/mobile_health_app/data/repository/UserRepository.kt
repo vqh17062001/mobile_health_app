@@ -248,4 +248,51 @@ class UserRepository {
             return@withContext false
         }
     }
+
+    // New method to change user password
+    suspend fun changeUserPassword(userId: ObjectId, currentPassword: String, newPassword: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
+            
+            // First, get the user to verify the current password
+            val query = BsonDocument("_id", userId)
+            val user = users.findOne(query)
+            
+            if (user != null) {
+                // Hash the provided current password
+                val hashedCurrentPassword = hashPassword(currentPassword)
+                val storedPasswordHash = user["passwordHash"].toString()
+                
+                // Check if the current password matches
+                if (storedPasswordHash.contains(hashedCurrentPassword)) {
+                    // Hash the new password
+                    val hashedNewPassword = hashPassword(newPassword)
+                    val timestamp = getCurrentTimestamp()
+                    
+                    // Update the password hash
+                    val update = BsonDocument("\$set", BsonDocument().apply {
+                        put("passwordHash", BsonString(hashedNewPassword))
+                        put("updatedAt", BsonString(timestamp))
+                    })
+                    
+                    val result = users.updateOne(query, update)
+                    Log.d(TAG, "Password changed successfully for user ID: $userId")
+                    return@withContext result.updated
+                } else {
+                    Log.d(TAG, "Password change failed: current password does not match")
+                    return@withContext false
+                }
+            } else {
+                Log.d(TAG, "Password change failed: user not found")
+                return@withContext false
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error changing password: ${e.message}")
+            return@withContext false
+        }
+    }
 }

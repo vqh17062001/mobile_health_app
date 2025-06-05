@@ -75,15 +75,9 @@
     <string name="menu_qr_scan">Сканировать QR</string>
     <string name="menu_account">Аккаунт</string>
 
-    <!-- Additional array for direct reference -->
-
-    <!-- Common error messages -->
-
-    <!-- Button texts -->
-
-    <!-- Health related strings -->
-
-    <!-- Progress indicators -->
-
-    <!-- Dialog messages -->
+    <!-- Change Password feature -->
+    <string name="current_password">Текущий пароль</string>
+    <string name="new_password">Новый пароль</string>
+    <string name="confirm_password">Подтвердите пароль</string>
+    <string name="save_changes">Сохранить изменения</string>
 </resources>
