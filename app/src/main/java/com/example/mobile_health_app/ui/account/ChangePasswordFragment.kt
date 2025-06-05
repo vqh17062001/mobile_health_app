@@ -1,6 +1,8 @@
 package com.example.mobile_health_app.ui.account
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,11 +10,14 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.mobile_health_app.R
 import androidx.navigation.fragment.findNavController
 import com.example.mobile_health_app.data.model.AuditLog
 import com.example.mobile_health_app.databinding.FragmentChangePasswordBinding
 import com.example.mobile_health_app.viewmodel.AuditLogViewModel
 import com.example.mobile_health_app.viewmodel.UserViewModel
+import com.nulabinc.zxcvbn.Strength
+import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -47,7 +52,89 @@ class ChangePasswordFragment : Fragment() {
         auditLogViewModel = ViewModelProvider(requireActivity())[AuditLogViewModel::class.java]
         
         setupButtons()
+        setupPasswordStrengthChecker()
         observeViewModel()
+    }
+    
+    /**
+     * Sets up password strength checker that provides real-time feedback
+     */
+    private fun setupPasswordStrengthChecker() {
+        binding.edtNewPassword.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+            
+            override fun afterTextChanged(s: Editable?) {
+                val password = s.toString()
+                
+                if (password.isNotEmpty()) {
+                    val passwordStrength = evaluatePasswordStrength(password)
+                    val feedbackMessage = getPasswordFeedback(passwordStrength)
+                    
+                    // Set text color based on password strength
+                    val textColor = when (passwordStrength.score) {
+                        0 -> android.graphics.Color.parseColor("#FF0000") // Red for very weak
+                        1 -> android.graphics.Color.parseColor("#FF8C00") // Orange for weak
+                        2 -> android.graphics.Color.parseColor("#FFC000") // Amber for medium
+                        3 -> android.graphics.Color.parseColor("#32CD32") // Green for strong
+                        4 -> android.graphics.Color.parseColor("#006400") // Dark green for very strong
+                        else -> android.graphics.Color.parseColor("#7B6BA8") // Default purple
+                    }
+                    
+                    // Set the helper text with appropriate color
+                    binding.tilNewPassword.helperText = feedbackMessage
+                    binding.tilNewPassword.setHelperTextColor(android.content.res.ColorStateList.valueOf(textColor))
+                    
+                    // Display error only for weak passwords
+                    if (passwordStrength.score < 2) {
+                        binding.edtNewPassword.error = "Mật khẩu quá yếu"
+                    } else {
+                        binding.edtNewPassword.error = null
+                    }
+                } else {
+                    // Hide strength info when password field is empty
+                    binding.tilNewPassword.helperText = null
+                }
+            }
+        })
+    }
+    
+    /**
+     * Evaluates password strength using the Zxcvbn library
+     */
+    private fun evaluatePasswordStrength(password: String): Strength {
+        val zxcvbn = Zxcvbn()
+        return zxcvbn.measure(password)
+    }
+    
+    /**
+     * Generates user-friendly feedback based on password strength
+     */
+    private fun getPasswordFeedback(strength: Strength): String {
+        val feedback = StringBuilder()
+        
+        // Add score-based assessment
+        when (strength.score) {
+            0 -> feedback.append("Mật khẩu rất yếu! ")
+            1 -> feedback.append("Mật khẩu yếu! ")
+            2 -> feedback.append("Mật khẩu trung bình. ")
+            3 -> feedback.append("Mật khẩu mạnh. ")
+            4 -> feedback.append("Mật khẩu rất mạnh! ")
+        }
+        
+        // Add specific feedback from the library
+        val zxcvbnFeedback = strength.feedback
+        if (!zxcvbnFeedback.warning.isNullOrEmpty()) {
+            feedback.append(zxcvbnFeedback.warning)
+        }
+        
+        if (zxcvbnFeedback.suggestions.isNotEmpty()) {
+            feedback.append(" Gợi ý: ")
+            feedback.append(zxcvbnFeedback.suggestions.joinToString(". "))
+        }
+        
+        return feedback.toString()
     }
     
     private fun setupButtons() {
@@ -58,9 +145,18 @@ class ChangePasswordFragment : Fragment() {
             }
         }
         
-        // Cancel button click
+        // Cancel button click - try multiple navigation approaches for reliability
         binding.btnCancel.setOnClickListener {
-            findNavController().navigateUp()
+            try {
+                // Option 1: Navigate up to previous destination
+                if (!findNavController().popBackStack()) {
+                    // Option 2: Navigate directly to account fragment if popBackStack fails
+                    findNavController().navigate(R.id.navigation_account)
+                }
+            } catch (e: Exception) {
+                // Option 3: Fallback to activity-level navigation if all else fails
+                requireActivity().onBackPressed()
+            }
         }
     }
     
@@ -82,13 +178,36 @@ class ChangePasswordFragment : Fragment() {
             isValid = false
         }
         
-        // Validate new password
+        // Validate new password with strength check
         if (newPassword.isEmpty()) {
             binding.tilNewPassword.error = "Vui lòng nhập mật khẩu mới"
+            binding.tilNewPassword.helperText = null
             isValid = false
-        } else if (newPassword.length < 6) {
-            binding.tilNewPassword.error = "Mật khẩu phải có ít nhất 6 ký tự"
-            isValid = false
+        } else {
+            // Use Zxcvbn to check password strength
+            val strength = evaluatePasswordStrength(newPassword)
+            val feedback = getPasswordFeedback(strength)
+            
+            // Set text color based on password strength
+            val textColor = when (strength.score) {
+                0 -> android.graphics.Color.parseColor("#FF0000") // Red for very weak
+                1 -> android.graphics.Color.parseColor("#FF8C00") // Orange for weak
+                else -> android.graphics.Color.parseColor("#32CD32") // Green for medium+ strength
+            }
+            
+            // Require at least a medium-strength password (score >= 2)
+            if (strength.score < 2) {
+                // Show error for weak passwords
+                binding.edtNewPassword.error = "Mật khẩu quá yếu"
+                binding.tilNewPassword.helperText = feedback
+                binding.tilNewPassword.setHelperTextColor(android.content.res.ColorStateList.valueOf(textColor))
+                isValid = false
+            } else {
+                // For strong passwords, make sure there's no error
+                binding.edtNewPassword.error = null
+                binding.tilNewPassword.helperText = feedback
+                binding.tilNewPassword.setHelperTextColor(android.content.res.ColorStateList.valueOf(textColor))
+            }
         }
         
         // Validate confirm password

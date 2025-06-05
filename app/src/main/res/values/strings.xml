@@ -83,5 +83,5 @@
     <string name="current_password">Curent pasword</string>
     <string name="new_password">New password</string>
     <string name="confirm_password">Confirm password</string>
-    <string name="save_changes">Save_changes</string>
+    <string name="save_changes">Save changes</string>
 </resources>
