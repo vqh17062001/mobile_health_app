@@ -5,11 +5,8 @@
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/language_selection" android:textSize="20sp" android:textStyle="bold" android:layout_marginBottom="16dp"/>
 
-    <RadioGroup android:id="@+id/radioGroupLanguages" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
-
-        <!-- RadioButtons will be added programmatically -->
-
-    </RadioGroup>
+    <!-- Replace RadioGroup with ChipGroup -->
+    <com.google.android.material.chip.ChipGroup android:id="@+id/chipGroupLanguages" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp" app:singleSelection="true" app:selectionRequired="true" />
 
     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:layout_marginTop="24dp" android:gravity="end">
 
