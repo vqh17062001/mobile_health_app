@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.NavHostFragment
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.data.model.AuditLog
 import com.example.mobile_health_app.databinding.FragmentAccountBinding

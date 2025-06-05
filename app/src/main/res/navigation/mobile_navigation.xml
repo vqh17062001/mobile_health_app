@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation" app:startDestination="@+id/nav_home">
+    xmlns:tools="http://schemas.android.com/tools" android:id="@+id/mobile_navigation" app:startDestination="@+id/navigation_features">
 
-    <fragment android:id="@+id/nav_home" android:name="com.example.mobile_health_app.ui.home.HomeFragment" android:label="@string/menu_home" tools:layout="@layout/fragment_home" />
+    <!-- Removed unnecessary fragments: nav_home, nav_gallery, nav_slideshow -->
+    <!--    <action android:id="@+id/action_nav_account_to_changePasswordFragment" app:destination="@id/nav_change_password" />-->
+    <fragment android:id="@+id/navigation_account" android:name="com.example.mobile_health_app.ui.account.AccountFragment" android:label="@string/account_info" tools:layout="@layout/fragment_account">
 
-    <fragment android:id="@+id/nav_gallery" android:name="com.example.mobile_health_app.ui.gallery.GalleryFragment" android:label="@string/menu_gallery" tools:layout="@layout/fragment_gallery" />
+    </fragment>
 
-    <fragment android:id="@+id/nav_slideshow" android:name="com.example.mobile_health_app.ui.slideshow.SlideshowFragment" android:label="@string/menu_slideshow" tools:layout="@layout/fragment_slideshow" />
-    <fragment
-        android:id="@+id/nav_change_password"
-        android:name="com.example.mobile_health_app.ui.account.ChangePasswordFragment"
-        android:label="@string/change_password"
-        tools:layout="@layout/fragment_change_password" />
+    <fragment android:id="@+id/nav_change_password" android:name="com.example.mobile_health_app.ui.account.ChangePasswordFragment" android:label="@string/change_password" tools:layout="@layout/fragment_change_password" />
 
+    <!-- Add features and QR scan fragments -->
+    <fragment android:id="@+id/navigation_features" android:name="com.example.mobile_health_app.ui.features.FeaturesFragment" android:label="@string/features" tools:layout="@layout/fragment_features" />
+
+    <fragment android:id="@+id/navigation_qr_scan" android:name="com.example.mobile_health_app.ui.qrscan.QrScanFragment" android:label="@string/scan_qr" tools:layout="@layout/fragment_qr_scan" />
 </navigation>

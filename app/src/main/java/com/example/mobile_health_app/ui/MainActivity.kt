@@ -5,24 +5,15 @@ import android.view.Menu
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.databinding.ActivityMainBinding
 import com.example.mobile_health_app.ui.account.AccountFragment
 import com.example.mobile_health_app.ui.features.FeaturesFragment
 import com.example.mobile_health_app.ui.qrscan.QrScanFragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationView
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,33 +25,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var username = intent.getStringExtra("userName")
-        var userId = intent.getStringExtra("userId")
-        var userEmail = intent.getStringExtra("userEmail")
-        var userFullName = intent.getStringExtra("userFullName")
-
-
-        setSupportActionBar(binding.appBarMain.toolbar)
-
-
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
-
-        // Set up user info in the nav header
-        val textViewUserName = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewUserName)
-        textViewUserName.text = userFullName ?: "Guest"
-        val textViewUserEmail = navView.getHeaderView(0).findViewById<TextView>(R.id.textViewEmail)
-        textViewUserEmail.text = userEmail ?: "No Email"
+        // Get user data from intent
+        val username = intent.getStringExtra("userName")
+        val userId = intent.getStringExtra("userId")
+        val userEmail = intent.getStringExtra("userEmail")
+        val userFullName = intent.getStringExtra("userFullName")
 
         // Set up bottom navigation
         setupBottomNavigation()
@@ -93,14 +62,8 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    // For external access from other fragments
+    fun loadFragment(fragment: Fragment) {
+        replaceFragment(fragment)
     }
 }
