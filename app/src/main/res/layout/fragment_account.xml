@@ -19,7 +19,7 @@
             </androidx.cardview.widget.CardView>
 
             <!-- Logout Link -->
-            <TextView android:id="@+id/txt_logout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/logout" android:textColor="@color/primary" android:textSize="16sp" android:padding="8dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="16dp" android:clickable="true" android:focusable="true" android:drawableStart="@android:drawable/ic_lock_power_off" android:drawablePadding="4dp" />
+            <TextView android:id="@+id/txt_logout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/logout" android:textColor="@color/error" android:textSize="16sp" android:padding="8dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="16dp" android:clickable="true" android:focusable="true" android:drawableStart="@android:drawable/ic_lock_power_off" android:drawablePadding="4dp" />
         </RelativeLayout>
 
         <!-- Username (Not editable) -->

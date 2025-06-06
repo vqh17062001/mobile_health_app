@@ -256,15 +256,15 @@ class AccountFragment : Fragment() {
             ).show()
         }
     }
-    
+
     private fun showLogoutConfirmationDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Logout")
-            .setMessage("Are you sure you want to logout?")
-            .setPositiveButton("Logout") { _, _ ->
+            .setTitle(R.string.logout)
+            .setMessage(R.string.logout_confirmation_message)
+            .setPositiveButton(R.string.logout) { _, _ ->
                 performLogout()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .create()
             .show()
     }
