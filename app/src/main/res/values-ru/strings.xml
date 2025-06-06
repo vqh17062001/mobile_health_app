@@ -138,4 +138,8 @@
     <string name="feature_add_manager_description">Добавьте ID менеджера, чтобы поделиться с ним информацией о здоровье</string>
     <string name="feature_view_health_title">Просмотр информации о здоровье</string>
     <string name="feature_view_health_description">Просмотр информации о здоровье и истории проверок</string>
+    <string name="feature_sync_health_data_title">Синхронизация данных о здоровье</string>
+    <string name="feature_sync_health_data_description">Синхронизируйте данные о здоровье с сервером для отслеживания вашего здоровья с любого устройства</string>
+    <string name="feature_device_inf_title">Информация об устройстве</string>
+    <string name="feature_device_inf_description">Просмотр информации о вашем устройстве</string>
 </resources>

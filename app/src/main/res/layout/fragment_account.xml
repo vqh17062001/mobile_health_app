@@ -6,28 +6,24 @@
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/account_info" android:textSize="24sp" android:textStyle="bold" android:textColor="?attr/colorPrimary" android:gravity="center" android:layout_marginBottom="24dp" />
 
-        <!-- Header with Profile Image and Logout Link -->
-        <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="16dp">
+        <!-- Wrapped in CardView to make it stand out -->
+        <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="24dp" android:layout_marginTop="4dp" android:layout_marginLeft="2dp" android:layout_marginRight="2dp" app:cardBackgroundColor="@color/surface_variant" app:cardCornerRadius="25dp" app:cardElevation="4dp" >
 
-            <!-- Profile Image -->
-            <androidx.cardview.widget.CardView android:id="@+id/profile_image_card" android:layout_width="120dp" android:layout_height="120dp" app:cardCornerRadius="60dp" android:layout_marginStart="40dp" app:cardBackgroundColor="?attr/colorSurface">
+            <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="16dp">
 
-                <ImageView android:id="@+id/profile_image" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@mipmap/ic_launcher" android:scaleType="centerCrop" android:clickable="true" android:focusable="true" />
+                <!-- Profile Image -->
+                <androidx.cardview.widget.CardView android:id="@+id/profile_image_card" android:layout_width="120dp" android:layout_height="120dp" app:cardCornerRadius="60dp" android:layout_marginStart="24dp" app:cardBackgroundColor="@color/surface_variant" app:cardElevation="2dp">
 
-                <!-- Camera icon overlay -->
-                <ImageView
-                    android:id="@+id/camera_icon"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="bottom|center"
-                    android:background="@drawable/circle_background"
-                    android:padding="4dp"
-                    android:src="@android:drawable/ic_menu_camera" />
-            </androidx.cardview.widget.CardView>
+                    <ImageView android:id="@+id/profile_image" android:layout_width="match_parent" android:layout_height="match_parent" android:src="@mipmap/ic_launcher" android:scaleType="centerCrop" android:clickable="true" android:focusable="true" />
 
-            <!-- Logout Link -->
-            <TextView android:id="@+id/txt_logout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/logout" android:textColor="@color/error" android:textSize="16sp" android:padding="8dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="16dp" android:clickable="true" android:focusable="true" android:drawableStart="@android:drawable/ic_lock_power_off" android:drawablePadding="4dp" />
-        </RelativeLayout>
+                    <!-- Camera icon overlay -->
+                    <ImageView android:id="@+id/camera_icon" android:layout_width="24dp" android:layout_height="24dp" android:layout_gravity="bottom|center" android:background="@drawable/circle_background" android:padding="4dp" android:src="@android:drawable/ic_menu_camera" />
+                </androidx.cardview.widget.CardView>
+
+                <!-- Logout Link -->
+                <TextView android:id="@+id/txt_logout" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/logout" android:textColor="@color/error" android:textSize="16sp" android:padding="12dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:layout_marginEnd="16dp" android:clickable="true" android:focusable="true" android:drawableStart="@android:drawable/ic_lock_power_off" android:drawablePadding="8dp" android:background="?attr/selectableItemBackground" />
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
 
         <!-- Username (Not editable) -->
         <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:boxBackgroundMode="outline" app:boxStrokeColor="@color/input_border" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp" android:hint="@string/username">

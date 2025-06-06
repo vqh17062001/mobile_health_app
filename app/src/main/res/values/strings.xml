@@ -142,4 +142,8 @@
     <string name="feature_add_manager_description">Add manager ID to share your health information with them</string>
     <string name="feature_view_health_title">View Health Info</string>
     <string name="feature_view_health_description">View your health information and check-up history</string>
+    <string name="feature_sync_health_data_title" >Sync your health data</string>
+    <string name="feature_sync_health_data_description" > Sync your health data with the server for track your health from any device</string>
+    <string name="feature_device_inf_title" > Device Information</string>
+    <string name="feature_device_inf_description" > View your device information </string>
 </resources>

@@ -31,6 +31,10 @@ class FeaturesFragment : Fragment() {
     // Feature IDs
     private val FEATURE_ADD_MANAGER = "add_manager"
     private val FEATURE_VIEW_HEALTH = "view_health"
+    private val FEATURE_DEVICE_INF = "device_inf"
+    private val FEATURE_SYNC_HEALTH_DATA = "sync_health_data"
+
+
 
     private val TAG = "FeaturesFragment"
 
@@ -103,7 +107,32 @@ class FeaturesFragment : Fragment() {
                 description = getString(R.string.feature_view_health_description),
                 iconResourceId = android.R.drawable.ic_menu_view,
                 action = "view_health"
-            )
+            ),
+            Feature(
+                id = FEATURE_SYNC_HEALTH_DATA,
+                title = getString(R.string.feature_sync_health_data_title),
+                description = getString(R.string.feature_sync_health_data_description),
+                iconResourceId = if ((requireContext().resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_NO) {
+                    R.drawable.icons8_sync  // Light mode icon
+                } else {
+                    R.drawable.icons8_sync_dark// Dark mode icon
+                },
+                action = "sync_health_data"
+            ),
+            Feature(
+                id = FEATURE_DEVICE_INF,
+                title = getString(R.string.feature_device_inf_title),
+                description = getString(R.string.feature_device_inf_description),
+                iconResourceId = if ((requireContext().resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_NO) {
+                    R.drawable.icons8_device_information  // Light mode icon
+                } else {
+                    R.drawable.icons8_device_information_dark // Dark mode icon
+                },
+                action = "device_inf"
+        )
+
         )
         
         // Set up adapter with click listener

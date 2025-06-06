@@ -148,4 +148,8 @@
     <string name="feature_add_manager_description">Thêm ID người quản lý để chia sẻ thông tin sức khỏe của bạn tới họ</string>
     <string name="feature_view_health_title">Xem thông tin sức khỏe</string>
     <string name="feature_view_health_description">Xem thông tin sức khỏe và lịch sử kiểm tra của bạn</string>
+    <string name="feature_sync_health_data_title">Đồng bộ dữ liệu sức khỏe</string>
+    <string name="feature_sync_health_data_description">Đồng bộ dữ liệu sức khỏe của bạn với máy chủ để theo dõi sức khỏe từ bất kỳ thiết bị nào</string>
+    <string name="feature_device_inf_title">Thông tin thiết bị</string>
+    <string name="feature_device_inf_description">Xem thông tin thiết bị của bạn</string>
 </resources>
