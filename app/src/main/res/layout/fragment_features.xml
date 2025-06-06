@@ -4,7 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:background="@android:color/white">
 
     <!-- Header -->
-    <TextView android:id="@+id/tvFeaturesHeader" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/features" android:textSize="24sp" android:textStyle="bold" android:textColor="@color/primary" android:gravity="center" android:padding="16dp" android:background="@android:color/white" android:elevation="4dp" />
+    <TextView
+        android:id="@+id/tvFeaturesHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/features"
+        android:textColor="@color/primary"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <!-- GridView for features -->
     <GridView android:id="@+id/gridViewFeatures" android:layout_width="match_parent" android:layout_height="match_parent" android:numColumns="1" android:verticalSpacing="12dp" android:horizontalSpacing="12dp" android:padding="16dp" android:clipToPadding="false" android:scrollbarStyle="outsideOverlay" />
