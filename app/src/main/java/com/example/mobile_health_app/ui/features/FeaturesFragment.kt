@@ -71,7 +71,7 @@ class FeaturesFragment : Fragment() {
                 // This will show visual feedback that something happened
                 view.isPressed = true
                 
-                Toast.makeText(context, "Feature selected: ${featuresList[position].title}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.feature_selected, featuresList[position].title), Toast.LENGTH_SHORT).show()
                 handleFeatureClick(featuresList[position])
             }
         }
@@ -83,16 +83,16 @@ class FeaturesFragment : Fragment() {
         featuresList = listOf(
             Feature(
                 id = FEATURE_ADD_MANAGER,
-                title = "Thêm người quản lý",
-                description = "Thêm ID người quản lý để chia sẻ thông tin sức khỏe của bạn tới họ",
+                title = getString(R.string.feature_add_manager_title),
+                description = getString(R.string.feature_add_manager_description),
                 iconResourceId = R.drawable.icons8_add_administrator,
                 action = "add_manager"
             ),
             // Add another feature for testing
             Feature(
                 id = "view_health",
-                title = "Xem thông tin sức khỏe",
-                description = "Xem thông tin sức khỏe và lịch sử kiểm tra của bạn",
+                title = getString(R.string.feature_view_health_title),
+                description = getString(R.string.feature_view_health_description),
                 iconResourceId = android.R.drawable.ic_menu_view,
                 action = "view_health"
             )
@@ -104,7 +104,7 @@ class FeaturesFragment : Fragment() {
             featuresList,
             onItemClickListener = { feature ->
                 Log.d(TAG, "Adapter item clicked: ${feature.id}")
-                Toast.makeText(requireContext(), "Clicked: ${feature.title}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.feature_selected, feature.title), Toast.LENGTH_SHORT).show()
                 handleFeatureClick(feature)
             }
         )
@@ -126,7 +126,7 @@ class FeaturesFragment : Fragment() {
                 showAddManagerDialog()
             }
             else -> {
-                Toast.makeText(context, "Feature not implemented: ${feature.title}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.feature_not_implemented, feature.title), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -139,23 +139,23 @@ class FeaturesFragment : Fragment() {
         val inputManagerId = dialogView.findViewById<TextInputEditText>(R.id.editTextManagerId)
         
         AlertDialog.Builder(requireContext())
-            .setTitle("Thêm người quản lý")
+            .setTitle(getString(R.string.add_manager_title))
             .setView(dialogView)
-            .setPositiveButton("Xác nhận") { dialog, _ ->
+            .setPositiveButton(getString(R.string.confirm)) { dialog, _ ->
                 val managerId = inputManagerId.text.toString().trim()
                 if (managerId.isNotEmpty()) {
                     // Validate the manager ID
                     if (isValidObjectId(managerId)) {
                         updateManagerId(managerId)
                     } else {
-                        Toast.makeText(requireContext(), "ID người quản lý không hợp lệ", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), getString(R.string.invalid_manager_id), Toast.LENGTH_SHORT).show()
                     }
                 } else {
-                    Toast.makeText(requireContext(), "ID người quản lý không được để trống", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.manager_id_empty), Toast.LENGTH_SHORT).show()
                 }
                 dialog.dismiss()
             }
-            .setNegativeButton("Hủy") { dialog, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
             .create()
@@ -194,13 +194,13 @@ class FeaturesFragment : Fragment() {
                 } else {
                     // If user data not loaded yet, load it first
                     userViewModel.loadUserById(userId)
-                    Toast.makeText(requireContext(), "Vui lòng thử lại sau khi dữ liệu người dùng được tải", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.try_after_user_data_loaded), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_occurred, e.message), Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(requireContext(), "Không tìm thấy ID người dùng", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.user_id_not_found), Toast.LENGTH_SHORT).show()
         }
     }
     

@@ -116,11 +116,11 @@ class ChangePasswordFragment : Fragment() {
         
         // Add score-based assessment
         when (strength.score) {
-            0 -> feedback.append("Mật khẩu rất yếu! ")
-            1 -> feedback.append("Mật khẩu yếu! ")
-            2 -> feedback.append("Mật khẩu trung bình. ")
-            3 -> feedback.append("Mật khẩu mạnh. ")
-            4 -> feedback.append("Mật khẩu rất mạnh! ")
+            0 -> feedback.append(getString(R.string.password_very_weak))
+            1 -> feedback.append(getString(R.string.password_weak))
+            2 -> feedback.append(getString(R.string.password_medium))
+            3 -> feedback.append(getString(R.string.password_strong))
+            4 -> feedback.append(getString(R.string.password_very_strong))
         }
         
         // Add specific feedback from the library
@@ -130,7 +130,7 @@ class ChangePasswordFragment : Fragment() {
         }
         
         if (zxcvbnFeedback.suggestions.isNotEmpty()) {
-            feedback.append(" Gợi ý: ")
+            feedback.append(" ").append(getString(R.string.password_suggestions))
             feedback.append(zxcvbnFeedback.suggestions.joinToString(". "))
         }
         
@@ -174,13 +174,13 @@ class ChangePasswordFragment : Fragment() {
         
         // Validate current password
         if (currentPassword.isEmpty()) {
-            binding.tilCurrentPassword.error = "Vui lòng nhập mật khẩu hiện tại"
+            binding.tilCurrentPassword.error = getString(R.string.current_password_required)
             isValid = false
         }
         
         // Validate new password with strength check
         if (newPassword.isEmpty()) {
-            binding.tilNewPassword.error = "Vui lòng nhập mật khẩu mới"
+            binding.tilNewPassword.error = getString(R.string.new_password_required)
             binding.tilNewPassword.helperText = null
             isValid = false
         } else {
@@ -198,7 +198,7 @@ class ChangePasswordFragment : Fragment() {
             // Require at least a medium-strength password (score >= 2)
             if (strength.score < 2) {
                 // Show error for weak passwords
-                binding.edtNewPassword.error = "Mật khẩu quá yếu"
+                binding.edtNewPassword.error = getString(R.string.password_too_weak)
                 binding.tilNewPassword.helperText = feedback
                 binding.tilNewPassword.setHelperTextColor(android.content.res.ColorStateList.valueOf(textColor))
                 isValid = false
@@ -212,10 +212,10 @@ class ChangePasswordFragment : Fragment() {
         
         // Validate confirm password
         if (confirmPassword.isEmpty()) {
-            binding.tilConfirmPassword.error = "Vui lòng xác nhận mật khẩu mới"
+            binding.tilConfirmPassword.error = getString(R.string.confirm_password_required)
             isValid = false
         } else if (confirmPassword != newPassword) {
-            binding.tilConfirmPassword.error = "Mật khẩu xác nhận không khớp"
+            binding.tilConfirmPassword.error = getString(R.string.passwords_not_match)
             isValid = false
         }
         
@@ -253,7 +253,7 @@ class ChangePasswordFragment : Fragment() {
                 }
             } catch (e: Exception) {
                 binding.progressBarPassword.visibility = View.GONE
-                Toast.makeText(requireContext(), "Lỗi: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_occurred, e.message), Toast.LENGTH_SHORT).show()
             }
         } else {
             Toast.makeText(requireContext(), "Không tìm thấy ID người dùng", Toast.LENGTH_SHORT).show()
@@ -272,7 +272,7 @@ class ChangePasswordFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             userViewModel.passwordChangeSuccessful.collectLatest { success ->
                 if (success) {
-                    Toast.makeText(requireContext(), "Đổi mật khẩu thành công", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.password_change_success), Toast.LENGTH_SHORT).show()
                     userViewModel.resetPasswordChangeStatus()
                     findNavController().navigateUp()
                 }

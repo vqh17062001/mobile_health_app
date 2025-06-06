@@ -162,7 +162,7 @@ class LoginActivity : AppCompatActivity() {
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 userViewModel.loginUser(username, password)
             } else {
-                Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.please_enter_username_password), Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -177,7 +177,7 @@ class LoginActivity : AppCompatActivity() {
         // Handle Forgot Password click
         binding.txtForgotPassword.setOnClickListener {
             // Handle forgot password action
-            Toast.makeText(this, "Forgot Password clicked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.forgot_password_clicked), Toast.LENGTH_SHORT).show()
         }
     }
 

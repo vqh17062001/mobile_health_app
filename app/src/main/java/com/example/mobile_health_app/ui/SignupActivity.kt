@@ -65,7 +65,7 @@ class SignupActivity : AppCompatActivity() {
         lifecycleScope.launch {
             userViewModel.registrationSuccess.collectLatest { success ->
                 if (success) {
-                    Toast.makeText(this@SignupActivity, "Registration successful!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@SignupActivity, getString(R.string.registration_successful), Toast.LENGTH_SHORT).show()
                     userViewModel.resetRegistrationState()
                     
                     // Navigate to Login screen after successful registration
@@ -183,11 +183,11 @@ class SignupActivity : AppCompatActivity() {
         
         // Add score-based assessment
         when (strength.score) {
-            0 -> feedback.append("Very weak password! ")
-            1 -> feedback.append("Weak password! ")
-            2 -> feedback.append("Medium strength password. ")
-            3 -> feedback.append("Strong password. ")
-            4 -> feedback.append("Very strong password! ")
+            0 -> feedback.append(getString(R.string.password_very_weak))
+            1 -> feedback.append(getString(R.string.password_weak))
+            2 -> feedback.append(getString(R.string.password_medium))
+            3 -> feedback.append(getString(R.string.password_strong))
+            4 -> feedback.append(getString(R.string.password_very_strong))
         }
         
         // Add specific feedback from the library
@@ -197,7 +197,7 @@ class SignupActivity : AppCompatActivity() {
         }
         
         if (zxcvbnFeedback.suggestions.isNotEmpty()) {
-            feedback.append(" Suggestions: ")
+            feedback.append(" ").append(getString(R.string.password_suggestions))
             feedback.append(zxcvbnFeedback.suggestions.joinToString(". "))
         }
         
@@ -260,46 +260,48 @@ class SignupActivity : AppCompatActivity() {
         with(binding) {
             // Check full name
             if (edtFullName.text.toString().trim().isEmpty()) {
-                edtFullName.error = "Full name required"
+                edtFullName.error = getString(R.string.name_required)
                 isValid = false
             }
             
             // Check gender
             if (edtGender.text.toString().trim().isEmpty()) {
-                edtGender.error = "Gender required"
+                edtGender.error = getString(R.string.gender_required)
                 isValid = false
             }
             
             // Check birthday
             if (edtBirthday.text.toString().trim().isEmpty()) {
-                edtBirthday.error = "Birthday required"
+                edtBirthday.error = getString(R.string.birthday_required)
                 isValid = false
             }
             
             // Check phone
             if (edtPhone.text.toString().trim().isEmpty()) {
-                edtPhone.error = "Phone required"
+                edtPhone.error = getString(R.string.phone_required)
                 isValid = false
             }
             
             // Check email
             val email = edtEmail.text.toString().trim()
             if (email.isEmpty()) {
-                edtEmail.error = "Email required"
+                edtEmail.error = getString(R.string.email_required)
                 isValid = false
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                edtEmail.error = "Please enter a valid email address"
+                edtEmail.error = getString(R.string.invalid_email)
                 isValid = false
             }
             
             // Check username
             if (edtUsername.text.toString().trim().isEmpty()) {
-                edtUsername.error = "Username required"
+                edtUsername.error = getString(R.string.username_required)
                 isValid = false
-            }            // Check password
+            }
+            
+            // Check password
             val password = edtPassword.text.toString()
             if (password.isEmpty()) {
-                edtPassword.error = "Password required"
+                edtPassword.error = getString(R.string.password_required)
                 passwordLayout.helperText = null
                 isValid = false
             } else {
@@ -317,7 +319,7 @@ class SignupActivity : AppCompatActivity() {
                 // Require at least a medium-strength password (score >= 2)
                 if (strength.score < 2) {
                     // Show error for weak passwords
-                    edtPassword.error = "Password too weak"
+                    edtPassword.error = getString(R.string.password_too_weak)
                     passwordLayout.helperText = feedback
                     passwordLayout.setHelperTextColor(android.content.res.ColorStateList.valueOf(textColor))
                     isValid = false
@@ -332,10 +334,10 @@ class SignupActivity : AppCompatActivity() {
             // Check confirm password
             val confirmPassword = edtConfirmPassword.text.toString()
             if (confirmPassword.isEmpty()) {
-                edtConfirmPassword.error = "Please confirm your password"
+                edtConfirmPassword.error = getString(R.string.confirm_password_required)
                 isValid = false
             } else if (password != confirmPassword) {
-                edtConfirmPassword.error = "Passwords do not match"
+                edtConfirmPassword.error = getString(R.string.passwords_not_match)
                 isValid = false
             }
         }

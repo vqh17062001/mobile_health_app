@@ -158,12 +158,12 @@ class AccountFragment : Fragment() {
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
                 // Show explanation why camera permission is needed
                 AlertDialog.Builder(requireContext())
-                    .setTitle("Camera Permission Required")
-                    .setMessage("This app needs camera access to take profile pictures")
-                    .setPositiveButton("Allow") { _, _ ->
+                    .setTitle(getString(R.string.camera_permission_title))
+                    .setMessage(getString(R.string.camera_permission_message))
+                    .setPositiveButton(getString(R.string.allow)) { _, _ ->
                         requestPermissionLauncher.launch(Manifest.permission.CAMERA)
                     }
-                    .setNegativeButton("Cancel", null)
+                    .setNegativeButton(getString(R.string.cancel), null)
                     .create()
                     .show()
             }
@@ -175,9 +175,13 @@ class AccountFragment : Fragment() {
     }
     
     private fun showImageSourceDialog() {
-        val options = arrayOf("Take Photo", "Choose from Gallery", "Cancel")
+        val options = arrayOf(
+            getString(R.string.take_photo),
+            getString(R.string.choose_gallery),
+            getString(R.string.cancel)
+        )
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Profile Picture")
+            .setTitle(getString(R.string.image_source_title))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> takePhotoWithCamera()
@@ -251,7 +255,7 @@ class AccountFragment : Fragment() {
             e.printStackTrace()
             Toast.makeText(
                 requireContext(),
-                "Failed to save profile image",
+                getString(R.string.failed_save_profile_image),
                 Toast.LENGTH_SHORT
             ).show()
         }
@@ -303,7 +307,7 @@ class AccountFragment : Fragment() {
             } catch (e: Exception) {
                 Toast.makeText(
                     requireContext(),
-                    "Logout failed: ${e.message}",
+                    getString(R.string.logout_failed, e.message),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -383,10 +387,10 @@ class AccountFragment : Fragment() {
                 // Load user data
                 userViewModel.loadUserById(userId)
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Không thể tải thông tin người dùng: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.cannot_load_user_info, e.message), Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(requireContext(), "Không tìm thấy ID người dùng", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.user_id_not_found), Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -437,35 +441,35 @@ class AccountFragment : Fragment() {
         with(binding) {
             // Check full name
             if (edtFullName.text.toString().trim().isEmpty()) {
-                edtFullName.error = "Vui lòng nhập họ tên"
+                edtFullName.error = getString(R.string.name_required)
                 isValid = false
             }
             
             // Check email
             val email = edtEmail.text.toString().trim()
             if (email.isEmpty()) {
-                edtEmail.error = "Vui lòng nhập email"
+                edtEmail.error = getString(R.string.email_required)
                 isValid = false
             } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                edtEmail.error = "Email không hợp lệ"
+                edtEmail.error = getString(R.string.invalid_email)
                 isValid = false
             }
             
             // Check phone
             if (edtPhone.text.toString().trim().isEmpty()) {
-                edtPhone.error = "Vui lòng nhập số điện thoại"
+                edtPhone.error = getString(R.string.phone_required)
                 isValid = false
             }
             
             // Check gender
             if (edtGender.text.toString().trim().isEmpty()) {
-                edtGender.error = "Vui lòng chọn giới tính"
+                edtGender.error = getString(R.string.gender_required)
                 isValid = false
             }
             
             // Check birthday
             if (edtBirthday.text.toString().trim().isEmpty()) {
-                edtBirthday.error = "Vui lòng chọn ngày sinh"
+                edtBirthday.error = getString(R.string.birthday_required)
                 isValid = false
             }
         }
@@ -513,7 +517,7 @@ class AccountFragment : Fragment() {
                     userViewModel.updateUserProfile(updatedUser)
                 }
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Cập nhật thất bại: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.update_failed, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }

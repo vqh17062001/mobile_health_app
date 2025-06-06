@@ -81,4 +81,61 @@
     <string name="confirm_password">Подтвердите пароль</string>
     <string name="save_changes">Сохранить изменения</string>
     <string name="logout_confirmation_message">Вы уверены, что хотите выйти из системы?</string>
+
+    <!-- Toast Messages -->
+    <string name="registration_successful">Регистрация прошла успешно!</string>
+    <string name="please_enter_username_password">Пожалуйста, введите имя пользователя и пароль</string>
+    <string name="forgot_password_clicked">Нажато "Забыли пароль"</string>
+    <string name="feature_not_implemented">Функция не реализована: %1$s</string>
+    <string name="feature_selected">Выбрана функция: %1$s</string>
+    <string name="invalid_manager_id">ID менеджера недействителен</string>
+    <string name="manager_id_empty">ID менеджера не может быть пустым</string>
+    <string name="user_id_not_found">ID пользователя не найден</string>
+    <string name="try_after_user_data_loaded">Пожалуйста, повторите попытку после загрузки данных пользователя</string>
+    <string name="error_occurred">Ошибка: %1$s</string>
+    <string name="failed_save_profile_image">Не удалось сохранить изображение профиля</string>
+    <string name="camera_permission_required">Для съемки фотографий требуется разрешение на использование камеры</string>
+    <string name="logout_failed">Ошибка выхода из системы: %1$s</string>
+    <string name="cannot_load_user_info">Не удается загрузить информацию о пользователе: %1$s</string>
+    <string name="update_failed">Ошибка обновления: %1$s</string>
+    <string name="password_change_success">Пароль успешно изменен</string>
+
+    <!-- Form Validation Messages -->
+    <string name="name_required">Требуется полное имя</string>
+    <string name="gender_required">Требуется пол</string>
+    <string name="birthday_required">Требуется дата рождения</string>
+    <string name="phone_required">Требуется телефон</string>
+    <string name="email_required">Требуется электронная почта</string>
+    <string name="invalid_email">Пожалуйста, введите действительный адрес электронной почты</string>
+    <string name="username_required">Требуется имя пользователя</string>
+    <string name="password_required">Требуется пароль</string>
+    <string name="password_too_weak">Слишком слабый пароль</string>
+    <string name="confirm_password_required">Пожалуйста, подтвердите свой пароль</string>
+    <string name="passwords_not_match">Пароли не совпадают</string>
+    <string name="current_password_required">Пожалуйста, введите текущий пароль</string>
+    <string name="new_password_required">Пожалуйста, введите новый пароль</string>
+
+    <!-- Password Strength -->
+    <string name="password_very_weak">Очень слабый пароль! </string>
+    <string name="password_weak">Слабый пароль! </string>
+    <string name="password_medium">Пароль средней сложности. </string>
+    <string name="password_strong">Сильный пароль. </string>
+    <string name="password_very_strong">Очень сильный пароль! </string>
+    <string name="password_suggestions">Предложения: </string>
+
+    <!-- Dialog Titles -->
+    <string name="camera_permission_title">Требуется разрешение на использование камеры</string>
+    <string name="camera_permission_message">Это приложение требует доступ к камере для создания фотографий профиля</string>
+    <string name="allow">Разрешить</string>
+    <string name="image_source_title">Выберите изображение профиля</string>
+    <string name="take_photo">Сделать фото</string>
+    <string name="choose_gallery">Выбрать из галереи</string>
+    <string name="add_manager_title">Добавить менеджера</string>
+    <string name="confirm">Подтвердить</string>
+
+    <!-- Feature titles and descriptions -->
+    <string name="feature_add_manager_title">Добавить менеджера</string>
+    <string name="feature_add_manager_description">Добавьте ID менеджера, чтобы поделиться с ним информацией о здоровье</string>
+    <string name="feature_view_health_title">Просмотр информации о здоровье</string>
+    <string name="feature_view_health_description">Просмотр информации о здоровье и истории проверок</string>
 </resources>

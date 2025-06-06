@@ -92,6 +92,60 @@
     <string name="logout_confirmation_message">"Bạn có chắc muốn đăng xuất ? "</string>
     <!-- cancel string already exists in Vietnamese -->
 
-    <!-- Additional array for direct reference, if needed -->
+    <!-- Toast Messages -->
+    <string name="registration_successful">Đăng ký thành công!</string>
+    <string name="please_enter_username_password">Vui lòng nhập tên đăng nhập và mật khẩu</string>
+    <string name="forgot_password_clicked">Đã nhấn Quên mật khẩu</string>
+    <string name="feature_not_implemented">Chức năng chưa được thực hiện: %1$s</string>
+    <string name="feature_selected">Đã chọn chức năng: %1$s</string>
+    <string name="invalid_manager_id">ID người quản lý không hợp lệ</string>
+    <string name="manager_id_empty">ID người quản lý không được để trống</string>
+    <string name="user_id_not_found">Không tìm thấy ID người dùng</string>
+    <string name="try_after_user_data_loaded">Vui lòng thử lại sau khi dữ liệu người dùng được tải</string>
+    <string name="error_occurred">Lỗi: %1$s</string>
+    <string name="failed_save_profile_image">Không thể lưu ảnh hồ sơ</string>
+    <string name="camera_permission_required">Cần quyền truy cập camera để chụp ảnh</string>
+    <string name="logout_failed">Đăng xuất thất bại: %1$s</string>
+    <string name="cannot_load_user_info">Không thể tải thông tin người dùng: %1$s</string>
+    <string name="update_failed">Cập nhật thất bại: %1$s</string>
+    <string name="password_change_success">Đổi mật khẩu thành công</string>
 
+    <!-- Form Validation Messages -->
+    <string name="name_required">Vui lòng nhập họ tên</string>
+    <string name="gender_required">Vui lòng chọn giới tính</string>
+    <string name="birthday_required">Vui lòng chọn ngày sinh</string>
+    <string name="phone_required">Vui lòng nhập số điện thoại</string>
+    <string name="email_required">Vui lòng nhập email</string>
+    <string name="invalid_email">Email không hợp lệ</string>
+    <string name="username_required">Vui lòng nhập tên đăng nhập</string>
+    <string name="password_required">Vui lòng nhập mật khẩu</string>
+    <string name="password_too_weak">Mật khẩu quá yếu</string>
+    <string name="confirm_password_required">Vui lòng xác nhận mật khẩu</string>
+    <string name="passwords_not_match">Mật khẩu xác nhận không khớp</string>
+    <string name="current_password_required">Vui lòng nhập mật khẩu hiện tại</string>
+    <string name="new_password_required">Vui lòng nhập mật khẩu mới</string>
+
+    <!-- Password Strength -->
+    <string name="password_very_weak">Mật khẩu rất yếu! </string>
+    <string name="password_weak">Mật khẩu yếu! </string>
+    <string name="password_medium">Mật khẩu trung bình. </string>
+    <string name="password_strong">Mật khẩu mạnh. </string>
+    <string name="password_very_strong">Mật khẩu rất mạnh! </string>
+    <string name="password_suggestions">Gợi ý: </string>
+
+    <!-- Dialog Titles -->
+    <string name="camera_permission_title">Yêu cầu quyền truy cập camera</string>
+    <string name="camera_permission_message">Ứng dụng cần quyền truy cập camera để chụp ảnh</string>
+    <string name="allow">Cho phép</string>
+    <string name="image_source_title">Chọn ảnh hồ sơ</string>
+    <string name="take_photo">Chụp ảnh</string>
+    <string name="choose_gallery">Chọn từ thư viện</string>
+    <string name="add_manager_title">Thêm người quản lý</string>
+    <string name="confirm">Xác nhận</string>
+
+    <!-- Feature titles and descriptions -->
+    <string name="feature_add_manager_title">Thêm người quản lý</string>
+    <string name="feature_add_manager_description">Thêm ID người quản lý để chia sẻ thông tin sức khỏe của bạn tới họ</string>
+    <string name="feature_view_health_title">Xem thông tin sức khỏe</string>
+    <string name="feature_view_health_description">Xem thông tin sức khỏe và lịch sử kiểm tra của bạn</string>
 </resources>
