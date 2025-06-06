@@ -30,6 +30,8 @@ class FeaturesFragment : Fragment() {
     
     // Feature IDs
     private val FEATURE_ADD_MANAGER = "add_manager"
+    private val FEATURE_VIEW_HEALTH = "view_health"
+
     private val TAG = "FeaturesFragment"
 
     override fun onCreateView(
@@ -76,7 +78,8 @@ class FeaturesFragment : Fragment() {
             }
         }
     }
-    
+
+    // Initialize features and set up the adapter
     private fun setupFeatures() {
         Log.d(TAG, "setupFeatures: Initializing features list")
         // Create features list
@@ -85,12 +88,17 @@ class FeaturesFragment : Fragment() {
                 id = FEATURE_ADD_MANAGER,
                 title = getString(R.string.feature_add_manager_title),
                 description = getString(R.string.feature_add_manager_description),
-                iconResourceId = R.drawable.icons8_add_administrator,
+                iconResourceId = if ((requireContext().resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_NO) {
+                    R.drawable.icons8_add_administrator  // Light mode icon
+                } else {
+                    R.drawable.icons8_add_administrator_dark  // Dark mode icon
+                },
                 action = "add_manager"
             ),
             // Add another feature for testing
             Feature(
-                id = "view_health",
+                id = FEATURE_VIEW_HEALTH,
                 title = getString(R.string.feature_view_health_title),
                 description = getString(R.string.feature_view_health_description),
                 iconResourceId = android.R.drawable.ic_menu_view,
@@ -117,7 +125,7 @@ class FeaturesFragment : Fragment() {
         
         Log.d(TAG, "setupFeatures: Features list size: ${featuresList.size}")
     }
-    
+    //// Handle feature click events
     private fun handleFeatureClick(feature: Feature) {
         Log.d(TAG, "handleFeatureClick: Feature clicked: ${feature.id}")
         when(feature.id) {
