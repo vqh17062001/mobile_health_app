@@ -165,6 +165,27 @@ class UserViewModel : ViewModel() {
         }
     }
     
+    // New method specifically for updating managerIds
+    fun updateUserManagerIds(user: User) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val success = repo.updateUserManagerIds(user)
+                if (success) {
+                    // Update current user in memory
+                    _currentUser.value = user
+                    _errorMessage.value = "Cập nhật người quản lý thành công!"
+                } else {
+                    _errorMessage.value = "Cập nhật người quản lý thất bại!"
+                }
+            } catch (e: Exception) {
+                _errorMessage.value = "Lỗi cập nhật: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    
     // Reset password change status
     fun resetPasswordChangeStatus() {
         _passwordChangeSuccessful.value = false

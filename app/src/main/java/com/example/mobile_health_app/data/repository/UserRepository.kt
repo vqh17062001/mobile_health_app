@@ -25,7 +25,7 @@ import org.mongodb.kbson.*
 @OptIn(ExperimentalKBsonSerializerApi::class)
 class UserRepository {
     private val TAG = "UserRepository"
-    
+
 
     val mongoClient = "mongodb-atlas"
     val databaseName = "health_monitor"
@@ -36,7 +36,7 @@ class UserRepository {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.fold("") { str, it -> str + "%02x".format(it) }
     }
-    
+
     // Helper method to get current ISO timestamp
     private fun getCurrentTimestamp(): String {
         val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
@@ -55,7 +55,7 @@ class UserRepository {
             val query = BsonDocument("username", BsonString(username))
 
             val user = users.findOne(query)
-            
+
             return@withContext user != null
         } catch (e: Exception) {
             Log.e(TAG, "Error checking username: ${e.message}")
@@ -81,10 +81,10 @@ class UserRepository {
                 Log.w(TAG, "Username already exists: $username")
                 return@withContext false
             }
-            
+
             val timestamp = getCurrentTimestamp()
             val hashedPassword = hashPassword(password)
-            
+
             val user = User(
                 _id = ObjectId(),
                 username = username,
@@ -100,7 +100,7 @@ class UserRepository {
                 createdAt = timestamp,
                 updatedAt = timestamp
             )
-            
+
             insertUser(user)
             return@withContext true
         } catch (e: Exception) {
@@ -118,7 +118,7 @@ class UserRepository {
             val users = db.collection("users")
             val timestamp = getCurrentTimestamp()
             val doc = BsonDocument().apply {
-                                   // ObjectId
+                // ObjectId
                 put("username", BsonString(user.username))
                 put("passwordHash", BsonString(user.passwordHash))
                 put("fullName", BsonString(user.fullName))
@@ -128,7 +128,7 @@ class UserRepository {
                 put("department", BsonString(user.department))
                 put("email", BsonString(user.email))
                 put("phone", BsonString(user.phone))
-                put("managerIds", BsonString(user.managerIds) ) // List<ObjectId>
+                put("managerIds", BsonString(user.managerIds)) // List<ObjectId>
                 put("createdAt", BsonString(timestamp))
                 put("updatedAt", BsonString(timestamp))
             }
@@ -151,29 +151,29 @@ class UserRepository {
             val mgcli = userAuth.mongoClient(mongoClient)
             val db = mgcli.database(databaseName)
             val users = db.collection(collectionName)
-            
+
             val hashedPassword = hashPassword(password)
             val query = BsonDocument().apply {
                 put("username", BsonString(username))
-                put("passwordHash",BsonString(hashedPassword))
+                put("passwordHash", BsonString(hashedPassword))
             }
-            
+
             val doc = users.findOne(query)
             if (doc != null) {
 
                 // Convert Document to User
                 return@withContext User(
                     _id = doc["_id"]!!.asObjectId(),
-                    username = doc["username"] .toString(),
-                    passwordHash = doc["passwordHash"] .toString(),
-                    fullName = doc["fullName"] .toString(),
-                    gender = doc["gender"] .toString(),
-                    Dob = doc["Dob"] .toString(),
-                    role = doc["role"] .toString(),
-                    department = doc["department"] .toString(),
-                    email = doc["email"] .toString(),
-                    phone = doc["phone"] .toString(),
-                    createdAt = doc["createdAt"] .toString(),
+                    username = doc["username"].toString(),
+                    passwordHash = doc["passwordHash"].toString(),
+                    fullName = doc["fullName"].toString(),
+                    gender = doc["gender"].toString(),
+                    Dob = doc["Dob"].toString(),
+                    role = doc["role"].toString(),
+                    department = doc["department"].toString(),
+                    email = doc["email"].toString(),
+                    phone = doc["phone"].toString(),
+                    createdAt = doc["createdAt"].toString(),
                     updatedAt = doc["updatedAt"].toString()
                 )
             }
@@ -192,10 +192,10 @@ class UserRepository {
             val mgcli = userAuth.mongoClient(mongoClient)
             val db = mgcli.database(databaseName)
             val users = db.collection(collectionName)
-            
+
             val query = BsonDocument("_id", userId)
             val doc = users.findOne(query)
-            
+
             if (doc != null) {
                 return@withContext User(
                     _id = doc["_id"]!!.asObjectId(),
@@ -227,7 +227,7 @@ class UserRepository {
             val mgcli = userAuth.mongoClient(mongoClient)
             val db = mgcli.database(databaseName)
             val users = db.collection(collectionName)
-            
+
             val query = BsonDocument("_id", user._id)
             val update = BsonDocument("\$set", BsonDocument().apply {
                 put("fullName", BsonString(user.fullName))
@@ -238,7 +238,7 @@ class UserRepository {
                 put("phone", BsonString(user.phone))
                 put("updatedAt", BsonString(user.updatedAt))
             })
-            
+
             val result = users.updateOne(query, update)
             Log.d(TAG, "User updated successfully: ${user.username}")
 
@@ -250,35 +250,39 @@ class UserRepository {
     }
 
     // New method to change user password
-    suspend fun changeUserPassword(userId: ObjectId, currentPassword: String, newPassword: String): Boolean = withContext(Dispatchers.IO) {
+    suspend fun changeUserPassword(
+        userId: ObjectId,
+        currentPassword: String,
+        newPassword: String
+    ): Boolean = withContext(Dispatchers.IO) {
         try {
             val app = RealmConfig.app
             val userAuth = app.login(Credentials.anonymous())
             val mgcli = userAuth.mongoClient(mongoClient)
             val db = mgcli.database(databaseName)
             val users = db.collection(collectionName)
-            
+
             // First, get the user to verify the current password
             val query = BsonDocument("_id", userId)
             val user = users.findOne(query)
-            
+
             if (user != null) {
                 // Hash the provided current password
                 val hashedCurrentPassword = hashPassword(currentPassword)
                 val storedPasswordHash = user["passwordHash"].toString()
-                
+
                 // Check if the current password matches
                 if (storedPasswordHash.contains(hashedCurrentPassword)) {
                     // Hash the new password
                     val hashedNewPassword = hashPassword(newPassword)
                     val timestamp = getCurrentTimestamp()
-                    
+
                     // Update the password hash
                     val update = BsonDocument("\$set", BsonDocument().apply {
                         put("passwordHash", BsonString(hashedNewPassword))
                         put("updatedAt", BsonString(timestamp))
                     })
-                    
+
                     val result = users.updateOne(query, update)
                     Log.d(TAG, "Password changed successfully for user ID: $userId")
                     return@withContext result.updated
@@ -290,6 +294,31 @@ class UserRepository {
                 Log.d(TAG, "Password change failed: user not found")
                 return@withContext false
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Error changing password: ${e.message}")
+            return@withContext false
+        }
+    }
+
+    // New method to update specifically managerIds
+    suspend fun updateUserManagerIds(user: User): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val users = db.collection(collectionName)
+
+            val query = BsonDocument("_id", user._id)
+            val update = BsonDocument("\$set", BsonDocument().apply {
+                put("managerIds", BsonString(user.managerIds))
+                put("updatedAt", BsonString(user.updatedAt))
+            })
+
+            val result = users.updateOne(query, update)
+            Log.d(TAG, "Manager ID updated successfully for user: ${user.username}")
+
+            return@withContext result.updated
         } catch (e: Exception) {
             Log.e(TAG, "Error changing password: ${e.message}")
             return@withContext false
