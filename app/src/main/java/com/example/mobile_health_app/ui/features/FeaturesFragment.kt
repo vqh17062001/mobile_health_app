@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.adapter.FeaturesAdapter
 import com.example.mobile_health_app.data.model.Feature
+import com.example.mobile_health_app.ui.features.ViewHealthBSFragment
 import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
@@ -161,6 +162,12 @@ class FeaturesFragment : Fragment() {
             FEATURE_ADD_MANAGER -> {
                 Log.d(TAG, "handleFeatureClick: Showing add manager dialog")
                 showAddManagerDialog()
+            }
+            FEATURE_VIEW_HEALTH -> {
+                Log.d(TAG, "handleFeatureClick: View Health feature clicked")
+                // Show the bottom sheet dialog for health information
+                val viewHealthBottomSheet = ViewHealthBSFragment.newInstance()
+                viewHealthBottomSheet.show(parentFragmentManager, ViewHealthBSFragment.TAG)
             }
             else -> {
                 Toast.makeText(context, getString(R.string.feature_not_implemented, feature.title), Toast.LENGTH_SHORT).show()
