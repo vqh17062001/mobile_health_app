@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_margin="0dp" app:cardCornerRadius="16dp" app:cardElevation="4dp" app:cardUseCompatPadding="true"  >
 
-    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/feature_add_manager_description" android:textSize="16sp" android:layout_marginBottom="16dp" />
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-    <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Manager ID" app:boxBackgroundMode="outline" app:boxStrokeColor="@color/input_border" app:errorEnabled="true" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/feature_add_manager_description" android:textSize="16sp" android:layout_marginBottom="16dp" />
 
-        <com.google.android.material.textfield.TextInputEditText android:id="@+id/editTextManagerId" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
-    </com.google.android.material.textfield.TextInputLayout>
-</LinearLayout>
+        <com.google.android.material.textfield.TextInputLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="@string/feature_add_manager_title" app:boxBackgroundMode="outline" app:boxStrokeColor="@color/input_border" app:errorEnabled="true" app:boxCornerRadiusTopStart="8dp" app:boxCornerRadiusTopEnd="8dp" app:boxCornerRadiusBottomStart="8dp" app:boxCornerRadiusBottomEnd="8dp">
+
+            <com.google.android.material.textfield.TextInputEditText android:id="@+id/editTextManagerId" android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
