@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-
-    package="com.example.mobile_health_app">
+    xmlns:tools="http://schemas.android.com/tools" package="com.example.mobile_health_app">
 
     <!-- Internet permission for MongoDB Atlas connection -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -13,29 +11,51 @@
 
 
     <!-- Permisson for samsung health -->
-    <uses-permission android:name="android.permission.health.READ_STEPS" />
-    <uses-permission android:name="android.permission.health.WRITE_STEPS" />
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
+    <uses-permission android:name="android.permission.health.READ_EXERCISE"/>
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE"/>
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED"/>
+    <uses-permission android:name="android.permission.health.WRITE_TOTAL_CALORIES_BURNED"/>
+    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT"/>
 
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE" />
-    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE" />
-    <uses-permission android:name="android.permission.health.READ_BLOOD_PRESSURE" />
-    <uses-permission android:name="android.permission.health.WRITE_BLOOD_PRESSURE" />
-    <uses-permission android:name="android.permission.health.READ_WEIGHT" />
-    <uses-permission android:name="android.permission.health.WRITE_WEIGHT" />
-    <!-- …và những permission android.permission.health.* khác mà bạn cần -->
+    <uses-permission android:name= "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"/>
+    <uses-permission android:name= "android.permission.health.READ_HEALTH_DATA_HISTORY"/>
+    <!-- Health Connect permissions -->
+    <uses-permission android:name="android.permission.health.READ_SLEEP"/>
+    <uses-permission android:name="android.permission.health.READ_BLOOD_PRESSURE"/>
+    <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE"/>
+    <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION"/>
 
 
 
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />
 
+
     <queries>
+        <package android:name="com.google.android.apps.healthdata" />
         <package android:name="com.sec.android.app.shealth" />
     </queries>
 
 
+
     <application android:allowBackup="true" android:dataExtractionRules="@xml/data_extraction_rules" android:fullBackupContent="@xml/backup_rules" android:icon="@mipmap/ic_launcher" android:label="@string/app_name" android:roundIcon="@mipmap/ic_launcher_round" android:supportsRtl="true" android:theme="@style/Theme.Mobile_health_app" tools:targetApi="31">
+        <!-- Tên hiển thị trên dialog Samsung Health -->
+        <meta-data android:name="com.samsung.android.sdk.healthdata.app.name" android:value="MobileHealthApp"/>
+
+        <!-- ID phải duy nhất, thường dùng package name -->
+        <meta-data android:name="com.samsung.android.sdk.healthdata.app.id" android:value="com.example.mobile_health_app"/>
+
+
         <activity android:name=".ui.StartActivity" android:exported="true" android:theme="@style/Theme.Mobile_health_app.NoActionBar">
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE"/>
+                <category android:name="android.intent.category.HEALTH_PERMISSIONS"/>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -48,18 +68,15 @@
         </activity>
 
         <activity android:name=".ui.MainActivity" android:exported="false" android:label="@string/app_name" android:theme="@style/Theme.Mobile_health_app.NoActionBar">
-
+            <intent-filter>
+                <action android:name="androidx.health.ACTION_SHOW_PERMISSIONS_RATIONALE" />
+            </intent-filter>
         </activity>
 
 
         <activity android:name=".ui.LanguageActivity" android:exported="false" android:label="@string/app_name" android:theme="@style/Theme.Mobile_health_app.NoActionBar">
 
         </activity>
-
-        <service
-            android:name="com.samsung.android.sdk.healthdata.HealthDataService"
-            android:exported="true"
-            android:permission="android.permission.BIND_EXTERNAL_SERVICE" />
 
 
         <!-- Add FileProvider configuration -->
@@ -69,7 +86,7 @@
 
 
 
-
     </application>
+    <!-- Check if Health Connect is installed -->
 
 </manifest>

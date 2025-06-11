@@ -38,7 +38,6 @@ class FeaturesFragment : Fragment() {
 
 
     private val TAG = "FeaturesFragment"
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -264,4 +263,6 @@ class FeaturesFragment : Fragment() {
             }
         }
     }
+
+
 }
