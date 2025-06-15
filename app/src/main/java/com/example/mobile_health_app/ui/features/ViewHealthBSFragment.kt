@@ -17,6 +17,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
 class ViewHealthBSFragment : BottomSheetDialogFragment() {
@@ -68,31 +72,8 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         // Nút Đóng
         binding.btnClose.setOnClickListener { dismiss() }
 
-        // Observe LiveData bước chân từ ViewModel
-        healthConnectViewModel.steps.observe(viewLifecycleOwner) { records ->
-            showLoading(false)
-            val total = records.sumOf { it.count.toLong() }
-            binding.tvStepCount.text = "$total"
-        }
-        
-        // Observe LiveData khoảng cách từ ViewModel
-        healthConnectViewModel.distance.observe(viewLifecycleOwner) { records ->
-            val totalMeters = records.sumOf { it.distance.inMeters }
-            val formattedDistance = if (totalMeters >= 1000) {
-                String.format("%.2f km", totalMeters / 1000)
-            } else {
-                String.format("%d m", totalMeters.roundToInt())
-            }
-            binding.tvDistanceValue.text = formattedDistance
-        }
-        
-        // Observe LiveData calories từ ViewModel
-        healthConnectViewModel.totalCaloriesBurned.observe(viewLifecycleOwner) { records ->
-            val totalCalories = records.sumOf { it.energy.inKilocalories }
-            binding.tvCaloriesValue.text = String.format("%.0f kcal", totalCalories)
-        }
-
-
+        // Setup all health data observers
+        setupHealthDataObservers()
         
         // 4. Check hoặc request permissions, rồi fetch
         viewLifecycleOwner.lifecycleScope.launch {
@@ -121,13 +102,92 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         return dlg
     }
 
+    /**
+     * Sets up observers for all health data LiveData streams from the ViewModel
+     */
+    private fun setupHealthDataObservers() {
+        // Observe LiveData bước chân từ ViewModel
+        healthConnectViewModel.steps.observe(viewLifecycleOwner) { records ->
+            showLoading(false)
+            val total = records.sumOf { it.count.toLong() }
+            binding.tvStepCount.text = "$total"
+        }
+        
+        // Observe LiveData khoảng cách từ ViewModel
+        healthConnectViewModel.distance.observe(viewLifecycleOwner) { records ->
+            val totalMeters = records.sumOf { it.distance.inMeters }
+            val formattedDistance = if (totalMeters >= 1000) {
+                String.format("%.2f km", totalMeters / 1000)
+            } else {
+                String.format("%d m", totalMeters.roundToInt())
+            }
+            binding.tvDistanceValue.text = formattedDistance
+        }
+        
+        // Observe LiveData calories từ ViewModel
+        healthConnectViewModel.totalCaloriesBurned.observe(viewLifecycleOwner) { records ->
+            val totalCalories = records.sumOf { it.energy.inKilocalories }
+            binding.tvCaloriesValue.text = String.format("%.0f kcal", totalCalories)
+        }
+
+        // Setup specialized observer for sleep data which is more complex
+        healthConnectViewModel.sleepSessions.observe(viewLifecycleOwner) { records ->
+            if (records.isNotEmpty()) {
+                // Sort sleep sessions by start time
+                val sortedSessions = records.sortedBy { it.startTime }
+
+                // Calculate total sleep duration in milliseconds
+                var totalSleepDuration = 0L
+                sortedSessions.forEach { session ->
+                    totalSleepDuration += session.endTime.toEpochMilli() - session.startTime.toEpochMilli()
+                }
+
+                // Convert to hours and minutes
+                val hours = TimeUnit.MILLISECONDS.toHours(totalSleepDuration)
+                val minutes = TimeUnit.MILLISECONDS.toMinutes(totalSleepDuration) % 60
+                binding.tvSleepDuration.text = "${hours}h ${minutes}m"
+
+                // Get earliest bedtime and latest wake time
+                val formatter = DateTimeFormatter.ofPattern("HH:mm")
+                val earliestBedtime = LocalDateTime.ofInstant(
+                    sortedSessions.first().startTime,
+                    ZoneId.systemDefault()
+                ).format(formatter)
+
+                val latestWakeup = LocalDateTime.ofInstant(
+                    sortedSessions.last().endTime,
+                    ZoneId.systemDefault()
+                ).format(formatter)
+
+                binding.tvBedTime.text = earliestBedtime
+                binding.tvWakeTime.text = latestWakeup
+
+                // Basic sleep quality assessment based on duration
+                val sleepQuality = when {
+                    hours >= 8 -> "Good sleep duration"
+                    hours >= 6 -> "Adequate sleep"
+                    else -> "Insufficient sleep"
+                }
+                binding.tvSleepQuality.text = sleepQuality
+            } else {
+                binding.tvSleepDuration.text = "0h 0m"
+                binding.tvBedTime.text = "--:--"
+                binding.tvWakeTime.text = "--:--"
+                binding.tvSleepQuality.text = "No sleep data in 24h ago available"
+            }
+        }
+    }
+
+
     private fun fetchHealthData() {
         showLoading(true)
         val now = Instant.now()
         val yesterday = now.minusSeconds(24 * 3600)
+
         healthConnectViewModel.loadSteps(yesterday, now)
         healthConnectViewModel.loadDistance(yesterday, now)
         healthConnectViewModel.loadTotalCaloriesBurned(yesterday, now)
+        healthConnectViewModel.loadSleepSessions(yesterday, now)
     }
 
     private fun showLoading(loading: Boolean) {

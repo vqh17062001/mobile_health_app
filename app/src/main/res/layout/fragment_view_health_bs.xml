@@ -50,6 +50,35 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
+            <!-- Sleep Card -->
+            <androidx.cardview.widget.CardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginVertical="8dp" app:cardCornerRadius="12dp" app:cardElevation="4dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sleep" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
+
+                    <TextView android:id="@+id/tvSleepDuration" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="36sp" android:textStyle="bold" android:text="0h 0m" android:textColor="#5D4037" />
+
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="hours of sleep" android:textSize="14sp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
+
+                        <TextView android:id="@+id/tvBedTime" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--:--" android:textSize="16sp" android:textStyle="bold" />
+
+                        <TextView android:id="@+id/tvWakeTime" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="--:--" android:textSize="16sp" android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Bedtime" android:textSize="12sp" />
+
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Wake up" android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <TextView android:id="@+id/tvSleepQuality" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="No sleep data in 24h ago available" android:textSize="14sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
             <!-- Error message -->
             <TextView android:id="@+id/tvErrorMessage" android:layout_width="match_parent" android:layout_height="wrap_content" android:textColor="@android:color/holo_red_dark" android:gravity="center" android:layout_marginTop="16dp" android:visibility="gone" />
         </LinearLayout>
