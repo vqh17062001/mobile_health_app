@@ -94,7 +94,12 @@ class HealthConnectManager(context: Context) {
 
         // Wheelchair Pushes
         HealthPermission.getReadPermission(WheelchairPushesRecord::class),
-        HealthPermission.getWritePermission(WheelchairPushesRecord::class)
+        HealthPermission.getWritePermission(WheelchairPushesRecord::class),
+
+        //oxygenSaturation
+        HealthPermission.getReadPermission(OxygenSaturationRecord::class),
+        HealthPermission.getWritePermission(OxygenSaturationRecord::class)
+
     )
 
     // 3. Hàm check coi đã grant đủ hay chưa

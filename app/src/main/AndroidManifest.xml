@@ -85,6 +85,10 @@
     <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES"/>
     <uses-permission android:name="android.permission.health.WRITE_WHEELCHAIR_PUSHES"/>
 
+    <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION"/>
+    <uses-permission android:name="android.permission.health.WRITE_OXYGEN_SATURATION"/>
+
+
 
 
     <uses-feature android:name="android.hardware.camera" android:required="false" />

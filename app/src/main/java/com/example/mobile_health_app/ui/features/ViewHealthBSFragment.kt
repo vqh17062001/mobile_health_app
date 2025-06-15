@@ -228,19 +228,69 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 binding.tvHeartRateStatus.text = "No heart rate data in 24h ago available"
             }
         }
+        
+        // Add observer for blood oxygen data
+        healthConnectViewModel.oxygenSaturation.observe(viewLifecycleOwner) { records ->
+            if (records.isNotEmpty()) {
+                // Sort oxygen saturation records by time
+                val sortedRecords = records.sortedBy { it.time }
+                
+                // Get the most recent SpO2 reading
+                val latestRecord = sortedRecords.last()
+                val latestSpO2 = latestRecord.percentage
+                binding.tvSpO2.text = latestSpO2.toString()
+                
+                // Find min and max SpO2
+                var minSpO2 = 100
+                var maxSpO2 = 0
+                var totalSpO2 = 0
+                var sampleCount = 0
+                
+                records.forEach { record ->
+                    val spO2 = record.percentage.value.toInt()
+                    minSpO2 = minOf(minSpO2, spO2)
+                    maxSpO2 = maxOf(maxSpO2, spO2)
+                    totalSpO2 += spO2
+                    sampleCount++
+                }
+                
+                // Calculate average SpO2
+                val avgSpO2 = if (sampleCount > 0) totalSpO2 / sampleCount else 0
+                
+                // Update UI
+                binding.tvMinSpO2.text = "$minSpO2 %"
+                binding.tvMaxSpO2.text = "$maxSpO2 %"
+                binding.tvAvgSpO2.text = "$avgSpO2 %"
+                
+                // SpO2 status assessment
+                val spO2Status = when {
+                    latestSpO2.value.toInt() >= 95 -> "Normal oxygen level"
+                    latestSpO2.value.toInt() in 90..94 -> "Slightly below normal"
+                    latestSpO2.value.toInt() < 90 -> "Low oxygen level - consult a doctor"
+                    else -> "Invalid reading"
+                }
+                binding.tvSpO2Status.text = spO2Status
+            } else {
+                binding.tvSpO2.text = "--"
+                binding.tvMinSpO2.text = "-- %"
+                binding.tvMaxSpO2.text = "-- %"
+                binding.tvAvgSpO2.text = "-- %"
+                binding.tvSpO2Status.text = "No SpO2 data in 24h ago available"
+            }
+        }
     }
-
 
     private fun fetchHealthData() {
         showLoading(true)
         val now = Instant.now()
         val yesterday = now.minusSeconds(24 * 3600)
-
+        val sixdaysAgo = now.minusSeconds(6 * 24 * 3600)
         healthConnectViewModel.loadSteps(yesterday, now)
         healthConnectViewModel.loadDistance(yesterday, now)
         healthConnectViewModel.loadTotalCaloriesBurned(yesterday, now)
         healthConnectViewModel.loadSleepSessions(yesterday, now)
-        healthConnectViewModel.loadHeartRates(yesterday, now)  // Add this line to load heart rate data
+        healthConnectViewModel.loadHeartRates(yesterday, now)
+        healthConnectViewModel.loadOxygenSaturation(yesterday, now)  // Add this line to load SpO2 data
     }
 
     private fun showLoading(loading: Boolean) {
