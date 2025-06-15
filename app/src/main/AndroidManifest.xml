@@ -11,31 +11,11 @@
 
 
     <!-- Health Connect permissions -->
-    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
-    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
-
-    <uses-permission android:name="android.permission.health.READ_STEPS"/>
-    <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
-
-    <uses-permission android:name="android.permission.health.READ_EXERCISE"/>
-    <uses-permission android:name="android.permission.health.WRITE_EXERCISE"/>
-    <uses-permission android:name="android.permission.health.READ_EXERCISE_ROUTE"/>
-    <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE"/>
-
-    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED"/>
-    <uses-permission android:name="android.permission.health.WRITE_TOTAL_CALORIES_BURNED"/>
-
-    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
-    <uses-permission android:name="android.permission.health.WRITE_WEIGHT"/>
-
     <uses-permission android:name= "android.permission.health.READ_HEALTH_DATA_IN_BACKGROUND"/>
     <uses-permission android:name= "android.permission.health.READ_HEALTH_DATA_HISTORY"/>
 
-    <uses-permission android:name="android.permission.health.READ_SLEEP"/>
-    <uses-permission android:name="android.permission.health.WRITE_SLEEP"/>
-
-    <uses-permission android:name="android.permission.health.READ_BODY_TEMPERATURE"/>
-    <uses-permission android:name="android.permission.health.READ_OXYGEN_SATURATION"/>
+    <uses-permission android:name="android.permission.health.READ_ACTIVE_CALORIES_BURNED"/>
+    <uses-permission android:name="android.permission.health.WRITE_ACTIVE_CALORIES_BURNED"/>
 
     <uses-permission android:name="android.permission.health.READ_BASAL_METABOLIC_RATE"/>
     <uses-permission android:name=" android.permission.health.WRITE_BASAL_METABOLIC_RATE"/>
@@ -52,8 +32,19 @@
     <uses-permission android:name="android.permission.health.READ_ELEVATION_GAINED"/>
     <uses-permission android:name="android.permission.health.WRITE_ELEVATION_GAINED"/>
 
+    <uses-permission android:name="android.permission.health.READ_EXERCISE"/>
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE"/>
+    <uses-permission android:name="android.permission.health.READ_EXERCISE_ROUTE"/>
+    <uses-permission android:name="android.permission.health.WRITE_EXERCISE_ROUTE"/>
+
     <uses-permission android:name="android.permission.health.READ_FLOORS_CLIMBED"/>
     <uses-permission android:name="android.permission.health.WRITE_FLOORS_CLIMBED"/>
+
+    <uses-permission android:name="android.permission.health.READ_HEART_RATE"/>
+    <uses-permission android:name="android.permission.health.WRITE_HEART_RATE"/>
+
+    <uses-permission android:name="android.permission.health.READ_HEIGHT"/>
+    <uses-permission android:name="android.permission.health.WRITE_HEIGHT"/>
 
     <uses-permission android:name="android.permission.health.READ_HYDRATION"/>
     <uses-permission android:name="android.permission.health.WRITE_HYDRATION"/>
@@ -73,21 +64,26 @@
     <uses-permission android:name="android.permission.health.READ_SKIN_TEMPERATURE"/>
     <uses-permission android:name="android.permission.health.WRITE_SKIN_TEMPERATURE"/>
 
+    <uses-permission android:name="android.permission.health.READ_SLEEP"/>
+    <uses-permission android:name="android.permission.health.WRITE_SLEEP"/>
+
     <uses-permission android:name="android.permission.health.READ_SPEED"/>
     <uses-permission android:name="android.permission.health.WRITE_SPEED"/>
+
+    <uses-permission android:name="android.permission.health.READ_STEPS"/>
+    <uses-permission android:name="android.permission.health.WRITE_STEPS"/>
 
     <uses-permission android:name="android.permission.health.READ_STEPS_CADENCE"/>
     <uses-permission android:name="android.permission.health.WRITE_STEPS_CADENCE"/>
 
+    <uses-permission android:name="android.permission.health.READ_TOTAL_CALORIES_BURNED"/>
+    <uses-permission android:name="android.permission.health.WRITE_TOTAL_CALORIES_BURNED"/>
+
+    <uses-permission android:name="android.permission.health.READ_WEIGHT"/>
+    <uses-permission android:name="android.permission.health.WRITE_WEIGHT"/>
+
     <uses-permission android:name="android.permission.health.READ_WHEELCHAIR_PUSHES"/>
     <uses-permission android:name="android.permission.health.WRITE_WHEELCHAIR_PUSHES"/>
-
-
-
-
-
-
-
 
 
 
