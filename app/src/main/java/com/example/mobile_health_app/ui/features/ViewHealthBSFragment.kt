@@ -176,6 +176,58 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 binding.tvSleepQuality.text = "No sleep data in 24h ago available"
             }
         }
+
+        // Observe LiveData for heart rate from ViewModel
+        healthConnectViewModel.heartRates.observe(viewLifecycleOwner) { records ->
+            if (records.isNotEmpty()) {
+                // Sort heart rate records by time
+                val sortedRecords = records.sortedBy { it.endTime }
+                
+                // Get the most recent heart rate (for current heart rate)
+                val latestRecord = sortedRecords.last()
+                val latestHeartRate = latestRecord.samples.maxByOrNull { it.time }?.beatsPerMinute?.toInt() ?: 0
+                binding.tvHeartRate.text = latestHeartRate.toString()
+                
+                // Find min and max heart rate
+                var minHeartRate = Int.MAX_VALUE
+                var maxHeartRate = Int.MIN_VALUE
+                var totalHeartRate = 0
+                var sampleCount = 0
+                
+                records.forEach { record ->
+                    record.samples.forEach { sample ->
+                        val rate = sample.beatsPerMinute.toInt()
+                        minHeartRate = minOf(minHeartRate, rate)
+                        maxHeartRate = maxOf(maxHeartRate, rate)
+                        totalHeartRate += rate
+                        sampleCount++
+                    }
+                }
+                
+                // Calculate average heart rate
+                val avgHeartRate = if (sampleCount > 0) totalHeartRate / sampleCount else 0
+                
+                // Update UI
+                binding.tvMinHeartRate.text = "$minHeartRate bpm"
+                binding.tvMaxHeartRate.text = "$maxHeartRate bpm"
+                binding.tvAvgHeartRate.text = "$avgHeartRate bpm"
+                
+                // Simple heart rate status assessment
+                val heartRateStatus = when {
+                    latestHeartRate < 60 -> "Resting heart rate"
+                    latestHeartRate in 60..100 -> "Normal heart rate"
+                    latestHeartRate in 101..160 -> "Elevated heart rate"
+                    else -> "High heart rate"
+                }
+                binding.tvHeartRateStatus.text = heartRateStatus
+            } else {
+                binding.tvHeartRate.text = "--"
+                binding.tvMinHeartRate.text = "-- bpm"
+                binding.tvMaxHeartRate.text = "-- bpm"
+                binding.tvAvgHeartRate.text = "-- bpm"
+                binding.tvHeartRateStatus.text = "No heart rate data in 24h ago available"
+            }
+        }
     }
 
 
@@ -188,6 +240,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         healthConnectViewModel.loadDistance(yesterday, now)
         healthConnectViewModel.loadTotalCaloriesBurned(yesterday, now)
         healthConnectViewModel.loadSleepSessions(yesterday, now)
+        healthConnectViewModel.loadHeartRates(yesterday, now)  // Add this line to load heart rate data
     }
 
     private fun showLoading(loading: Boolean) {
