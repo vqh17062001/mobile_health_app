@@ -152,4 +152,42 @@
     <string name="feature_sync_health_data_description">Đồng bộ dữ liệu sức khỏe của bạn với máy chủ để theo dõi sức khỏe từ bất kỳ thiết bị nào</string>
     <string name="feature_device_inf_title">Thông tin thiết bị</string>
     <string name="feature_device_inf_description">Xem thông tin thiết bị của bạn</string>
+
+    <!-- Health data viewer strings -->
+    <string name="close">Đóng</string>
+    <string name="daily_steps">Số bước hàng ngày</string>
+    <string name="steps_today">bước hôm nay</string>
+    <string name="distance">Khoảng cách</string>
+    <string name="calories">Calo</string>
+    <string name="sleep">Giấc ngủ</string>
+    <string name="hours_of_sleep">giờ ngủ</string>
+    <string name="bedtime">Giờ đi ngủ</string>
+    <string name="wake_up">Giờ thức dậy</string>
+    <string name="heart_rate">Nhịp tim</string>
+    <string name="current_heart_rate">Nhịp tim hiện tại</string>
+    <string name="minimum">Thấp nhất</string>
+    <string name="maximum">Cao nhất</string>
+    <string name="average">Trung bình</string>
+    <string name="blood_oxygen">Oxy trong máu (SpO2)</string>
+    <string name="current_blood_oxygen">Nồng độ oxy trong máu hiện tại</string>
+    <string name="percent">%</string>
+    <string name="bpm">bpm</string>
+    <string name="bpm_suffix">bpm</string>
+
+    <!-- Health data assessment -->
+    <string name="good_sleep_duration">Thời lượng ngủ tốt</string>
+    <string name="adequate_sleep">Giấc ngủ đủ</string>
+    <string name="insufficient_sleep">Thiếu ngủ</string>
+    <string name="no_sleep_data">Không có dữ liệu giấc ngủ trong 24 giờ qua</string>
+    <string name="no_heart_rate_data">Không có dữ liệu nhịp tim trong 24 giờ qua</string>
+    <string name="resting_heart_rate">Nhịp tim khi nghỉ ngơi</string>
+    <string name="normal_heart_rate">Nhịp tim bình thường</string>
+    <string name="elevated_heart_rate">Nhịp tim tăng cao</string>
+    <string name="high_heart_rate">Nhịp tim rất cao</string>
+    <string name="normal_oxygen_level">Mức oxy bình thường</string>
+    <string name="slightly_below_normal">Hơi thấp hơn bình thường</string>
+    <string name="low_oxygen_level">Mức oxy thấp - nên tham khảo ý kiến bác sĩ</string>
+    <string name="invalid_reading">Chỉ số không hợp lệ</string>
+    <string name="no_spo2_data">Không có dữ liệu SpO2 trong 24 giờ qua</string>
+    <string name="health_connect_permission_required">Bạn phải cấp quyền Health Connect để xem dữ liệu bước chân</string>
 </resources>

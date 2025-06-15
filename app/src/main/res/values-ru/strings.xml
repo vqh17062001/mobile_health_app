@@ -142,4 +142,42 @@
     <string name="feature_sync_health_data_description">Синхронизируйте данные о здоровье с сервером для отслеживания вашего здоровья с любого устройства</string>
     <string name="feature_device_inf_title">Информация об устройстве</string>
     <string name="feature_device_inf_description">Просмотр информации о вашем устройстве</string>
+
+    <!-- Health data viewer strings -->
+    <string name="close">Закрыть</string>
+    <string name="daily_steps">Ежедневные шаги</string>
+    <string name="steps_today">шагов сегодня</string>
+    <string name="distance">Расстояние</string>
+    <string name="calories">Калории</string>
+    <string name="sleep">Сон</string>
+    <string name="hours_of_sleep">часов сна</string>
+    <string name="bedtime">Время сна</string>
+    <string name="wake_up">Пробуждение</string>
+    <string name="heart_rate">Пульс</string>
+    <string name="current_heart_rate">Текущий пульс</string>
+    <string name="minimum">Минимум</string>
+    <string name="maximum">Максимум</string>
+    <string name="average">Среднее</string>
+    <string name="blood_oxygen">Кислород в крови (SpO2)</string>
+    <string name="current_blood_oxygen">Текущее насыщение крови кислородом</string>
+    <string name="percent">%</string>
+    <string name="bpm">уд/мин</string>
+    <string name="bpm_suffix">уд/мин</string>
+
+    <!-- Health data assessment -->
+    <string name="good_sleep_duration">Хорошая продолжительность сна</string>
+    <string name="adequate_sleep">Достаточный сон</string>
+    <string name="insufficient_sleep">Недостаточный сон</string>
+    <string name="no_sleep_data">Нет данных о сне за последние 24 часа</string>
+    <string name="no_heart_rate_data">Нет данных о пульсе за последние 24 часа</string>
+    <string name="resting_heart_rate">Частота пульса в покое</string>
+    <string name="normal_heart_rate">Нормальный пульс</string>
+    <string name="elevated_heart_rate">Повышенный пульс</string>
+    <string name="high_heart_rate">Высокий пульс</string>
+    <string name="normal_oxygen_level">Нормальный уровень кислорода</string>
+    <string name="slightly_below_normal">Немного ниже нормы</string>
+    <string name="low_oxygen_level">Низкий уровень кислорода - обратитесь к врачу</string>
+    <string name="invalid_reading">Недействительное показание</string>
+    <string name="no_spo2_data">Нет данных о SpO2 за последние 24 часа</string>
+    <string name="health_connect_permission_required">Вы должны предоставить разрешения Health Connect для просмотра шагов</string>
 </resources>

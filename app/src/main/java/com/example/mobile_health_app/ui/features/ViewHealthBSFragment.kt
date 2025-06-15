@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import com.example.mobile_health_app.R
 import com.example.mobile_health_app.data.hconnect.HealthConnectManager
 import com.example.mobile_health_app.viewmodel.HealthConnectViewModel
 import com.example.mobile_health_app.databinding.FragmentViewHealthBsBinding
@@ -52,7 +53,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
             if (grantedPermissions.containsAll(manager.permissions)) {
                 fetchHealthData()
             } else {
-                showError("Bạn phải cấp quyền Health Connect để xem bước chân")
+                showError(getString(R.string.health_connect_permission_required))
             }
         }
     }
@@ -164,16 +165,16 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
 
                 // Basic sleep quality assessment based on duration
                 val sleepQuality = when {
-                    hours >= 8 -> "Good sleep duration"
-                    hours >= 6 -> "Adequate sleep"
-                    else -> "Insufficient sleep"
+                    hours >= 8 -> getString(R.string.good_sleep_duration)
+                    hours >= 6 -> getString(R.string.adequate_sleep)
+                    else -> getString(R.string.insufficient_sleep)
                 }
                 binding.tvSleepQuality.text = sleepQuality
             } else {
                 binding.tvSleepDuration.text = "0h 0m"
                 binding.tvBedTime.text = "--:--"
                 binding.tvWakeTime.text = "--:--"
-                binding.tvSleepQuality.text = "No sleep data in 24h ago available"
+                binding.tvSleepQuality.text = getString(R.string.no_sleep_data)
             }
         }
 
@@ -208,24 +209,24 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 val avgHeartRate = if (sampleCount > 0) totalHeartRate / sampleCount else 0
                 
                 // Update UI
-                binding.tvMinHeartRate.text = "$minHeartRate bpm"
-                binding.tvMaxHeartRate.text = "$maxHeartRate bpm"
-                binding.tvAvgHeartRate.text = "$avgHeartRate bpm"
+                binding.tvMinHeartRate.text = "$minHeartRate ${getString(R.string.bpm_suffix)}"
+                binding.tvMaxHeartRate.text = "$maxHeartRate ${getString(R.string.bpm_suffix)}"
+                binding.tvAvgHeartRate.text = "$avgHeartRate ${getString(R.string.bpm_suffix)}"
                 
                 // Simple heart rate status assessment
                 val heartRateStatus = when {
-                    latestHeartRate < 60 -> "Resting heart rate"
-                    latestHeartRate in 60..100 -> "Normal heart rate"
-                    latestHeartRate in 101..160 -> "Elevated heart rate"
-                    else -> "High heart rate"
+                    latestHeartRate < 60 -> getString(R.string.resting_heart_rate)
+                    latestHeartRate in 60..100 -> getString(R.string.normal_heart_rate)
+                    latestHeartRate in 101..160 -> getString(R.string.elevated_heart_rate)
+                    else -> getString(R.string.high_heart_rate)
                 }
                 binding.tvHeartRateStatus.text = heartRateStatus
             } else {
                 binding.tvHeartRate.text = "--"
-                binding.tvMinHeartRate.text = "-- bpm"
-                binding.tvMaxHeartRate.text = "-- bpm"
-                binding.tvAvgHeartRate.text = "-- bpm"
-                binding.tvHeartRateStatus.text = "No heart rate data in 24h ago available"
+                binding.tvMinHeartRate.text = "-- ${getString(R.string.bpm_suffix)}"
+                binding.tvMaxHeartRate.text = "-- ${getString(R.string.bpm_suffix)}"
+                binding.tvAvgHeartRate.text = "-- ${getString(R.string.bpm_suffix)}"
+                binding.tvHeartRateStatus.text = getString(R.string.no_heart_rate_data)
             }
         }
         
@@ -264,10 +265,10 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 
                 // SpO2 status assessment
                 val spO2Status = when {
-                    latestSpO2.value.toInt() >= 95 -> "Normal oxygen level"
-                    latestSpO2.value.toInt() in 90..94 -> "Slightly below normal"
-                    latestSpO2.value.toInt() < 90 -> "Low oxygen level - consult a doctor"
-                    else -> "Invalid reading"
+                    latestSpO2.value.toInt() >= 95 -> getString(R.string.normal_oxygen_level)
+                    latestSpO2.value.toInt() in 90..94 -> getString(R.string.slightly_below_normal)
+                    latestSpO2.value.toInt() < 90 -> getString(R.string.low_oxygen_level)
+                    else -> getString(R.string.invalid_reading)
                 }
                 binding.tvSpO2Status.text = spO2Status
             } else {
@@ -275,7 +276,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 binding.tvMinSpO2.text = "-- %"
                 binding.tvMaxSpO2.text = "-- %"
                 binding.tvAvgSpO2.text = "-- %"
-                binding.tvSpO2Status.text = "No SpO2 data in 24h ago available"
+                binding.tvSpO2Status.text = getString(R.string.no_spo2_data)
             }
         }
     }

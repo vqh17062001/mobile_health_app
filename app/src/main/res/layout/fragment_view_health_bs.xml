@@ -11,7 +11,7 @@
 
                 <TextView android:id="@+id/tvHealthInfoTitle" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_centerVertical="true" android:text="@string/feature_view_health_title" android:textSize="20sp" android:textStyle="bold" android:textColor="?attr/colorPrimary" />
 
-                <ImageButton android:id="@+id/btnClose" android:layout_width="48dp" android:layout_height="48dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="Close" android:src="@drawable/outline_arrow_drop_down_24" />
+                <ImageButton android:id="@+id/btnClose" android:layout_width="48dp" android:layout_height="48dp" android:layout_alignParentEnd="true" android:layout_centerVertical="true" android:background="?attr/selectableItemBackgroundBorderless" android:contentDescription="@string/close" android:src="@drawable/outline_arrow_drop_down_24" />
             </RelativeLayout>
 
             <!-- Divider -->
@@ -28,11 +28,11 @@
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Daily Steps" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/daily_steps" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
 
                     <TextView android:id="@+id/tvStepCount" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="36sp" android:textStyle="bold" android:text="0" android:textColor="#4CAF50" />
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="steps today" android:textSize="14sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/steps_today" android:textSize="14sp" />
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
 
@@ -43,9 +43,9 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Distance" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/distance" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Calories" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/calories" android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -55,11 +55,11 @@
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Sleep" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/sleep" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
 
                     <TextView android:id="@+id/tvSleepDuration" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="36sp" android:textStyle="bold" android:text="0h 0m" android:textColor="#5D4037" />
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="hours of sleep" android:textSize="14sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/hours_of_sleep" android:textSize="14sp" />
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
 
@@ -70,12 +70,12 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Bedtime" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/bedtime" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Wake up" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/wake_up" android:textSize="12sp" />
                     </LinearLayout>
 
-                    <TextView android:id="@+id/tvSleepQuality" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="No sleep data in 24h ago available" android:textSize="14sp" />
+                    <TextView android:id="@+id/tvSleepQuality" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:text="@string/no_sleep_data" android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -84,15 +84,15 @@
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Heart Rate" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/heart_rate" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
                         <TextView android:id="@+id/tvHeartRate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="36sp" android:textStyle="bold" android:text="--" android:textColor="#E91E63" />
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" bpm" android:textSize="16sp" android:layout_marginStart="4dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bpm" android:textSize="16sp" android:layout_marginStart="4dp" />
                     </LinearLayout>
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Current heart rate" android:textSize="14sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/current_heart_rate" android:textSize="14sp" />
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
 
@@ -105,14 +105,14 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Minimum" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/minimum" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Maximum" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/maximum" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Average" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/average" android:textSize="12sp" />
                     </LinearLayout>
 
-                    <TextView android:id="@+id/tvHeartRateStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No heart rate data available" android:textSize="14sp" android:layout_marginTop="8dp" />
+                    <TextView android:id="@+id/tvHeartRateStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/no_heart_rate_data" android:textSize="14sp" android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -121,15 +121,15 @@
 
                 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="16dp">
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Blood Oxygen (SpO2)" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/blood_oxygen" android:textSize="18sp" android:textStyle="bold" android:textColor="?attr/colorPrimary"/>
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:gravity="center_vertical">
                         <TextView android:id="@+id/tvSpO2" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textSize="36sp" android:textStyle="bold" android:text="--" android:textColor="#1E88E5" />
 
-                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text=" %" android:textSize="16sp" android:layout_marginStart="4dp" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/percent" android:textSize="16sp" android:layout_marginStart="4dp" />
                     </LinearLayout>
 
-                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Current blood oxygen saturation" android:textSize="14sp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/current_blood_oxygen" android:textSize="14sp" />
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:orientation="horizontal">
 
@@ -142,14 +142,14 @@
 
                     <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Minimum" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/minimum" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Maximum" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/maximum" android:textSize="12sp" />
 
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Average" android:textSize="12sp" />
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/average" android:textSize="12sp" />
                     </LinearLayout>
 
-                    <TextView android:id="@+id/tvSpO2Status" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="No SpO2 data available" android:textSize="14sp" android:layout_marginTop="8dp" />
+                    <TextView android:id="@+id/tvSpO2Status" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="@string/no_spo2_data" android:textSize="14sp" android:layout_marginTop="8dp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 

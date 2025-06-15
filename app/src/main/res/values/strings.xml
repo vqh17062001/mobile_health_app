@@ -142,8 +142,46 @@
     <string name="feature_add_manager_description">Add manager ID to share your health information with them</string>
     <string name="feature_view_health_title">View Health Info</string>
     <string name="feature_view_health_description">View your health information and check-up history</string>
-    <string name="feature_sync_health_data_title" >Sync your health data</string>
-    <string name="feature_sync_health_data_description" > Sync your health data with the server for track your health from any device</string>
-    <string name="feature_device_inf_title" > Device Information</string>
-    <string name="feature_device_inf_description" > View your device information </string>
+    <string name="feature_sync_health_data_title">Sync your health data</string>
+    <string name="feature_sync_health_data_description"> Sync your health data with the server for track your health from any device</string>
+    <string name="feature_device_inf_title"> Device Information</string>
+    <string name="feature_device_inf_description"> View your device information </string>
+
+    <!-- Health data viewer strings -->
+    <string name="close">Close</string>
+    <string name="daily_steps">Daily Steps</string>
+    <string name="steps_today">steps today</string>
+    <string name="distance">Distance</string>
+    <string name="calories">Calories</string>
+    <string name="sleep">Sleep</string>
+    <string name="hours_of_sleep">hours of sleep</string>
+    <string name="bedtime">Bedtime</string>
+    <string name="wake_up">Wake up</string>
+    <string name="heart_rate">Heart Rate</string>
+    <string name="current_heart_rate">Current heart rate</string>
+    <string name="minimum">Minimum</string>
+    <string name="maximum">Maximum</string>
+    <string name="average">Average</string>
+    <string name="blood_oxygen">Blood Oxygen (SpO2)</string>
+    <string name="current_blood_oxygen">Current blood oxygen saturation</string>
+    <string name="percent">%</string>
+    <string name="bpm">bpm</string>
+    <string name="bpm_suffix">bpm</string>
+
+    <!-- Health data assessment -->
+    <string name="good_sleep_duration">Good sleep duration</string>
+    <string name="adequate_sleep">Adequate sleep</string>
+    <string name="insufficient_sleep">Insufficient sleep</string>
+    <string name="no_sleep_data">No sleep data in 24h ago available</string>
+    <string name="no_heart_rate_data">No heart rate data in 24h ago available</string>
+    <string name="resting_heart_rate">Resting heart rate</string>
+    <string name="normal_heart_rate">Normal heart rate</string>
+    <string name="elevated_heart_rate">Elevated heart rate</string>
+    <string name="high_heart_rate">High heart rate</string>
+    <string name="normal_oxygen_level">Normal oxygen level</string>
+    <string name="slightly_below_normal">Slightly below normal</string>
+    <string name="low_oxygen_level">Low oxygen level - consult a doctor</string>
+    <string name="invalid_reading">Invalid reading</string>
+    <string name="no_spo2_data">No SpO2 data in 24h ago available</string>
+    <string name="health_connect_permission_required">You must grant Health Connect permissions to view steps</string>
 </resources>
