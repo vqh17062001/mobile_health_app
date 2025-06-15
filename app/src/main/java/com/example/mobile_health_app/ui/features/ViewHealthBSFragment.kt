@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.launch
 import java.time.Instant
+import kotlin.math.roundToInt
 
 class ViewHealthBSFragment : BottomSheetDialogFragment() {
 
@@ -71,9 +72,28 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         healthConnectViewModel.steps.observe(viewLifecycleOwner) { records ->
             showLoading(false)
             val total = records.sumOf { it.count.toLong() }
-            binding.tvStepCount.text = "$total bước"
+            binding.tvStepCount.text = "$total"
+        }
+        
+        // Observe LiveData khoảng cách từ ViewModel
+        healthConnectViewModel.distance.observe(viewLifecycleOwner) { records ->
+            val totalMeters = records.sumOf { it.distance.inMeters }
+            val formattedDistance = if (totalMeters >= 1000) {
+                String.format("%.2f km", totalMeters / 1000)
+            } else {
+                String.format("%d m", totalMeters.roundToInt())
+            }
+            binding.tvDistanceValue.text = formattedDistance
+        }
+        
+        // Observe LiveData calories từ ViewModel
+        healthConnectViewModel.totalCaloriesBurned.observe(viewLifecycleOwner) { records ->
+            val totalCalories = records.sumOf { it.energy.inKilocalories }
+            binding.tvCaloriesValue.text = String.format("%.0f kcal", totalCalories)
         }
 
+
+        
         // 4. Check hoặc request permissions, rồi fetch
         viewLifecycleOwner.lifecycleScope.launch {
             if (manager.hasAllPermissions(manager.permissions)) {
@@ -106,6 +126,8 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         val now = Instant.now()
         val yesterday = now.minusSeconds(24 * 3600)
         healthConnectViewModel.loadSteps(yesterday, now)
+        healthConnectViewModel.loadDistance(yesterday, now)
+        healthConnectViewModel.loadTotalCaloriesBurned(yesterday, now)
     }
 
     private fun showLoading(loading: Boolean) {
