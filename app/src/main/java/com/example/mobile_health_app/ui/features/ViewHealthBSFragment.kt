@@ -113,7 +113,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
             val total = records.sumOf { it.count.toLong() }
             binding.tvStepCount.text = "$total"
         }
-        
+
         // Observe LiveData khoảng cách từ ViewModel
         healthConnectViewModel.distance.observe(viewLifecycleOwner) { records ->
             val totalMeters = records.sumOf { it.distance.inMeters }
@@ -124,7 +124,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
             }
             binding.tvDistanceValue.text = formattedDistance
         }
-        
+
         // Observe LiveData calories từ ViewModel
         healthConnectViewModel.totalCaloriesBurned.observe(viewLifecycleOwner) { records ->
             val totalCalories = records.sumOf { it.energy.inKilocalories }
@@ -183,18 +183,19 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
             if (records.isNotEmpty()) {
                 // Sort heart rate records by time
                 val sortedRecords = records.sortedBy { it.endTime }
-                
+
                 // Get the most recent heart rate (for current heart rate)
                 val latestRecord = sortedRecords.last()
-                val latestHeartRate = latestRecord.samples.maxByOrNull { it.time }?.beatsPerMinute?.toInt() ?: 0
+                val latestHeartRate =
+                    latestRecord.samples.maxByOrNull { it.time }?.beatsPerMinute?.toInt() ?: 0
                 binding.tvHeartRate.text = latestHeartRate.toString()
-                
+
                 // Find min and max heart rate
                 var minHeartRate = Int.MAX_VALUE
                 var maxHeartRate = Int.MIN_VALUE
                 var totalHeartRate = 0
                 var sampleCount = 0
-                
+
                 records.forEach { record ->
                     record.samples.forEach { sample ->
                         val rate = sample.beatsPerMinute.toInt()
@@ -204,15 +205,15 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                         sampleCount++
                     }
                 }
-                
+
                 // Calculate average heart rate
                 val avgHeartRate = if (sampleCount > 0) totalHeartRate / sampleCount else 0
-                
+
                 // Update UI
                 binding.tvMinHeartRate.text = "$minHeartRate ${getString(R.string.bpm_suffix)}"
                 binding.tvMaxHeartRate.text = "$maxHeartRate ${getString(R.string.bpm_suffix)}"
                 binding.tvAvgHeartRate.text = "$avgHeartRate ${getString(R.string.bpm_suffix)}"
-                
+
                 // Simple heart rate status assessment
                 val heartRateStatus = when {
                     latestHeartRate < 60 -> getString(R.string.resting_heart_rate)
@@ -229,54 +230,60 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
                 binding.tvHeartRateStatus.text = getString(R.string.no_heart_rate_data)
             }
         }
-        
         // Add observer for blood oxygen data
         healthConnectViewModel.oxygenSaturation.observe(viewLifecycleOwner) { records ->
             if (records.isNotEmpty()) {
-                // Sort oxygen saturation records by time
-                val sortedRecords = records.sortedBy { it.time }
-                
-                // Get the most recent SpO2 reading
-                val latestRecord = sortedRecords.last()
-                val latestSpO2 = latestRecord.percentage
-                binding.tvSpO2.text = latestSpO2.toString()
-                
-                // Find min and max SpO2
-                var minSpO2 = 100
-                var maxSpO2 = 0
-                var totalSpO2 = 0
-                var sampleCount = 0
-                
-                records.forEach { record ->
-                    val spO2 = record.percentage.value.toInt()
-                    minSpO2 = minOf(minSpO2, spO2)
-                    maxSpO2 = maxOf(maxSpO2, spO2)
-                    totalSpO2 += spO2
-                    sampleCount++
+                // Filter out invalid SpO2 readings (0 values)
+                val validRecords = records.filter { it.percentage.value.toInt() > 0 }
+
+                if (validRecords.isNotEmpty()) {
+                    // Sort oxygen saturation records by time
+                    val sortedRecords = validRecords.sortedBy { it.time }
+
+                    // Get the most recent SpO2 reading
+                    val latestRecord = sortedRecords.last()
+                    val latestSpO2 = latestRecord.percentage
+                    binding.tvSpO2.text = latestSpO2.toString()
+
+                    // Find min and max SpO2
+                    var minSpO2 = 100
+                    var maxSpO2 = 0
+                    var totalSpO2 = 0
+                    var sampleCount = 0
+
+                    validRecords.forEach { record ->
+                        val spO2 = record.percentage.value.toInt()
+                        if (spO2 > 0) { // Double check to filter out zero values
+                            minSpO2 = minOf(minSpO2, spO2)
+                            maxSpO2 = maxOf(maxSpO2, spO2)
+                            totalSpO2 += spO2
+                            sampleCount++
+                        }
+                    }
+
+                    // Calculate average SpO2
+                    val avgSpO2 = if (sampleCount > 0) totalSpO2 / sampleCount else 0
+
+                    // Update UI
+                    binding.tvMinSpO2.text = "$minSpO2 %"
+                    binding.tvMaxSpO2.text = "$maxSpO2 %"
+                    binding.tvAvgSpO2.text = "$avgSpO2 %"
+
+                    // SpO2 status assessment
+                    val spO2Status = when {
+                        latestSpO2.value.toInt() >= 95 -> getString(R.string.normal_oxygen_level)
+                        latestSpO2.value.toInt() in 90..94 -> getString(R.string.slightly_below_normal)
+                        latestSpO2.value.toInt() < 90 -> getString(R.string.low_oxygen_level)
+                        else -> getString(R.string.invalid_reading)
+                    }
+                    binding.tvSpO2Status.text = spO2Status
+                } else {
+                    binding.tvSpO2.text = "--"
+                    binding.tvMinSpO2.text = "-- %"
+                    binding.tvMaxSpO2.text = "-- %"
+                    binding.tvAvgSpO2.text = "-- %"
+                    binding.tvSpO2Status.text = getString(R.string.no_spo2_data)
                 }
-                
-                // Calculate average SpO2
-                val avgSpO2 = if (sampleCount > 0) totalSpO2 / sampleCount else 0
-                
-                // Update UI
-                binding.tvMinSpO2.text = "$minSpO2 %"
-                binding.tvMaxSpO2.text = "$maxSpO2 %"
-                binding.tvAvgSpO2.text = "$avgSpO2 %"
-                
-                // SpO2 status assessment
-                val spO2Status = when {
-                    latestSpO2.value.toInt() >= 95 -> getString(R.string.normal_oxygen_level)
-                    latestSpO2.value.toInt() in 90..94 -> getString(R.string.slightly_below_normal)
-                    latestSpO2.value.toInt() < 90 -> getString(R.string.low_oxygen_level)
-                    else -> getString(R.string.invalid_reading)
-                }
-                binding.tvSpO2Status.text = spO2Status
-            } else {
-                binding.tvSpO2.text = "--"
-                binding.tvMinSpO2.text = "-- %"
-                binding.tvMaxSpO2.text = "-- %"
-                binding.tvAvgSpO2.text = "-- %"
-                binding.tvSpO2Status.text = getString(R.string.no_spo2_data)
             }
         }
     }
@@ -285,7 +292,7 @@ class ViewHealthBSFragment : BottomSheetDialogFragment() {
         showLoading(true)
         val now = Instant.now()
         val yesterday = now.minusSeconds(24 * 3600)
-        val sixdaysAgo = now.minusSeconds(6 * 24 * 3600)
+        val sixdaysAgo = now.minusSeconds(18 * 24 * 3600)
         healthConnectViewModel.loadSteps(yesterday, now)
         healthConnectViewModel.loadDistance(yesterday, now)
         healthConnectViewModel.loadTotalCaloriesBurned(yesterday, now)
