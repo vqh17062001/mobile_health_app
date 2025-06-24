@@ -190,4 +190,114 @@
     <string name="invalid_reading">Chỉ số không hợp lệ</string>
     <string name="no_spo2_data">Không có dữ liệu SpO2 trong 24 giờ qua</string>
     <string name="health_connect_permission_required">Bạn phải cấp quyền Health Connect để xem dữ liệu bước chân</string>
+
+    <!-- Device Information strings -->
+    <string name="device_information">Thông tin thiết bị</string>
+    <string name="basic_device_info">Thông tin cơ bản thiết bị</string>
+    <string name="device_model">Mẫu máy</string>
+    <string name="manufacturer">Nhà sản xuất</string>
+    <string name="android_version">Phiên bản Android</string>
+    <string name="sdk_version">Cấp độ SDK</string>
+    <string name="device_id">ID thiết bị</string>
+    <string name="network_information">Thông tin mạng</string>
+    <string name="ip_address">Địa chỉ IP</string>
+    <string name="mac_address">Địa chỉ MAC</string>
+    <string name="wifi_status">Trạng thái WiFi</string>
+    <string name="health_sensors">Cảm biến sức khỏe</string>
+    <string name="step_counter_sensor">Cảm biến đếm bước</string>
+    <string name="heart_rate_sensor">Nhịp tim</string>
+    <string name="accelerometer_sensor">Gia tốc kế</string>
+    <string name="gyroscope_sensor">Con quay hồi chuyển</string>
+    <string name="health_connect_support">Health Connect</string>
+    <string name="refresh_device_info">Làm mới thông tin</string>
+    <string name="sensor_available">Có sẵn</string>
+    <string name="sensor_not_available">Không có sẵn</string>
+    <string name="wifi_connected">Đã kết nối</string>
+    <string name="wifi_disconnected">Chưa kết nối</string>
+    <string name="supported">Được hỗ trợ</string>
+    <string name="not_supported">Không được hỗ trợ</string>
+
+    <!-- Wearable Device Information strings -->
+    <string name="wearable_info">Thông tin thiết bị đeo</string>
+    <string name="spo2_sensor">Cảm biến SpO2</string>
+    <string name="additional_sensors">Cảm biến bổ sung</string>
+    <string name="bluetooth_not_available">Bluetooth không khả dụng trên thiết bị này</string>
+    <string name="bluetooth_disabled">Bluetooth đã tắt. Vui lòng bật Bluetooth để phát hiện thiết bị đeo.</string>
+    <string name="bluetooth_permissions_required">Cần quyền Bluetooth để quét thiết bị đeo</string>
+    <string name="no_wearable_devices">Không tìm thấy thiết bị đeo nào.\n• Đảm bảo thiết bị đeo đã ghép nối với điện thoại này\n• Kiểm tra Bluetooth đã bật trên cả hai thiết bị\n• Đảm bảo thiết bị đeo ở gần và đã kết nối</string>
+    <string name="connected_wearable_devices">📱 Thiết bị đeo đã kết nối:</string>
+    <string name="device_status_connected">Đã kết nối</string>
+    <string name="device_permissions_required">Đã tìm thấy thiết bị (cần quyền để xem chi tiết)</string>
+    <string name="connect_wearable_message">Kết nối thiết bị đeo qua Bluetooth để xem thông tin cảm biến chi tiết.\n\nCác loại thiết bị được hỗ trợ:\n• Samsung Galaxy Watch/Fit series\n• Thiết bị Fitbit\n• Đồng hồ thông minh Garmin\n• Thiết bị Amazfit\n• Xiaomi Mi Band\n• Các thiết bị Wear OS khác</string>
+
+    <!-- Additional Device Information strings -->
+    <string name="unable_to_retrieve">Không thể lấy</string>
+    <string name="not_available">Không có sẵn</string>
+    <string name="unknown_status">Không rõ</string>
+    <string name="wearable_scan_error">Lỗi quét thiết bị đeo: %1$s</string>
+    <string name="heart_rate_sensor_generic">❓ Cảm biến Nhịp Tim\n• Kết nối thiết bị đeo để xem thông tin cảm biến cụ thể\n• Hầu hết thiết bị đeo hiện đại đều có cảm biến nhịp tim PPG</string>
+    <string name="spo2_sensor_generic">❓ Cảm biến Oxy Máu\n• Kết nối thiết bị đeo tương thích\n• Nhiều smartwatch mới có cảm biến SpO2</string>
+    <!-- Additional Device Information strings -->
+    <string name="device_info_refreshed">Đã làm mới thông tin thiết bị</string>
+    <string name="loading">Đang tải...</string>
+    <string name="phone_prefix">Điện thoại:</string>
+
+    <!-- Bluetooth related messages -->
+    <string name="samsung_ppg_heart_rate">✅ Cảm biến Nhịp Tim PPG Samsung\n• Theo dõi nhịp tim liên tục\n• Phát hiện vùng nhịp tim\n• Thông báo nhịp tim bất thường\n• Theo dõi nhịp tim khi tập luyện\n• Tích hợp Samsung Health</string>
+    <string name="generic_heart_rate">✅ Cảm biến Nhịp Tim Có Sẵn\n• Công nghệ quang điện dung (PPG)\n• Theo dõi liên tục\n• Theo dõi tập luyện\n• Tích hợp ứng dụng sức khỏe</string>
+
+    <string name="samsung_spo2">✅ Cảm biến SpO2 Samsung\n• Đo độ bão hòa oxy trong máu\n• Phân tích mẫu hô hấp khi ngủ\n• Đọc thủ công và tự động\n• Tích hợp Samsung Health</string>
+    <string name="fitbit_spo2">✅ Cảm biến SpO2 Fitbit\n• Theo dõi biến thiên oxy trong máu\n• Thông tin điểm số giấc ngủ\n• Bảng điều khiển chỉ số sức khỏe</string>
+    <string name="generic_spo2">✅ Cảm biến Oxy Máu Có Sẵn\n• Khả năng đo SpO2\n• Hỗ trợ theo dõi giấc ngủ\n• Tích hợp theo dõi sức khỏe</string>
+
+
+    <string name="samsung_additional_sensors">🔹 Cảm biến Chuẩn\n   • Cảm biến ánh sáng môi trường\n   • Cảm biến áp suất khí quyển\n   • Cảm biến nhiệt độ\n\n🔹 Định vị &amp; Điều hướng\n   • Kết nối GPS (nếu được hỗ trợ)\n   • Theo dõi khoảng cách và tốc độ\n   • Lập bản đồ tuyến đường\n\n🔹 Tính năng đặc biệt Samsung\n   • Phân tích thành phần cơ thể (một số model)\n   • Theo dõi ECG (một số model)\n   • Theo dõi huyết áp (một số model)\n   • Theo dõi nhiệt độ da\n   • Theo dõi căng thẳng\n   • Phân tích giai đoạn giấc ngủ\n\nLưu ý: Tính năng có sẵn tùy thuộc vào model Galaxy Watch cụ thể của bạn.</string>
+
+    <string name="fitbit_additional_sensors">🔹 Cảm biến Chuẩn\n   • Cảm biến ánh sáng môi trường\n   • Cảm biến áp suất khí quyển\n   • Cảm biến nhiệt độ\n\n🔹 Định vị &amp; Điều hướng\n   • Kết nối GPS (nếu được hỗ trợ)\n   • Theo dõi khoảng cách và tốc độ\n   • Lập bản đồ tuyến đường\n\n🔹 Tính năng đặc biệt Fitbit\n   • Phút Vùng Hoạt Động\n   • Điểm quản lý căng thẳng\n   • Biến thiên nhiệt độ da\n   • Điểm số giấc ngủ\n   • Buổi thở có hướng dẫn\n\nLưu ý: Tính năng có sẵn tùy thuộc vào model Fitbit cụ thể của bạn.</string>
+
+    <string name="generic_additional_sensors">🔹 Cảm biến Chuẩn\n   • Cảm biến ánh sáng môi trường\n   • Cảm biến áp suất khí quyển\n   • Cảm biến nhiệt độ\n\n🔹 Định vị &amp; Điều hướng\n   • Kết nối GPS (nếu được hỗ trợ)\n   • Theo dõi khoảng cách và tốc độ\n   • Lập bản đồ tuyến đường\n\n🔹 Theo dõi Sức khỏe Nâng cao\n   • Phát hiện mức độ căng thẳng\n   • Phân tích giai đoạn giấc ngủ\n   • Ước tính thời gian phục hồi\n\nLưu ý: Tính năng cảm biến thực tế tùy thuộc vào model và nhà sản xuất thiết bị đeo cụ thể của bạn.</string>
+
+    <!-- Additional Device Information strings -->
+    <string name="wearable_not_connected_health_connect">Thiết bị đeo: Chưa kết nối qua Health Connect</string>
+    <string name="unknown_device">Thiết bị không rõ</string>
+    <string name="device_type">Loại</string>
+    <string name="device_status">Trạng thái</string>
+    <string name="samsung_galaxy_watch_series">Samsung Galaxy Watch Series</string>
+    <string name="samsung_galaxy_fit_series">Samsung Galaxy Fit Series</string>
+    <string name="samsung_gear_series">Samsung Gear Series</string>
+    <string name="fitbit_fitness_tracker">Fitbit Fitness Tracker</string>
+    <string name="garmin_smartwatch">Garmin Smartwatch</string>
+    <string name="amazfit_smartwatch">Amazfit Smartwatch</string>
+    <string name="xiaomi_mi_band">Xiaomi Mi Band</string>
+    <string name="huawei_wearable">Huawei Wearable</string>
+    <string name="apple_watch">Apple Watch</string>
+    <string name="smartwatch">Smartwatch</string>
+    <string name="fitness_tracker">Vòng theo dõi sức khỏe</string>
+    <string name="wearable_device">Thiết bị đeo</string>
+
+    <!-- Heart Rate Sensor strings -->
+    <string name="garmin_heart_rate">✅ Cảm biến Nhịp Tim Garmin Elevate\n• Theo dõi nhịp tim tại cổ tay\n• Biến thiên nhịp tim\n• Số liệu hiệu suất\n• Tư vấn phục hồi</string>
+    <string name="generic_heart_rate_sensor">✅ Cảm biến Nhịp Tim Có Sẵn\n• Công nghệ quang học (PPG)\n• Theo dõi liên tục\n• Theo dõi khi tập luyện\n• Tích hợp ứng dụng sức khỏe</string>
+
+    <!-- SpO2 Sensor strings -->
+    <string name="samsung_spo2_sensor">✅ Cảm biến SpO2 Samsung\n• Đo độ bão hòa oxy trong máu\n• Phân tích mẫu thở khi ngủ\n• Đo thủ công và tự động\n• Tích hợp Samsung Health</string>
+    <string name="fitbit_spo2_sensor">✅ Cảm biến SpO2 Fitbit\n• Theo dõi biến thiên oxy trong máu\n• Thông tin điểm số giấc ngủ\n• Bảng điều khiển số liệu sức khỏe</string>
+    <string name="generic_spo2_sensor">✅ Cảm biến Oxy Máu Có Sẵn\n• Khả năng đo SpO2\n• Hỗ trợ theo dõi giấc ngủ\n• Tích hợp theo dõi sức khỏe</string>
+
+    <!-- Motion Sensor strings -->
+    <string name="motion_sensors_available">✅ Cảm biến Chuyển động Có Sẵn\n• Gia tốc kế 3 trục\n• Con quay hồi chuyển 3 trục\n• Đếm bước tiên tiến\n• Tự động nhận diện hoạt động\n• Theo dõi chuyển động khi ngủ\n• Phát hiện ngã (nếu được hỗ trợ)</string>
+    <string name="motion_sensor_generic">❓ Cảm biến Chuyển động\n• Kết nối thiết bị đeo để xem chi tiết cảm biến chuyển động\n• Dự kiến có gia tốc kế và con quay hồi chuyển chuẩn</string>
+
+    <!-- Additional sensor information -->
+    <string name="common_sensors_info">🔹 Cảm biến Chuẩn\n   • Cảm biến ánh sáng môi trường\n   • Cảm biến áp suất khí quyển\n   • Cảm biến nhiệt độ\n\n🔹 Vị trí &amp; Định vị\n   • Kết nối GPS (nếu được hỗ trợ)\n   • Theo dõi khoảng cách và tốc độ\n   • Lập bản đồ tuyến đường</string>
+    <string name="samsung_specific_features">🔹 Tính năng đặc biệt của Samsung\n   • Phân tích thành phần cơ thể (một số mẫu)\n   • Theo dõi ECG (một số mẫu)\n   • Theo dõi huyết áp (một số mẫu)\n   • Theo dõi nhiệt độ da\n   • Theo dõi căng thẳng\n   • Phân tích giai đoạn giấc ngủ\n\nLưu ý: Tính năng khả dụng phụ thuộc vào mẫu Galaxy Watch cụ thể của bạn.</string>
+    <string name="fitbit_specific_features">🔹 Tính năng đặc biệt của Fitbit\n   • Phút Vùng Hoạt động\n   • Điểm quản lý căng thẳng\n   • Biến thiên nhiệt độ da\n   • Điểm giấc ngủ\n   • Phiên thở có hướng dẫn\n\nLưu ý: Tính năng khả dụng phụ thuộc vào mẫu Fitbit cụ thể của bạn.</string>
+    <string name="generic_advanced_monitoring">🔹 Theo dõi Sức khỏe Nâng cao\n   • Phát hiện mức độ căng thẳng\n   • Phân tích giai đoạn giấc ngủ\n   • Ước tính thời gian phục hồi\n\nLưu ý: Tính năng cảm biến thực tế phụ thuộc vào mẫu và nhà sản xuất thiết bị đeo cụ thể của bạn.</string>
+
+    <!-- Network Information strings -->
+    <string name="public_ip">Công cộng</string>
+    <string name="local_ip">Cục bộ</string>
+
+    <!-- Fitbit Heart Rate specific string -->
+    <string name="fitbit_heart_rate">✅ Cảm biến Nhịp Tim Fitbit\n• Công nghệ nhịp tim PurePulse\n• Theo dõi nhịp tim 24/7\n• Vùng nhịp tim\n• Điểm thể lực tim mạch</string>
 </resources>

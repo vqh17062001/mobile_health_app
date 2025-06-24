@@ -61,12 +61,10 @@ class DeviceInfoFragment : Fragment() {
         bluetoothAdapter = bluetoothManager.adapter
 
         // Load device information
-        loadDeviceInformation()
-
-        // Set refresh button click listener
+        loadDeviceInformation()        // Set refresh button click listener
         binding.btnRefreshInfo.setOnClickListener {
             loadDeviceInformation()
-            Toast.makeText(requireContext(), "Device information refreshed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.device_info_refreshed), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -91,14 +89,12 @@ class DeviceInfoFragment : Fragment() {
 
         // Device ID
         binding.tvDeviceId.text = getDeviceId()
-    }
-
-    @SuppressLint("HardwareIds")
+    }    @SuppressLint("HardwareIds")
     private fun getDeviceId(): String {
         return try {
             Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)
         } catch (e: Exception) {
-            "Unable to retrieve"
+            getString(R.string.unable_to_retrieve)
         }
     }
 
@@ -111,14 +107,13 @@ class DeviceInfoFragment : Fragment() {
                 
                 withContext(Dispatchers.Main) {
                     binding.tvIpAddress.text = if (publicIp != null) {
-                        "Public: $publicIp\nLocal: $localIp"
+                        "${getString(R.string.public_ip)}: $publicIp\n${getString(R.string.local_ip)}: $localIp"
                     } else {
-                        "Local: $localIp"
+                        "${getString(R.string.local_ip)}: $localIp"
                     }
-                }
-            } catch (e: Exception) {
+                }            } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    binding.tvIpAddress.text = "Unable to retrieve"
+                    binding.tvIpAddress.text = getString(R.string.unable_to_retrieve)
                 }
             }
         }
@@ -150,17 +145,15 @@ class DeviceInfoFragment : Fragment() {
                 val addresses = networkInterface.inetAddresses
                 for (address in addresses) {
                     if (!address.isLoopbackAddress && address.hostAddress?.indexOf(':') == -1) {
-                        return address.hostAddress ?: "Unknown"
+                        return address.hostAddress ?: getString(R.string.unknown_status)
                     }
                 }
             }
         } catch (e: Exception) {
             // Ignore
         }
-        return "Unknown"
-    }
-
-    private fun getMacAddress(): String {
+        return getString(R.string.unknown_status)
+    }    private fun getMacAddress(): String {
         return try {
             val interfaces = NetworkInterface.getNetworkInterfaces()
             for (networkInterface in interfaces) {
@@ -178,9 +171,9 @@ class DeviceInfoFragment : Fragment() {
                     }
                 }
             }
-            "Not available"
+            getString(R.string.not_available)
         } catch (e: Exception) {
-            "Unable to retrieve"
+            getString(R.string.unable_to_retrieve)
         }
     }
 
@@ -195,7 +188,7 @@ class DeviceInfoFragment : Fragment() {
                 getString(R.string.wifi_disconnected)
             }
         } catch (e: Exception) {
-            "Unknown"
+            getString(R.string.unknown_status)
         }
     }    private fun loadHealthSensorsInfo() {
         // Check for connected smartwatch sensors first
@@ -211,18 +204,18 @@ class DeviceInfoFragment : Fragment() {
             try {
                 // Check Bluetooth permissions and availability
                 if (!::bluetoothAdapter.isInitialized || bluetoothAdapter == null) {
-                    binding.tvWearableInfo.text = "Bluetooth not available on this device"
+                    binding.tvWearableInfo.text = getString(R.string.bluetooth_not_available)
                     return@launch
                 }
 
                 if (!bluetoothAdapter.isEnabled) {
-                    binding.tvWearableInfo.text = "Bluetooth is disabled. Please enable Bluetooth to detect wearable devices."
+                    binding.tvWearableInfo.text = getString(R.string.bluetooth_disabled)
                     return@launch
                 }
 
                 // Check Bluetooth permissions
                 if (!checkBluetoothPermissions()) {
-                    binding.tvWearableInfo.text = "Bluetooth permissions required to scan for wearable devices"
+                    binding.tvWearableInfo.text = getString(R.string.bluetooth_permissions_required)
                     return@launch
                 }
 
@@ -231,7 +224,7 @@ class DeviceInfoFragment : Fragment() {
                 displayConnectedWearableDevices(connectedDevices)
                 
             } catch (e: Exception) {
-                binding.tvWearableInfo.text = "Error scanning for wearable devices: ${e.message}"
+                binding.tvWearableInfo.text = getString(R.string.wearable_scan_error, e.message ?: getString(R.string.unknown_status))
             }
         }
     }
@@ -267,15 +260,10 @@ class DeviceInfoFragment : Fragment() {
         }
         
         return isWearableClass || isWearableName
-    }
-
-    @SuppressLint("MissingPermission")
+    }    @SuppressLint("MissingPermission")
     private fun displayConnectedWearableDevices(devices: List<BluetoothDevice>) {
         if (devices.isEmpty()) {
-            binding.tvWearableInfo.text = "No wearable devices found.\n" +
-                    "• Make sure your wearable device is paired with this phone\n" +
-                    "• Check if Bluetooth is enabled on both devices\n" +
-                    "• Ensure the wearable device is nearby and connected"
+            binding.tvWearableInfo.text = getString(R.string.no_wearable_devices)
             
             // Show generic sensor info if no specific device is connected
             displayGenericWearableSensorInfo()
@@ -284,16 +272,16 @@ class DeviceInfoFragment : Fragment() {
 
         // Display connected wearable devices
         val deviceInfo = StringBuilder()
-        deviceInfo.append("📱 Connected Wearable Devices:\n\n")
+        deviceInfo.append(getString(R.string.connected_wearable_devices)).append("\n\n")
         
         devices.forEachIndexed { index, device ->
             try {
-                deviceInfo.append("${index + 1}. ${device.name ?: "Unknown Device"}\n")
+                deviceInfo.append("${index + 1}. ${device.name ?: getString(R.string.unknown_device)}\n")
                 deviceInfo.append("   MAC: ${device.address}\n")
-                deviceInfo.append("   Type: ${getDeviceTypeDescription(device)}\n")
-                deviceInfo.append("   Status: Connected\n\n")
+                deviceInfo.append("   ${getString(R.string.device_type)}: ${getDeviceTypeDescription(device)}\n")
+                deviceInfo.append("   ${getString(R.string.device_status)}: ${getString(R.string.device_status_connected)}\n\n")
             } catch (e: SecurityException) {
-                deviceInfo.append("${index + 1}. Device found (permissions required for details)\n\n")
+                deviceInfo.append("${index + 1}. ${getString(R.string.device_permissions_required)}\n\n")
             }
         }
         
@@ -309,18 +297,18 @@ class DeviceInfoFragment : Fragment() {
         val deviceName = device.name?.lowercase() ?: ""
         
         return when {
-            deviceName.contains("galaxy watch") -> "Samsung Galaxy Watch Series"
-            deviceName.contains("galaxy fit") -> "Samsung Galaxy Fit Series"
-            deviceName.contains("gear") -> "Samsung Gear Series"
-            deviceName.contains("fitbit") -> "Fitbit Fitness Tracker"
-            deviceName.contains("garmin") -> "Garmin Smartwatch"
-            deviceName.contains("amazfit") -> "Amazfit Smartwatch"
-            deviceName.contains("mi band") -> "Xiaomi Mi Band"
-            deviceName.contains("huawei") -> "Huawei Wearable"
-            deviceName.contains("apple watch") -> "Apple Watch"
-            deviceName.contains("watch") -> "Smartwatch"
-            deviceName.contains("band") || deviceName.contains("fit") -> "Fitness Tracker"
-            else -> "Wearable Device"
+            deviceName.contains("galaxy watch") -> getString(R.string.samsung_galaxy_watch_series)
+            deviceName.contains("galaxy fit") -> getString(R.string.samsung_galaxy_fit_series)
+            deviceName.contains("gear") -> getString(R.string.samsung_gear_series)
+            deviceName.contains("fitbit") -> getString(R.string.fitbit_fitness_tracker)
+            deviceName.contains("garmin") -> getString(R.string.garmin_smartwatch)
+            deviceName.contains("amazfit") -> getString(R.string.amazfit_smartwatch)
+            deviceName.contains("mi band") -> getString(R.string.xiaomi_mi_band)
+            deviceName.contains("huawei") -> getString(R.string.huawei_wearable)
+            deviceName.contains("apple watch") -> getString(R.string.apple_watch)
+            deviceName.contains("watch") -> getString(R.string.smartwatch)
+            deviceName.contains("band") || deviceName.contains("fit") -> getString(R.string.fitness_tracker)
+            else -> getString(R.string.wearable_device)
         }
     }
 
@@ -331,137 +319,90 @@ class DeviceInfoFragment : Fragment() {
         // Heart Rate Sensor based on device type
         binding.tvHeartRateSensor.text = when {
             deviceName.contains("galaxy watch") || deviceName.contains("galaxy fit") -> {
-                "✅ Samsung PPG Heart Rate Sensor\n" +
-                        "• Continuous heart rate monitoring\n" +
-                        "• Heart rate zones detection\n" +
-                        "• Irregular heart rhythm notifications\n" +
-                        "• Exercise heart rate tracking\n" +
-                        "• Samsung Health integration"
+                getString(R.string.samsung_ppg_heart_rate)
             }
             deviceName.contains("fitbit") -> {
-                "✅ Fitbit Heart Rate Sensor\n" +
-                        "• PurePulse heart rate technology\n" +
-                        "• 24/7 heart rate tracking\n" +
-                        "• Heart rate zones\n" +
-                        "• Cardio fitness score"
+                getString(R.string.fitbit_heart_rate)
             }
             deviceName.contains("garmin") -> {
-                "✅ Garmin Elevate Heart Rate Sensor\n" +
-                        "• Wrist-based heart rate monitoring\n" +
-                        "• Heart rate variability\n" +
-                        "• Performance metrics\n" +
-                        "• Recovery advisor"
+                getString(R.string.garmin_heart_rate)
             }
             else -> {
-                "✅ Heart Rate Sensor Available\n" +
-                        "• Photoplethysmography (PPG) technology\n" +
-                        "• Continuous monitoring\n" +
-                        "• Exercise tracking\n" +
-                        "• Health app integration"
+                getString(R.string.generic_heart_rate_sensor)
             }
         }
 
         // SpO2 Sensor based on device type
         binding.tvSpO2Sensor.text = when {
             deviceName.contains("galaxy watch") -> {
-                "✅ Samsung SpO2 Sensor\n" +
-                        "• Blood oxygen saturation measurement\n" +
-                        "• Sleep breathing pattern analysis\n" +
-                        "• Manual and automatic readings\n" +
-                        "• Samsung Health integration"
+                getString(R.string.samsung_spo2_sensor)
             }
             deviceName.contains("fitbit") -> {
-                "✅ Fitbit SpO2 Sensor\n" +
-                        "• Blood oxygen variation tracking\n" +
-                        "• Sleep score insights\n" +
-                        "• Health metrics dashboard"
+                getString(R.string.fitbit_spo2_sensor)
             }
             else -> {
-                "✅ Blood Oxygen Sensor Available\n" +
-                        "• SpO2 measurement capability\n" +
-                        "• Sleep monitoring support\n" +
-                        "• Health tracking integration"
+                getString(R.string.generic_spo2_sensor)
             }
         }
 
         // Motion Sensors
-        binding.tvAccelerometer.text = "✅ Motion Sensors Available\n" +
-                "• 3-axis accelerometer\n" +
-                "• 3-axis gyroscope\n" +
-                "• Advanced step counting\n" +
-                "• Activity auto-detection\n" +
-                "• Sleep movement tracking\n" +
-                "• Fall detection (if supported)"
+        binding.tvAccelerometer.text = getString(R.string.motion_sensors_available)
 
         // Additional sensors based on device capabilities
         binding.tvAdditionalSensors.text = getAdditionalSensorInfo(deviceName)
     }
 
     private fun getAdditionalSensorInfo(deviceName: String): String {
-        val commonSensors = "🔹 Standard Sensors\n" +
-                "   • Ambient light sensor\n" +
-                "   • Barometric pressure sensor\n" +
-                "   • Temperature sensor\n\n" +
-                "🔹 Location & Navigation\n" +
-                "   • GPS connectivity (if supported)\n" +
-                "   • Distance and pace tracking\n" +
-                "   • Route mapping\n\n"
+        val commonSensors = getString(R.string.common_sensors_info)
 
         return when {
             deviceName.contains("galaxy watch") -> {
-                commonSensors +
-                        "🔹 Samsung-specific Features\n" +
-                        "   • Body composition analysis (select models)\n" +
-                        "   • ECG monitoring (select models)\n" +
-                        "   • Blood pressure monitoring (select models)\n" +
-                        "   • Skin temperature monitoring\n" +
-                        "   • Stress monitoring\n" +
-                        "   • Sleep stage analysis\n\n" +
-                        "Note: Feature availability depends on your specific Galaxy Watch model."
+                commonSensors + "\n\n" + getString(R.string.samsung_specific_features)
             }
             deviceName.contains("fitbit") -> {
-                commonSensors +
-                        "🔹 Fitbit-specific Features\n" +
-                        "   • Active Zone Minutes\n" +
-                        "   • Stress management score\n" +
-                        "   • Skin temperature variation\n" +
-                        "   • Sleep score\n" +
-                        "   • Guided breathing sessions\n\n" +
-                        "Note: Feature availability depends on your specific Fitbit model."
+                commonSensors + "\n\n" + getString(R.string.fitbit_specific_features)
             }
             else -> {
-                commonSensors +
-                        "🔹 Advanced Health Monitoring\n" +
-                        "   • Stress level detection\n" +
-                        "   • Sleep stage analysis\n" +
-                        "   • Recovery time estimation\n\n" +
-                        "Note: Actual sensor availability depends on your specific wearable device model and manufacturer."
+                commonSensors + "\n\n" + getString(R.string.generic_advanced_monitoring)
             }
         }
     }
 
     private fun displayGenericWearableSensorInfo() {
         // Generic wearable device information when no specific device is detected
-        binding.tvHeartRateSensor.text = "❓ Heart Rate Sensor\n" +
-                "• Connect a wearable device to see specific sensor information\n" +
-                "• Most modern wearables include PPG heart rate sensors"
-        
-        binding.tvSpO2Sensor.text = "❓ Blood Oxygen Sensor\n" +
-                "• Connect a compatible wearable device\n" +
-                "• Many newer smartwatches include SpO2 sensors"
-        
-        binding.tvAccelerometer.text = "❓ Motion Sensors\n" +
-                "• Connect a wearable device to see motion sensor details\n" +
-                "• Standard accelerometer and gyroscope expected"
-        
-        binding.tvAdditionalSensors.text = "Connect a wearable device via Bluetooth to see detailed sensor information.\n\n" +
-                "Supported device types:\n" +
-                "• Samsung Galaxy Watch/Fit series\n" +
-                "• Fitbit devices\n" +
-                "• Garmin smartwatches\n" +
-                "• Amazfit devices\n" +
-                "• Xiaomi Mi Band\n" +
-                "• Other Wear OS devices"
+        binding.tvHeartRateSensor.text = getString(R.string.heart_rate_sensor_generic)
+        binding.tvSpO2Sensor.text = getString(R.string.spo2_sensor_generic)
+        binding.tvAccelerometer.text = getString(R.string.motion_sensor_generic)
+        binding.tvAdditionalSensors.text = getString(R.string.connect_wearable_message)
+    }    private fun loadPhoneSensors() {
+        // Step Counter Sensor
+        val stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        binding.tvStepCounter.text = if (stepCounter != null) {
+            "${getString(R.string.phone_prefix)} ${getString(R.string.sensor_available)}"
+        } else {
+            "${getString(R.string.phone_prefix)} ${getString(R.string.sensor_not_available)}"
+        }
+
+        // Gyroscope
+        val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
+        binding.tvGyroscope.text = if (gyroscope != null) {
+            "${getString(R.string.phone_prefix)} ${getString(R.string.sensor_available)}"
+        } else {
+            "${getString(R.string.phone_prefix)} ${getString(R.string.sensor_not_available)}"
+        }
+    }
+
+    private fun checkHealthConnectSupport() {
+        try {
+            val healthConnectSupported = HealthConnectClient.getSdkStatus(requireContext()) == HealthConnectClient.SDK_AVAILABLE
+            binding.tvHealthConnectSupport.text = if (healthConnectSupported) {
+                getString(R.string.supported)
+            } else {
+                getString(R.string.not_supported)
+            }
+        } catch (e: Exception) {
+            binding.tvHealthConnectSupport.text = getString(R.string.not_supported)
+        }
     }
 
     private fun checkBluetoothPermissions(): Boolean {
@@ -479,37 +420,6 @@ class DeviceInfoFragment : Fragment() {
 
         return requiredPermissions.all { permission ->
             ActivityCompat.checkSelfPermission(requireContext(), permission) == PackageManager.PERMISSION_GRANTED
-        }
-    }
-    
-    private fun loadPhoneSensors() {
-        // Step Counter Sensor
-        val stepCounter = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
-        binding.tvStepCounter.text = if (stepCounter != null) {
-            "Phone: ${getString(R.string.sensor_available)}"
-        } else {
-            "Phone: ${getString(R.string.sensor_not_available)}"
-        }
-
-        // Gyroscope
-        val gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE)
-        binding.tvGyroscope.text = if (gyroscope != null) {
-            "Phone: ${getString(R.string.sensor_available)}"
-        } else {
-            "Phone: ${getString(R.string.sensor_not_available)}"
-        }
-    }
-
-    private fun checkHealthConnectSupport() {
-        try {
-            val healthConnectSupported = HealthConnectClient.getSdkStatus(requireContext()) == HealthConnectClient.SDK_AVAILABLE
-            binding.tvHealthConnectSupport.text = if (healthConnectSupported) {
-                getString(R.string.supported)
-            } else {
-                getString(R.string.not_supported)
-            }
-        } catch (e: Exception) {
-            binding.tvHealthConnectSupport.text = getString(R.string.not_supported)
         }
     }
 

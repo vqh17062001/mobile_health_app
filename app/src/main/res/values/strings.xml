@@ -210,4 +210,85 @@
     <string name="wifi_disconnected">Disconnected</string>
     <string name="supported">Supported</string>
     <string name="not_supported">Not Supported</string>
+
+    <!-- Wearable Device Information strings -->
+    <string name="wearable_info">Wearable Information</string>
+    <string name="spo2_sensor">SpO2 Sensor</string>
+    <string name="additional_sensors">Additional Sensors</string>
+    <string name="bluetooth_not_available">Bluetooth not available on this device</string>
+    <string name="bluetooth_disabled">Bluetooth is disabled. Please enable Bluetooth to detect wearable devices.</string>
+    <string name="bluetooth_permissions_required">Bluetooth permissions required to scan for wearable devices</string>
+    <string name="no_wearable_devices">No wearable devices found.\n• Make sure your wearable device is paired with this phone\n• Check if Bluetooth is enabled on both devices\n• Ensure the wearable device is nearby and connected</string>
+    <string name="connected_wearable_devices">📱 Connected Wearable Devices:</string>
+    <string name="device_status_connected">Connected</string>
+    <string name="device_permissions_required">Device found (permissions required for details)</string>
+    <string name="connect_wearable_message">Connect a wearable device via Bluetooth to see detailed sensor information.\n\nSupported device types:\n• Samsung Galaxy Watch/Fit series\n• Fitbit devices\n• Garmin smartwatches\n• Amazfit devices\n• Xiaomi Mi Band\n• Other Wear OS devices</string>    <!-- Additional Device Information strings -->
+    <string name="unable_to_retrieve">Unable to retrieve</string>
+    <string name="not_available">Not available</string>
+    <string name="unknown_status">Unknown</string>
+    <string name="device_info_refreshed">Device information refreshed</string>
+    <string name="loading">Loading...</string>
+    <string name="phone_prefix">Phone:</string>
+
+    <!-- Bluetooth related messages -->
+    <string name="samsung_ppg_heart_rate">✅ Samsung PPG Heart Rate Sensor\n• Continuous heart rate monitoring\n• Heart rate zones detection\n• Irregular heart rhythm notifications\n• Exercise heart rate tracking\n• Samsung Health integration</string>
+    <string name="fitbit_heart_rate">✅ Fitbit Heart Rate Sensor\n• PurePulse heart rate technology\n• 24/7 heart rate tracking\n• Heart rate zones\n• Cardio fitness score</string>
+    <string name="generic_heart_rate">✅ Heart Rate Sensor Available\n• Photoplethysmography (PPG) technology\n• Continuous monitoring\n• Exercise tracking\n• Health app integration</string>
+
+    <string name="samsung_spo2">✅ Samsung SpO2 Sensor\n• Blood oxygen saturation measurement\n• Sleep breathing pattern analysis\n• Manual and automatic readings\n• Samsung Health integration</string>
+    <string name="fitbit_spo2">✅ Fitbit SpO2 Sensor\n• Blood oxygen variation tracking\n• Sleep score insights\n• Health metrics dashboard</string>
+    <string name="generic_spo2">✅ Blood Oxygen Sensor Available\n• SpO2 measurement capability\n• Sleep monitoring support\n• Health tracking integration</string>
+
+
+    <string name="samsung_additional_sensors">🔹 Standard Sensors\n   • Ambient light sensor\n   • Barometric pressure sensor\n   • Temperature sensor\n\n🔹 Location &amp; Navigation\n   • GPS connectivity (if supported)\n   • Distance and pace tracking\n   • Route mapping\n\n🔹 Samsung-specific Features\n   • Body composition analysis (select models)\n   • ECG monitoring (select models)\n   • Blood pressure monitoring (select models)\n   • Skin temperature monitoring\n   • Stress monitoring\n   • Sleep stage analysis\n\nNote: Feature availability depends on your specific Galaxy Watch model.</string>
+
+    <string name="fitbit_additional_sensors">🔹 Standard Sensors\n   • Ambient light sensor\n   • Barometric pressure sensor\n   • Temperature sensor\n\n🔹 Location &amp; Navigation\n   • GPS connectivity (if supported)\n   • Distance and pace tracking\n   • Route mapping\n\n🔹 Fitbit-specific Features\n   • Active Zone Minutes\n   • Stress management score\n   • Skin temperature variation\n   • Sleep score\n   • Guided breathing sessions\n\nNote: Feature availability depends on your specific Fitbit model.</string>
+
+    <string name="generic_additional_sensors">🔹 Standard Sensors\n   • Ambient light sensor\n   • Barometric pressure sensor\n   • Temperature sensor\n\n🔹 Location &amp; Navigation\n   • GPS connectivity (if supported)\n   • Distance and pace tracking\n   • Route mapping\n\n🔹 Advanced Health Monitoring\n   • Stress level detection\n   • Sleep stage analysis\n   • Recovery time estimation\n\nNote: Actual sensor availability depends on your specific wearable device model and manufacturer.</string>
+
+    <!-- Additional Device Information strings -->
+    <string name="wearable_not_connected_health_connect">Wearable Device: Not connected via Health Connect</string>
+    <string name="unknown_device">Unknown Device</string>
+    <string name="device_type">Type</string>
+    <string name="device_status">Status</string>
+    <string name="samsung_galaxy_watch_series">Samsung Galaxy Watch Series</string>
+    <string name="samsung_galaxy_fit_series">Samsung Galaxy Fit Series</string>
+    <string name="samsung_gear_series">Samsung Gear Series</string>
+    <string name="fitbit_fitness_tracker">Fitbit Fitness Tracker</string>
+    <string name="garmin_smartwatch">Garmin Smartwatch</string>
+    <string name="amazfit_smartwatch">Amazfit Smartwatch</string>
+    <string name="xiaomi_mi_band">Xiaomi Mi Band</string>
+    <string name="huawei_wearable">Huawei Wearable</string>
+    <string name="apple_watch">Apple Watch</string>
+    <string name="smartwatch">Smartwatch</string>
+    <string name="fitness_tracker">Fitness Tracker</string>
+    <string name="wearable_device">Wearable Device</string>
+
+    <!-- Heart Rate Sensor strings -->
+    <string name="garmin_heart_rate">✅ Garmin Elevate Heart Rate Sensor\n• Wrist-based heart rate monitoring\n• Heart rate variability\n• Performance metrics\n• Recovery advisor</string>
+    <string name="generic_heart_rate_sensor">✅ Heart Rate Sensor Available\n• Photoplethysmography (PPG) technology\n• Continuous monitoring\n• Exercise tracking\n• Health app integration</string>
+
+    <!-- SpO2 Sensor strings -->
+    <string name="samsung_spo2_sensor">✅ Samsung SpO2 Sensor\n• Blood oxygen saturation measurement\n• Sleep breathing pattern analysis\n• Manual and automatic readings\n• Samsung Health integration</string>
+    <string name="fitbit_spo2_sensor">✅ Fitbit SpO2 Sensor\n• Blood oxygen variation tracking\n• Sleep score insights\n• Health metrics dashboard</string>
+    <string name="generic_spo2_sensor">✅ Blood Oxygen Sensor Available\n• SpO2 measurement capability\n• Sleep monitoring support\n• Health tracking integration</string>
+
+    <!-- Motion Sensor strings -->
+    <string name="motion_sensors_available">✅ Motion Sensors Available\n• 3-axis accelerometer\n• 3-axis gyroscope\n• Advanced step counting\n• Activity auto-detection\n• Sleep movement tracking\n• Fall detection (if supported)</string>
+    <string name="motion_sensor_generic">❓ Motion Sensors\n• Connect a wearable device to see motion sensor details\n• Standard accelerometer and gyroscope expected</string>
+
+    <!-- Additional sensor information -->
+    <string name="common_sensors_info">🔹 Standard Sensors\n   • Ambient light sensor\n   • Barometric pressure sensor\n   • Temperature sensor\n\n🔹 Location &amp; Navigation\n   • GPS connectivity (if supported)\n   • Distance and pace tracking\n   • Route mapping</string>
+    <string name="samsung_specific_features">🔹 Samsung-specific Features\n   • Body composition analysis (select models)\n   • ECG monitoring (select models)\n   • Blood pressure monitoring (select models)\n   • Skin temperature monitoring\n   • Stress monitoring\n   • Sleep stage analysis\n\nNote: Feature availability depends on your specific Galaxy Watch model.</string>
+    <string name="fitbit_specific_features">🔹 Fitbit-specific Features\n   • Active Zone Minutes\n   • Stress management score\n   • Skin temperature variation\n   • Sleep score\n   • Guided breathing sessions\n\nNote: Feature availability depends on your specific Fitbit model.</string>
+    <string name="generic_advanced_monitoring">🔹 Advanced Health Monitoring\n   • Stress level detection\n   • Sleep stage analysis\n   • Recovery time estimation\n\nNote: Actual sensor availability depends on your specific wearable device model and manufacturer.</string>
+
+    <!-- Network Information strings -->
+    <string name="public_ip">Public</string>
+    <string name="local_ip">Local</string>
+
+    <!-- Missing error and generic sensor strings -->
+    <string name="wearable_scan_error">Error scanning for wearable devices: %1$s</string>
+    <string name="heart_rate_sensor_generic">❓ Heart Rate Sensor\n• Connect a wearable device to see specific sensor information\n• Most modern wearables include PPG heart rate sensors</string>
+    <string name="spo2_sensor_generic">❓ Blood Oxygen Sensor\n• Connect a compatible wearable device\n• Many newer smartwatches include SpO2 sensors</string>
 </resources>
