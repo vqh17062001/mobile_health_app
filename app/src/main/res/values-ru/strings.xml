@@ -288,7 +288,7 @@
     <string name="fitbit_heart_rate">✅ Датчик пульса Fitbit\n• Технология пульса PurePulse\n• 24/7 отслеживание пульса\n• Зоны пульса\n• Оценка кардиофитнеса</string>
 
     <!-- Missing error and generic sensor strings -->
-    <string name="wearable_scan_error">Ошибка сканирования носимых устройств: %1$s</string>
-    <string name="heart_rate_sensor_generic">❓ Датчик пульса\n• Подключите носимое устройство для просмотра конкретной информации о датчике\n• Большинство современных носимых устройств включают датчики пульса PPG</string>
+    <string name="wearable_scan_error">Ошибка сканирования носимого устройства: %1$s</string>
+    <string name="heart_rate_sensor_generic">❓ Датчик пульса\n• Подключите носимое устройство для просмотра информации о конкретном датчике\n• Большинство современных носимых устройств включают датчики пульса PPG</string>
     <string name="spo2_sensor_generic">❓ Датчик кислорода в крови\n• Подключите совместимое носимое устройство\n• Многие новые умные часы включают датчики SpO2</string>
 </resources>

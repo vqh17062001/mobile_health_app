@@ -288,7 +288,7 @@
     <string name="local_ip">Local</string>
 
     <!-- Missing error and generic sensor strings -->
-    <string name="wearable_scan_error">Error scanning for wearable devices: %1$s</string>
+    <string name="wearable_scan_error">Wearable device scan error: %1$s</string>
     <string name="heart_rate_sensor_generic">❓ Heart Rate Sensor\n• Connect a wearable device to see specific sensor information\n• Most modern wearables include PPG heart rate sensors</string>
     <string name="spo2_sensor_generic">❓ Blood Oxygen Sensor\n• Connect a compatible wearable device\n• Many newer smartwatches include SpO2 sensors</string>
 </resources>
