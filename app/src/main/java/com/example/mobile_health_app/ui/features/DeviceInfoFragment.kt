@@ -2,6 +2,7 @@ package com.example.mobile_health_app.ui.features
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -25,6 +26,9 @@ import androidx.health.connect.client.HealthConnectClient
 import androidx.lifecycle.lifecycleScope
 import com.example.mobile_health_app.R
 import com.example.mobile_health_app.databinding.FragmentDeviceInfoBinding
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,7 +36,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.net.NetworkInterface
 
-class DeviceInfoFragment : Fragment() {
+class DeviceInfoFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentDeviceInfoBinding? = null
     private val binding get() = _binding!!
@@ -58,14 +62,62 @@ class DeviceInfoFragment : Fragment() {
         
         // Initialize Bluetooth
         val bluetoothManager = requireContext().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
+        bluetoothAdapter = bluetoothManager.adapter        // Load device information
+        loadDeviceInformation()
 
-        // Load device information
-        loadDeviceInformation()        // Set refresh button click listener
+        // Set refresh button click listener
         binding.btnRefreshInfo.setOnClickListener {
             loadDeviceInformation()
             Toast.makeText(requireContext(), getString(R.string.device_info_refreshed), Toast.LENGTH_SHORT).show()
+        }        // Set close button click listener
+        binding.btnClose.setOnClickListener {
+            // Navigate back to previous fragment
+            dismiss()
         }
+    }    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
+        
+        dialog.setOnShowListener { dialogInterface ->
+            val bottomSheetDialog = dialogInterface as BottomSheetDialog
+            val sheet = bottomSheetDialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+            
+            sheet?.let { view ->
+                val behavior = BottomSheetBehavior.from(view)
+                
+                // Set initial height to 90% of screen
+                val displayMetrics = resources.displayMetrics
+                val screenHeight = displayMetrics.heightPixels
+                val peekHeight = (screenHeight * 0.95).toInt()
+                
+                view.layoutParams.height = peekHeight
+                behavior.peekHeight = peekHeight
+                behavior.state = BottomSheetBehavior.STATE_EXPANDED
+                behavior.isHideable = true
+                behavior.skipCollapsed = false
+                
+                // Handle drag to dismiss
+                behavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                    override fun onStateChanged(bottomSheet: View, newState: Int) {
+                        when (newState) {
+                            BottomSheetBehavior.STATE_HIDDEN -> {
+                                dismiss()
+                            }
+                            BottomSheetBehavior.STATE_DRAGGING -> {
+                                // Optional: Add haptic feedback when dragging starts
+                                bottomSheet.performHapticFeedback(android.view.HapticFeedbackConstants.VIRTUAL_KEY)
+                            }
+                        }
+                    }
+                    
+                    override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                        // Optional: Add fade effect based on slide offset
+                        bottomSheet.alpha = (slideOffset + 1f).coerceIn(0.3f, 1f)
+                    }
+                })
+            }
+        }
+        
+        return dialog
     }
 
     private fun loadDeviceInformation() {

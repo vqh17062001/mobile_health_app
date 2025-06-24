@@ -167,15 +167,11 @@ class FeaturesFragment : Fragment() {
                 // Show the bottom sheet dialog for health information
                 val viewHealthBottomSheet = ViewHealthBSFragment.newInstance()
                 viewHealthBottomSheet.show(parentFragmentManager, ViewHealthBSFragment.TAG)
-            }
-            FEATURE_DEVICE_INF -> {
+            }            FEATURE_DEVICE_INF -> {
                 Log.d(TAG, "handleFeatureClick: Device Info feature clicked")
-                // Navigate to Device Info fragment
-                val deviceInfoFragment = DeviceInfoFragment.newInstance()
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.nav_host_fragment_content_main, deviceInfoFragment)
-                    .addToBackStack(null)
-                    .commit()
+                // Show the bottom sheet dialog for device information
+                val deviceInfoBottomSheet = DeviceInfoFragment.newInstance()
+                deviceInfoBottomSheet.show(parentFragmentManager, "DeviceInfoBottomSheet")
             }
             else -> {
                 Toast.makeText(context, getString(R.string.feature_not_implemented, feature.title), Toast.LENGTH_SHORT).show()
