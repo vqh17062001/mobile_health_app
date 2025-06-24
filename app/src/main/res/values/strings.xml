@@ -144,6 +144,20 @@
     <string name="feature_view_health_description">View your health information and check-up history</string>
     <string name="feature_sync_health_data_title">Sync your health data</string>
     <string name="feature_sync_health_data_description"> Sync your health data with the server for track your health from any device</string>
+
+    <!-- Sync Health Data Configuration -->
+    <string name="select_health_data_types">Select Health Data Types to Sync</string>
+    <string name="activity_data">Activity Data</string>
+    <string name="activity_data_description">Steps, distance, calories burned</string>
+    <string name="sleep_data">Sleep Data</string>
+    <string name="sleep_data_description">Sleep duration, bedtime, wake time</string>
+    <string name="heart_rate_data">Heart Rate Data</string>
+    <string name="heart_rate_data_description">Heart rate measurements and zones</string>
+    <string name="spo2_data">SpO2 Data</string>
+    <string name="spo2_data_description">Blood oxygen saturation levels</string>
+    <string name="save_configuration">Save Configuration</string>
+    <string name="sync_config_saved_with_types">Sync configuration saved. Enabled types: %1$s</string>
+    <string name="sync_config_saved_no_types">Sync configuration saved. No data types selected for sync.</string>
     <string name="feature_device_inf_title"> Device Information</string>
     <string name="feature_device_inf_description"> View your device information </string>
 
@@ -291,4 +305,17 @@
     <string name="wearable_scan_error">Wearable device scan error: %1$s</string>
     <string name="heart_rate_sensor_generic">❓ Heart Rate Sensor\n• Connect a wearable device to see specific sensor information\n• Most modern wearables include PPG heart rate sensors</string>
     <string name="spo2_sensor_generic">❓ Blood Oxygen Sensor\n• Connect a compatible wearable device\n• Many newer smartwatches include SpO2 sensors</string>
+
+    <!-- Health Sync Configuration -->
+
+    <!-- Health Data Types -->
+
+
+
+
+    <!-- Messages -->
+    <string name="save_config">Save config</string>
+    <string name="sync_health_config_title" >Health data sync </string>>
+
+    <string name="sync_health_config_description" >Select the type of health data to sync with Atlas</string>>
 </resources>

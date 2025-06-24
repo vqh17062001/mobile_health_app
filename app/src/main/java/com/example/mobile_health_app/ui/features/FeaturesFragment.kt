@@ -167,11 +167,21 @@ class FeaturesFragment : Fragment() {
                 // Show the bottom sheet dialog for health information
                 val viewHealthBottomSheet = ViewHealthBSFragment.newInstance()
                 viewHealthBottomSheet.show(parentFragmentManager, ViewHealthBSFragment.TAG)
-            }            FEATURE_DEVICE_INF -> {
+            }
+
+            FEATURE_DEVICE_INF -> {
                 Log.d(TAG, "handleFeatureClick: Device Info feature clicked")
                 // Show the bottom sheet dialog for device information
                 val deviceInfoBottomSheet = DeviceInfoFragment.newInstance()
                 deviceInfoBottomSheet.show(parentFragmentManager, "DeviceInfoBottomSheet")
+            }            FEATURE_SYNC_HEALTH_DATA -> {
+                Log.d(TAG, "handleFeatureClick: Sync Health Data feature clicked")
+                // Navigate to the sync health data configuration fragment
+                val syncHealthConfigFragment = SyncHealthConfigFragment.newInstance()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment_content_main, syncHealthConfigFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
             else -> {
                 Toast.makeText(context, getString(R.string.feature_not_implemented, feature.title), Toast.LENGTH_SHORT).show()

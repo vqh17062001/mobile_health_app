@@ -150,6 +150,20 @@
     <string name="feature_view_health_description">Xem thông tin sức khỏe và lịch sử kiểm tra của bạn</string>
     <string name="feature_sync_health_data_title">Đồng bộ dữ liệu sức khỏe</string>
     <string name="feature_sync_health_data_description">Đồng bộ dữ liệu sức khỏe của bạn với máy chủ để theo dõi sức khỏe từ bất kỳ thiết bị nào</string>
+
+    <!-- Sync Health Data Configuration -->
+    <string name="select_health_data_types">Chọn loại dữ liệu sức khỏe để đồng bộ</string>
+    <string name="activity_data">Dữ liệu hoạt động</string>
+    <string name="activity_data_description">Số bước, khoảng cách, calo tiêu thụ</string>
+    <string name="sleep_data">Dữ liệu giấc ngủ</string>
+    <string name="sleep_data_description">Thời lượng ngủ, giờ đi ngủ, giờ thức dậy</string>
+    <string name="heart_rate_data">Dữ liệu nhịp tim</string>
+    <string name="heart_rate_data_description">Đo nhịp tim và vùng nhịp tim</string>
+    <string name="spo2_data">Dữ liệu SpO2</string>
+    <string name="spo2_data_description">Mức độ bão hòa oxy trong máu</string>
+    <string name="save_configuration">Lưu cấu hình</string>
+    <string name="sync_config_saved_with_types">Đã lưu cấu hình đồng bộ. Loại đã bật: %1$s</string>
+    <string name="sync_config_saved_no_types">Đã lưu cấu hình đồng bộ. Không có loại dữ liệu nào được chọn để đồng bộ.</string>
     <string name="feature_device_inf_title">Thông tin thiết bị</string>
     <string name="feature_device_inf_description">Xem thông tin thiết bị của bạn</string>
 
@@ -300,4 +314,8 @@
 
     <!-- Fitbit Heart Rate specific string -->
     <string name="fitbit_heart_rate">✅ Cảm biến Nhịp Tim Fitbit\n• Công nghệ nhịp tim PurePulse\n• Theo dõi nhịp tim 24/7\n• Vùng nhịp tim\n• Điểm thể lực tim mạch</string>
+    <string name="save_config">Lưu cấu hình</string>
+    <string name="sync_health_config_title" >Đồng bộ dữ liệu sức khỏe</string>>
+    <string name="sync_health_config_description" >Chọn loại dữ liệu sức khỏe để đồng bộ với Atlas</string>>
+
 </resources>

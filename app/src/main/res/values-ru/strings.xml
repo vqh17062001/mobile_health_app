@@ -140,6 +140,20 @@
     <string name="feature_view_health_description">Просмотр информации о здоровье и истории проверок</string>
     <string name="feature_sync_health_data_title">Синхронизация данных о здоровье</string>
     <string name="feature_sync_health_data_description">Синхронизуйте данные о здоровье с сервером для отслеживания вашего здоровья с любого устройства</string>
+
+    <!-- Sync Health Data Configuration -->
+    <string name="select_health_data_types">Выберите типы данных о здоровье для синхронизации</string>
+    <string name="activity_data">Данные активности</string>
+    <string name="activity_data_description">Шаги, расстояние, сожженные калории</string>
+    <string name="sleep_data">Данные сна</string>
+    <string name="sleep_data_description">Продолжительность сна, время сна, время пробуждения</string>
+    <string name="heart_rate_data">Данные пульса</string>
+    <string name="heart_rate_data_description">Измерения пульса и зоны</string>
+    <string name="spo2_data">Данные SpO2</string>
+    <string name="spo2_data_description">Уровни насыщения крови кислородом</string>
+    <string name="save_configuration">Сохранить конфигурацию</string>
+    <string name="sync_config_saved_with_types">Конфигурация синхронизации сохранена. Включенные типы: %1$s</string>
+    <string name="sync_config_saved_no_types">Конфигурация синхронизации сохранена. Типы данных для синхронизации не выбраны.</string>
     <string name="feature_device_inf_title">Информация об устройстве</string>
     <string name="feature_device_inf_description">Просмотр информации о вашем устройстве</string>
 
@@ -288,7 +302,12 @@
     <string name="fitbit_heart_rate">✅ Датчик пульса Fitbit\n• Технология пульса PurePulse\n• 24/7 отслеживание пульса\n• Зоны пульса\n• Оценка кардиофитнеса</string>
 
     <!-- Missing error and generic sensor strings -->
+    <string name="save_config">Сохранить конфигурацию</string>
+
     <string name="wearable_scan_error">Ошибка сканирования носимого устройства: %1$s</string>
     <string name="heart_rate_sensor_generic">❓ Датчик пульса\n• Подключите носимое устройство для просмотра информации о конкретном датчике\n• Большинство современных носимых устройств включают датчики пульса PPG</string>
     <string name="spo2_sensor_generic">❓ Датчик кислорода в крови\n• Подключите совместимое носимое устройство\n• Многие новые умные часы включают датчики SpO2</string>
+    <string name="sync_health_config_title" >Синхронизация данных о состоянии здоровья</string>>
+
+    <string name="sync_health_config_description" >Выберите тип данных о состоянии здоровья для синхронизации с Atlas</string>>
 </resources>
