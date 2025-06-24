@@ -184,4 +184,30 @@
     <string name="invalid_reading">Invalid reading</string>
     <string name="no_spo2_data">No SpO2 data in 24h ago available</string>
     <string name="health_connect_permission_required">You must grant Health Connect permissions to view steps</string>
+
+    <!-- Device Information strings -->
+    <string name="device_information">Device Information</string>
+    <string name="basic_device_info">Basic Device Information</string>
+    <string name="device_model">Model</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="android_version">Android Version</string>
+    <string name="sdk_version">SDK Level</string>
+    <string name="device_id">Device ID</string>
+    <string name="network_information">Network Information</string>
+    <string name="ip_address">IP Address</string>
+    <string name="mac_address">MAC Address</string>
+    <string name="wifi_status">WiFi Status</string>
+    <string name="health_sensors">Health Sensors</string>
+    <string name="step_counter_sensor">Step Counter</string>
+    <string name="heart_rate_sensor">Heart Rate</string>
+    <string name="accelerometer_sensor">Accelerometer</string>
+    <string name="gyroscope_sensor">Gyroscope</string>
+    <string name="health_connect_support">Health Connect</string>
+    <string name="refresh_device_info">Refresh Information</string>
+    <string name="sensor_available">Available</string>
+    <string name="sensor_not_available">Not Available</string>
+    <string name="wifi_connected">Connected</string>
+    <string name="wifi_disconnected">Disconnected</string>
+    <string name="supported">Supported</string>
+    <string name="not_supported">Not Supported</string>
 </resources>

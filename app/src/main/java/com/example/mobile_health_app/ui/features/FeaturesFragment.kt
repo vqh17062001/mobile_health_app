@@ -16,6 +16,7 @@ import com.example.mobile_health_app.R
 import com.example.mobile_health_app.adapter.FeaturesAdapter
 import com.example.mobile_health_app.data.model.Feature
 import com.example.mobile_health_app.ui.features.ViewHealthBSFragment
+import com.example.mobile_health_app.ui.features.DeviceInfoFragment
 import com.example.mobile_health_app.viewmodel.UserViewModel
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
@@ -153,8 +154,7 @@ class FeaturesFragment : Fragment() {
         gridView.descendantFocusability = ViewGroup.FOCUS_AFTER_DESCENDANTS
         
         Log.d(TAG, "setupFeatures: Features list size: ${featuresList.size}")
-    }
-    //// Handle feature click events
+    }    //// Handle feature click events
     private fun handleFeatureClick(feature: Feature) {
         Log.d(TAG, "handleFeatureClick: Feature clicked: ${feature.id}")
         when(feature.id) {
@@ -167,6 +167,15 @@ class FeaturesFragment : Fragment() {
                 // Show the bottom sheet dialog for health information
                 val viewHealthBottomSheet = ViewHealthBSFragment.newInstance()
                 viewHealthBottomSheet.show(parentFragmentManager, ViewHealthBSFragment.TAG)
+            }
+            FEATURE_DEVICE_INF -> {
+                Log.d(TAG, "handleFeatureClick: Device Info feature clicked")
+                // Navigate to Device Info fragment
+                val deviceInfoFragment = DeviceInfoFragment.newInstance()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.nav_host_fragment_content_main, deviceInfoFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
             else -> {
                 Toast.makeText(context, getString(R.string.feature_not_implemented, feature.title), Toast.LENGTH_SHORT).show()
