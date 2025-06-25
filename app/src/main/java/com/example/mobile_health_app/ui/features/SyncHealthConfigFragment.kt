@@ -37,7 +37,7 @@ class SyncHealthConfigFragment : Fragment() {
 
     private fun setupButtons() {
         // Close button
-      
+
 
         // Cancel button
         binding.btnCancel.setOnClickListener {

@@ -315,7 +315,7 @@
 
     <!-- Messages -->
     <string name="save_config">Save config</string>
-    <string name="sync_health_config_title" >Health data sync </string>>
+    <string name="sync_health_config_title">Health data sync </string>>
 
-    <string name="sync_health_config_description" >Select the type of health data to sync with Atlas</string>>
+    <string name="sync_health_config_description">Select the type of health data to sync with Atlas</string>>
 </resources>
