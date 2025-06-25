@@ -33,9 +33,7 @@ class SyncHealthConfigFragment : Fragment() {
         
         setupButtons()
         loadSavedConfiguration()
-    }
-
-    private fun setupButtons() {
+    }    private fun setupButtons() {
         // Close button
 
 
@@ -48,20 +46,9 @@ class SyncHealthConfigFragment : Fragment() {
         binding.btnSaveConfig.setOnClickListener {
             saveConfiguration()
         }
-    }
-
-    private fun loadSavedConfiguration() {
+    }private fun loadSavedConfiguration() {
         currentUserId?.let { userId ->
             val sharedPrefs = requireContext().getSharedPreferences(SYNC_PREFS_NAME, Context.MODE_PRIVATE)
-            
-            // Kiểm tra xem có user ID được lưu trước đó không
-            val savedUserId = sharedPrefs.getString(KEY_USER_ID, null)
-            
-            // Nếu user ID khác với user hiện tại, xóa config cũ
-            if (savedUserId != null && savedUserId != userId) {
-                clearPreviousUserConfig()
-                return
-            }
             
             // Load config cho user hiện tại
             binding.switchActivity.isChecked = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_ACTIVITY, userId), false)
@@ -103,19 +90,9 @@ class SyncHealthConfigFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             requireActivity().onBackPressed()
         }
-    }
-
-    override fun onDestroyView() {
+    }    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun clearPreviousUserConfig() {
-        val sharedPrefs = requireContext().getSharedPreferences(SYNC_PREFS_NAME, Context.MODE_PRIVATE)
-        with(sharedPrefs.edit()) {
-            clear() // Xóa tất cả config cũ
-            apply()
-        }
     }
 
     private fun getKeyForUser(baseKey: String, userId: String): String {
