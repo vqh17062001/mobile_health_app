@@ -160,6 +160,9 @@
     <string name="sync_config_saved_no_types">Sync configuration saved. No data types selected for sync.</string>
     <string name="feature_device_inf_title"> Device Information</string>
     <string name="feature_device_inf_description"> View your device information </string>
+    <string name="sync_health_config_title">Sync Health Data Configuration</string>
+    <string name="sync_health_config_description">Select which health data types you want to sync with the server</string>
+    <string name="save_config">Save Configuration</string>
 
     <!-- Health data viewer strings -->
     <string name="close">Close</string>
@@ -314,8 +317,5 @@
 
 
     <!-- Messages -->
-    <string name="save_config">Save config</string>
-    <string name="sync_health_config_title">Health data sync </string>>
 
-    <string name="sync_health_config_description">Select the type of health data to sync with Atlas</string>>
 </resources>

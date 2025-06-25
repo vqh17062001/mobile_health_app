@@ -166,6 +166,9 @@
     <string name="sync_config_saved_no_types">Đã lưu cấu hình đồng bộ. Không có loại dữ liệu nào được chọn để đồng bộ.</string>
     <string name="feature_device_inf_title">Thông tin thiết bị</string>
     <string name="feature_device_inf_description">Xem thông tin thiết bị của bạn</string>
+    <string name="sync_health_config_title">Cấu hình đồng bộ dữ liệu sức khỏe</string>
+    <string name="sync_health_config_description">Chọn loại dữ liệu sức khỏe bạn muốn đồng bộ với máy chủ</string>
+    <string name="save_config">Lưu cấu hình</string>
 
     <!-- Health data viewer strings -->
     <string name="close">Đóng</string>
@@ -314,8 +317,5 @@
 
     <!-- Fitbit Heart Rate specific string -->
     <string name="fitbit_heart_rate">✅ Cảm biến Nhịp Tim Fitbit\n• Công nghệ nhịp tim PurePulse\n• Theo dõi nhịp tim 24/7\n• Vùng nhịp tim\n• Điểm thể lực tim mạch</string>
-    <string name="save_config">Lưu cấu hình</string>
-    <string name="sync_health_config_title" >Đồng bộ dữ liệu sức khỏe</string>>
-    <string name="sync_health_config_description" >Chọn loại dữ liệu sức khỏe để đồng bộ với Atlas</string>>
 
 </resources>

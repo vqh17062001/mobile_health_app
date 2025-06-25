@@ -12,6 +12,7 @@ import com.example.mobile_health_app.databinding.ActivityMainBinding
 import com.example.mobile_health_app.ui.account.AccountFragment
 import com.example.mobile_health_app.ui.features.FeaturesFragment
 import com.example.mobile_health_app.ui.qrscan.QrScanFragment
+import com.example.mobile_health_app.Service.HealthSyncManager
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,7 +25,9 @@ class MainActivity : AppCompatActivity() {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)        // Get user data from intent
+        setContentView(binding.root)
+
+        // Get user data from intent
         val username = intent.getStringExtra("userName")
         val userId = intent.getStringExtra("userId")
         val userEmail = intent.getStringExtra("userEmail")
@@ -33,6 +36,9 @@ class MainActivity : AppCompatActivity() {
         // Kiểm tra và xóa config cũ nếu user khác
         userId?.let { currentUserId ->
             checkAndClearOldUserConfig(currentUserId)
+            
+            // Kiểm tra và khởi chạy service đồng bộ tự động
+           // HealthSyncManager.checkAndStartSyncService(this)
         }
 
         // Set up bottom navigation
@@ -64,7 +70,9 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.nav_host_fragment_content_main, fragment)
             .commit()
-    }    // For external access from other fragments
+    }
+
+    // For external access from other fragments
     fun loadFragment(fragment: Fragment) {
         replaceFragment(fragment)
     }
@@ -93,6 +101,12 @@ class MainActivity : AppCompatActivity() {
             clear() // Xóa tất cả config cũ
             apply()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Dừng service khi activity bị destroy (có thể tùy chỉnh logic này)
+        // HealthSyncManager.stopSyncService(this)
     }
 
     companion object {

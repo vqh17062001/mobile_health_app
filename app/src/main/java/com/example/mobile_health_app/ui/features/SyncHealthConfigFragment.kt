@@ -46,7 +46,8 @@ class SyncHealthConfigFragment : Fragment() {
         binding.btnSaveConfig.setOnClickListener {
             saveConfiguration()
         }
-    }private fun loadSavedConfiguration() {
+    }
+    private fun loadSavedConfiguration() {
         currentUserId?.let { userId ->
             val sharedPrefs = requireContext().getSharedPreferences(SYNC_PREFS_NAME, Context.MODE_PRIVATE)
             
@@ -71,8 +72,12 @@ class SyncHealthConfigFragment : Fragment() {
                 putBoolean(getKeyForUser(KEY_SYNC_SLEEP, userId), binding.switchSleep.isChecked)
                 putBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userId), binding.switchHeartRate.isChecked)
                 putBoolean(getKeyForUser(KEY_SYNC_SPO2, userId), binding.switchSpO2.isChecked)
-                apply()
-            }
+                apply()            }
+
+            // Tự động khởi chạy hoặc dừng service dựa trên cấu hình trong một luồng riêng
+            Thread {
+                com.example.mobile_health_app.Service.HealthSyncManager.restartSyncService(requireContext())
+            }.start()
 
             // Show confirmation message
             val enabledTypes = mutableListOf<String>()
@@ -90,7 +95,7 @@ class SyncHealthConfigFragment : Fragment() {
             Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             requireActivity().onBackPressed()
         }
-    }    override fun onDestroyView() {
+    }override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
