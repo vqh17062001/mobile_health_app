@@ -99,6 +99,10 @@
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
 
+    <!-- Quyền cần cho Foreground Service -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC"/>
+
+
     <!-- Bluetooth feature -->
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
 
@@ -150,6 +154,11 @@
             <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
         </provider>
 
+
+        <service
+            android:name=".Service.HealthDataSyncService"
+            android:exported="false"
+            android:foregroundServiceType="dataSync" />
 
 
     </application>
