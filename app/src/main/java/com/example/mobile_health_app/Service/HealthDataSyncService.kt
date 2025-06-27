@@ -49,6 +49,10 @@ class HealthDataSyncService : Service() {
         private const val KEY_SYNC_HEART_RATE = "sync_heart_rate"
         private const val KEY_SYNC_SPO2 = "sync_spo2"
         private const val KEY_LAST_SYNC_TIME = "last_sync_time"
+        
+        // Initial sync offset when service starts/restarts
+        private const val INITIAL_SYNC_OFFSET_HOURS = 24L // 24 hours for general data
+        private const val SLEEP_SYNC_OFFSET_HOURS = 48L // 48 hours for sleep data (longer period)
     }
 
     private lateinit var healthConnectRepository: HealthConnectRepository
@@ -169,6 +173,30 @@ class HealthDataSyncService : Service() {
         handler.post(syncRunnable!!)
     }
 
+    /**
+     * Calculate the sync start time with offset for service startup/restart
+     * @param lastSyncTime The last recorded sync time
+     * @param isServiceStartup Whether this is a service startup (first sync after start)
+     * @param dataType The type of data being synced (for different offset strategies)
+     * @return Adjusted sync start time
+     */
+    private fun getAdjustedSyncTime(
+        lastSyncTime: Instant, 
+        isServiceStartup: Boolean = true, 
+        dataType: String = "general"
+    ): Instant {
+        return if (isServiceStartup) {
+            val offsetHours = when (dataType) {
+                "sleep" -> SLEEP_SYNC_OFFSET_HOURS
+                else -> INITIAL_SYNC_OFFSET_HOURS
+            }
+            lastSyncTime.minusSeconds(offsetHours * 60 * 60)
+        } else {
+            // For regular periodic syncs, use minimal offset
+            lastSyncTime.minusSeconds(20)
+        }
+    }
+
     private fun performSync() {
         currentUserId?.let { userId ->
             serviceScope.launch {
@@ -181,29 +209,38 @@ class HealthDataSyncService : Service() {
                     val sharedPrefs = getSharedPreferences(SYNC_PREFS_NAME, Context.MODE_PRIVATE)
 
                     // Get last sync time
-                    val lastSyncTime = getLastSyncTime(userIdString).minusSeconds(20) // trừ delay
+                    val baseSyncTime = getLastSyncTime(userIdString)
                     val currentTime = Instant.now()
+                    
+                    // Check if this is the first sync after service start (simple heuristic)
+                    val isServiceStartup = syncRunnable?.let { 
+                        handler.hasCallbacks(it) 
+                    } ?: true
                     
                     var syncCount = 0
                     
                     // Sync Activity Data (Steps, Distance, Calories)
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_ACTIVITY, userid), false)) {
-                        syncCount += syncActivityData(userId, lastSyncTime, currentTime)
+                        val activitySyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "activity")
+                        syncCount += syncActivityData(userId, activitySyncTime, currentTime)
                     }
                     
                     // Sync Sleep Data
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SLEEP,userid), false)) {
-                        syncCount += syncSleepData(userId,lastSyncTime.minusSeconds(60*60*24*5) , currentTime)
+                        val sleepSyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "sleep")
+                        syncCount += syncSleepData(userId, sleepSyncTime, currentTime)
                     }
                     
                     // Sync Heart Rate Data
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userid),false)) {
-                        syncCount += syncHeartRateData(userId, lastSyncTime, currentTime)
+                        val heartRateSyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "heart_rate")
+                        syncCount += syncHeartRateData(userId, heartRateSyncTime, currentTime)
                     }
                     
                     // Sync SpO2 Data
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SPO2, userid), false)) {
-                        syncCount += syncSpO2Data(userId, lastSyncTime, currentTime)
+                        val spo2SyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "spo2")
+                        syncCount += syncSpO2Data(userId, spo2SyncTime, currentTime)
                     }
                     
                     // Update last sync time
@@ -234,66 +271,110 @@ class HealthDataSyncService : Service() {
         var syncCount = 0
         
         try {
+            // Get existing activity records from database to check for duplicates
+            val existingActivityRecords = sensorReadingRepository.getSensorReadings(
+                userId = userId,
+                deviceId = null,
+                from = from,
+                to = to
+            ).filter { sensorReading ->
+                sensorReading.metadata.sensorType == "activity"
+            }
+            
+            // Extract existing timestamps for each activity type
+            val existingStepsTimestamps = existingActivityRecords.filter { sensorReading ->
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "steps" }
+            }.map { it.timestamp }.toSet()
+            
+            val existingDistanceTimestamps = existingActivityRecords.filter { sensorReading ->
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "distance" }
+            }.map { it.timestamp }.toSet()
+            
+            val existingCaloriesTimestamps = existingActivityRecords.filter { sensorReading ->
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "calories" }
+            }.map { it.timestamp }.toSet()
+            
             // Sync Steps
             val stepsRecords = healthConnectRepository.getSteps(from, to)
             for (record in stepsRecords) {
-                val readings = listOf(
-                    Reading("steps", ValueType.IntValue(record.count.toInt())),
-                    Reading("type", ValueType.StringValue("steps"))
-                )
-                val sensorReading = SensorReading(
-                    timestamp = record.startTime,
-                    metadata = Metadata(
-                        userId = userId,
-                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                        sensorType = "activity"
-                    ),
-                    readings = readings
-                )
-                if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                    syncCount++
+                // Check if this steps record already exists by comparing timestamp
+                if (!existingStepsTimestamps.contains(record.startTime)) {
+                    val readings = listOf(
+                        Reading("steps", ValueType.IntValue(record.count.toInt())),
+                        Reading("type", ValueType.StringValue("steps"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.startTime,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "activity"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new steps record with timestamp: ${record.startTime}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate steps record with timestamp: ${record.startTime}")
                 }
             }
             
             // Sync Distance
             val distanceRecords = healthConnectRepository.getDistance(from, to)
             for (record in distanceRecords) {
-                val readings = listOf(
-                    Reading("distance_meters", ValueType.DoubleValue(record.distance.inMeters)),
-                    Reading("type", ValueType.StringValue("distance"))
-                )
-                val sensorReading = SensorReading(
-                    timestamp = record.startTime,
-                    metadata = Metadata(
-                        userId = userId,
-                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                        sensorType = "activity"
-                    ),
-                    readings = readings
-                )
-                if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                    syncCount++
+                // Check if this distance record already exists by comparing timestamp
+                if (!existingDistanceTimestamps.contains(record.startTime)) {
+                    val readings = listOf(
+                        Reading("distance_meters", ValueType.DoubleValue(record.distance.inMeters)),
+                        Reading("type", ValueType.StringValue("distance"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.startTime,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "activity"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new distance record with timestamp: ${record.startTime}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate distance record with timestamp: ${record.startTime}")
                 }
             }
             
             // Sync Calories
             val caloriesRecords = healthConnectRepository.getTotalCaloriesBurned(from, to)
             for (record in caloriesRecords) {
-                val readings = listOf(
-                    Reading("calories", ValueType.DoubleValue(record.energy.inKilocalories)),
-                    Reading("type", ValueType.StringValue("calories"))
-                )
-                val sensorReading = SensorReading(
-                    timestamp = record.startTime,
-                    metadata = Metadata(
-                        userId = userId,
-                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                        sensorType = "activity"
-                    ),
-                    readings = readings
-                )
-                if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                    syncCount++
+                // Check if this calories record already exists by comparing timestamp
+                if (!existingCaloriesTimestamps.contains(record.startTime)) {
+                    val readings = listOf(
+                        Reading("calories", ValueType.DoubleValue(record.energy.inKilocalories)),
+                        Reading("type", ValueType.StringValue("calories"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.startTime,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "activity"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new calories record with timestamp: ${record.startTime}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate calories record with timestamp: ${record.startTime}")
                 }
             }
             
@@ -372,25 +453,56 @@ class HealthDataSyncService : Service() {
         var syncCount = 0
         
         try {
+            // Get existing heart rate records from database to check for duplicates
+            val existingHeartRateRecords = sensorReadingRepository.getSensorReadings(
+                userId = userId,
+                deviceId = null,
+                from = from,
+                to = to
+            ).filter { sensorReading ->
+                sensorReading.metadata.sensorType == "heart_rate" &&
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "heart_rate" }
+            }
+            
+            // Extract existing timestamps for comparison
+            val existingTimestamps = existingHeartRateRecords.mapNotNull { sensorReading ->
+                sensorReading.readings.find { it.key == "time" }?.let { reading ->
+                    (reading.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string?.let { 
+                        try {
+                            Instant.parse(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }
+            }.toSet()
+            
             val heartRateRecords = healthConnectRepository.getHeartRates(from, to)
             for (record in heartRateRecords) {
                 for (sample in record.samples) {
-                    val readings = listOf(
-                        Reading("heart_rate_bpm", ValueType.IntValue(sample.beatsPerMinute.toInt())),
-                        Reading("time", ValueType.StringValue(sample.time.toString())),
-                        Reading("type", ValueType.StringValue("heart_rate"))
-                    )
-                    val sensorReading = SensorReading(
-                        timestamp = sample.time,
-                        metadata = Metadata(
-                            userId = userId,
-                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                            sensorType = "heart_rate"
-                        ),
-                        readings = readings
-                    )
-                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                        syncCount++
+                    // Check if this sample already exists by comparing timestamp
+                    if (!existingTimestamps.contains(sample.time)) {
+                        val readings = listOf(
+                            Reading("heart_rate_bpm", ValueType.IntValue(sample.beatsPerMinute.toInt())),
+                            Reading("time", ValueType.StringValue(sample.time.toString())),
+                            Reading("type", ValueType.StringValue("heart_rate"))
+                        )
+                        val sensorReading = SensorReading(
+                            timestamp = sample.time,
+                            metadata = Metadata(
+                                userId = userId,
+                                deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                                sensorType = "heart_rate"
+                            ),
+                            readings = readings
+                        )
+                        if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                            syncCount++
+                            Log.d(TAG, "Synced new heart rate record with timestamp: ${sample.time}")
+                        }
+                    } else {
+                        Log.d(TAG, "Skipped duplicate heart rate record with timestamp: ${sample.time}")
                     }
                 }
             }
@@ -405,24 +517,55 @@ class HealthDataSyncService : Service() {
         var syncCount = 0
         
         try {
+            // Get existing SpO2 records from database to check for duplicates
+            val existingSpO2Records = sensorReadingRepository.getSensorReadings(
+                userId = userId,
+                deviceId = null,
+                from = from,
+                to = to
+            ).filter { sensorReading ->
+                sensorReading.metadata.sensorType == "spo2" &&
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "spo2" }
+            }
+            
+            // Extract existing timestamps for comparison
+            val existingTimestamps = existingSpO2Records.mapNotNull { sensorReading ->
+                sensorReading.readings.find { it.key == "time" }?.let { reading ->
+                    (reading.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string?.let { 
+                        try {
+                            Instant.parse(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }
+            }.toSet()
+            
             val spo2Records = healthConnectRepository.getOxygenSaturation(from, to)
             for (record in spo2Records) {
-                val readings = listOf(
-                    Reading("spo2_percentage", ValueType.DoubleValue(record.percentage.value)),
-                    Reading("time", ValueType.StringValue(record.time.toString())),
-                    Reading("type", ValueType.StringValue("spo2"))
-                )
-                val sensorReading = SensorReading(
-                    timestamp = record.time,
-                    metadata = Metadata(
-                        userId = userId,
-                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                        sensorType = "spo2"
-                    ),
-                    readings = readings
-                )
-                if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                    syncCount++
+                // Check if this record already exists by comparing timestamp
+                if (!existingTimestamps.contains(record.time)) {
+                    val readings = listOf(
+                        Reading("spo2_percentage", ValueType.DoubleValue(record.percentage.value)),
+                        Reading("time", ValueType.StringValue(record.time.toString())),
+                        Reading("type", ValueType.StringValue("spo2"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.time,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "spo2"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new SpO2 record with timestamp: ${record.time}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate SpO2 record with timestamp: ${record.time}")
                 }
             }
         } catch (e: Exception) {
