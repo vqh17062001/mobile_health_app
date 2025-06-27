@@ -193,7 +193,7 @@ class HealthDataSyncService : Service() {
                     
                     // Sync Sleep Data
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SLEEP,userid), false)) {
-                        syncCount += syncSleepData(userId,lastSyncTime , currentTime)
+                        syncCount += syncSleepData(userId,lastSyncTime.minusSeconds(60*60*24*5) , currentTime)
                     }
                     
                     // Sync Heart Rate Data
@@ -308,26 +308,57 @@ class HealthDataSyncService : Service() {
         var syncCount = 0
         
         try {
+            // Get existing sleep records from database to check for duplicates
+            val existingSleepRecords = sensorReadingRepository.getSensorReadings(
+                userId = userId,
+                deviceId = null,
+                from = from,
+                to = to
+            ).filter { sensorReading ->
+                sensorReading.metadata.sensorType == "sleep" &&
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "sleep" }
+            }
+            
+            // Extract existing start times for comparison
+            val existingStartTimes = existingSleepRecords.mapNotNull { sensorReading ->
+                sensorReading.readings.find { it.key == "start_time" }?.let { reading ->
+                    (reading.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string?.let { 
+                        try {
+                            Instant.parse(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }
+            }.toSet()
+            
             val sleepRecords = healthConnectRepository.getSleepSessions(from, to)
             for (record in sleepRecords) {
-                val durationMinutes = java.time.Duration.between(record.startTime, record.endTime).toMinutes()
-                val readings = listOf(
-                    Reading("sleep_duration_minutes", ValueType.IntValue(durationMinutes.toInt())),
-                    Reading("start_time", ValueType.StringValue(record.startTime.toString())),
-                    Reading("end_time", ValueType.StringValue(record.endTime.toString())),
-                    Reading("type", ValueType.StringValue("sleep"))
-                )
-                val sensorReading = SensorReading(
-                    timestamp = record.startTime,
-                    metadata = Metadata(
-                        userId = userId,
-                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
-                        sensorType = "sleep"
-                    ),
-                    readings = readings
-                )
-                if (sensorReadingRepository.insertSensorReading(sensorReading)) {
-                    syncCount++
+                // Check if this record already exists by comparing startTime
+                if (!existingStartTimes.contains(record.startTime)) {
+                    val durationMinutes = java.time.Duration.between(record.startTime, record.endTime).toMinutes()
+                    val readings = listOf(
+                        Reading("sleep_duration_minutes", ValueType.IntValue(durationMinutes.toInt())),
+                        Reading("start_time", ValueType.StringValue(record.startTime.toString())),
+                        Reading("end_time", ValueType.StringValue(record.endTime.toString())),
+                        Reading("type", ValueType.StringValue("sleep"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.startTime,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "sleep"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new sleep record with startTime: ${record.startTime}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate sleep record with startTime: ${record.startTime}")
                 }
             }
         } catch (e: Exception) {
