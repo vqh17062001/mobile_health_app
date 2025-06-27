@@ -9,9 +9,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.mongodb.kbson.*
 import io.realm.kotlin.mongodb.Credentials
+import io.realm.kotlin.mongodb.ext.deleteMany
+import io.realm.kotlin.mongodb.ext.deleteOne
 import io.realm.kotlin.mongodb.ext.insertOne
 import io.realm.kotlin.mongodb.ext.find
+import io.realm.kotlin.mongodb.ext.updateMany
+import io.realm.kotlin.mongodb.ext.updateOne
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.Date
 import java.util.Locale
 
@@ -72,6 +77,131 @@ class SensorReadingRepository {
             return@withContext false
         }
     }
+
+    // Update an existing sensor reading
+//    suspend fun updateSensorReading(
+//        userId: ObjectId,
+//        timestamp: Instant,
+//        sensorType: String,
+//        activityType: String,
+//        newReadings: List<Reading>
+//    ): Boolean = withContext(Dispatchers.IO) {
+//        try {
+//            val app = RealmConfig.app
+//            val userAuth = app.login(Credentials.anonymous())
+//            val mgcli = userAuth.mongoClient(mongoClient)
+//            val db = mgcli.database(databaseName)
+//            val readings = db.collection(collectionName)
+//
+//            // Query to find the existing record
+//            val query = BsonDocument().apply {
+//                put("metadata.userId", userId)
+//                put("timestamp", BsonDateTime(timestamp.toEpochMilli()))
+//                put("metadata.sensorType", BsonString(sensorType))
+//                put("readings.key", BsonString("type"))
+//                put("readings.value", BsonString(activityType))
+//            }
+//
+//            // Update document
+//            val update = BsonDocument().apply {
+//                put("\$set", BsonDocument().apply {
+//                    put("readings", BsonArray().apply {
+//                        newReadings.forEach { r ->
+//                            add(BsonDocument().apply {
+//                                put("key", BsonString(r.key))
+//                                when (val v = r.value) {
+//                                    is com.example.mobile_health_app.data.model.ValueType.IntValue -> put("value", BsonInt32(v.int))
+//                                    is com.example.mobile_health_app.data.model.ValueType.DoubleValue -> put("value", BsonDouble(v.double))
+//                                    is com.example.mobile_health_app.data.model.ValueType.StringValue -> put("value", BsonString(v.string))
+//                                    is com.example.mobile_health_app.data.model.ValueType.BoolValue -> put("value", BsonBoolean(v.bool))
+//                                }
+//                            })
+//                        }
+//                    })
+//                })
+//            }
+//
+//            val result = readings.updateMany(query, update)
+//            Log.d(TAG, "SensorReading updated successfully! Modified count: ${result.modifiedCount}")
+//            return@withContext result.modifiedCount > 0
+//        } catch (e: Exception) {
+//            Log.e(TAG, "Update failed: ${e.message}")
+//            return@withContext false
+//        }
+//    }
+
+
+
+    suspend fun updateSensorReading(
+        userId: ObjectId,
+        timestamp: Instant,
+        deviceId : String,
+
+        sensorType: String,
+        activityType: String,
+        newReadings: List<Reading>
+    ): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val app = RealmConfig.app
+            val userAuth = app.login(Credentials.anonymous())
+            val mgcli = userAuth.mongoClient(mongoClient)
+            val db = mgcli.database(databaseName)
+            val col = db.collection(collectionName)
+
+            // 1. Xây dựng filter để tìm đúng document cũ
+            val query = BsonDocument().apply {
+                put("metadata.userId", userId)
+                put("timestamp", BsonDateTime(timestamp.toEpochMilli()))
+                put("metadata.sensorType", BsonString(sensorType))
+                put("readings.key", BsonString("type"))
+                put("readings.value", BsonString(activityType))
+            }
+
+            // 2. Xóa document cũ
+            val deleteResult = col.deleteMany(query)
+            if (deleteResult>0) {
+                Log.d(TAG, "Delete successful, deleted count: ${deleteResult}")
+
+            }else {
+                Log.w(TAG, "No document found to delete")
+                return@withContext false
+            }
+
+            // 3. Tạo document mới với readings đã cập nhật
+            val newDoc = BsonDocument().apply {
+                put("timestamp", BsonDateTime(timestamp.toEpochMilli()))
+                put("metadata", BsonDocument().apply {
+                    put("userId", userId)
+                    put("sensorType", BsonString(sensorType))
+                    put("deviceId", BsonString(deviceId))
+                    // nếu có thêm field metadata khác thì put ở đây
+                })
+                put("readings", BsonArray().apply {
+                    newReadings.forEach { r ->
+                        add(BsonDocument().apply {
+                            put("key", BsonString(r.key))
+                            when (val v = r.value) {
+                                is com.example.mobile_health_app.data.model.ValueType.IntValue -> put("value", BsonInt32(v.int))
+                                is com.example.mobile_health_app.data.model.ValueType.DoubleValue -> put("value", BsonDouble(v.double))
+                                is com.example.mobile_health_app.data.model.ValueType.StringValue -> put("value", BsonString(v.string))
+                                is com.example.mobile_health_app.data.model.ValueType.BoolValue -> put("value", BsonBoolean(v.bool))
+
+                            }
+                        })
+                    }
+                })
+            }
+
+            // 4. Chèn lại document mới
+            col.insertOne(newDoc)
+            Log.d(TAG, "Re-inserted updated document")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "Update (delete+insert) failed: ${e.message}")
+            false
+        }
+    }
+
 
     // Lấy readings của 1 user (có thể lọc theo device hoặc time nếu muốn)
     /**

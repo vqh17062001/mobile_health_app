@@ -1,5 +1,6 @@
 package com.example.mobile_health_app.Service
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -267,6 +268,7 @@ class HealthDataSyncService : Service() {
         } else s
     }
 
+    @SuppressLint("HardwareIds")
     private suspend fun syncActivityData(userId: ObjectId, from: Instant, to: Instant): Int {
         var syncCount = 0
         
@@ -300,12 +302,13 @@ class HealthDataSyncService : Service() {
             // Sync Steps
             val stepsRecords = healthConnectRepository.getSteps(from, to)
             for (record in stepsRecords) {
-                // Check if this steps record already exists by comparing timestamp
+                val readings = listOf(
+                    Reading("steps", ValueType.IntValue(record.count.toInt())),
+                    Reading("type", ValueType.StringValue("steps"))
+                )
+                
                 if (!existingStepsTimestamps.contains(record.startTime)) {
-                    val readings = listOf(
-                        Reading("steps", ValueType.IntValue(record.count.toInt())),
-                        Reading("type", ValueType.StringValue("steps"))
-                    )
+                    // Insert new record
                     val sensorReading = SensorReading(
                         timestamp = record.startTime,
                         metadata = Metadata(
@@ -320,19 +323,31 @@ class HealthDataSyncService : Service() {
                         Log.d(TAG, "Synced new steps record with timestamp: ${record.startTime}")
                     }
                 } else {
-                    Log.d(TAG, "Skipped duplicate steps record with timestamp: ${record.startTime}")
+                    // Update existing record
+                    if (sensorReadingRepository.updateSensorReading(
+                        userId = userId,
+                        timestamp = record.startTime,
+                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                        sensorType = "activity",
+                        activityType = "steps",
+                        newReadings = readings
+                    )) {
+                        syncCount++
+                        Log.d(TAG, "Updated steps record with timestamp: ${record.startTime}, new count: ${record.count}")
+                    }
                 }
             }
             
             // Sync Distance
             val distanceRecords = healthConnectRepository.getDistance(from, to)
             for (record in distanceRecords) {
-                // Check if this distance record already exists by comparing timestamp
+                val readings = listOf(
+                    Reading("distance_meters", ValueType.DoubleValue(record.distance.inMeters)),
+                    Reading("type", ValueType.StringValue("distance"))
+                )
+                
                 if (!existingDistanceTimestamps.contains(record.startTime)) {
-                    val readings = listOf(
-                        Reading("distance_meters", ValueType.DoubleValue(record.distance.inMeters)),
-                        Reading("type", ValueType.StringValue("distance"))
-                    )
+                    // Insert new record
                     val sensorReading = SensorReading(
                         timestamp = record.startTime,
                         metadata = Metadata(
@@ -347,19 +362,32 @@ class HealthDataSyncService : Service() {
                         Log.d(TAG, "Synced new distance record with timestamp: ${record.startTime}")
                     }
                 } else {
-                    Log.d(TAG, "Skipped duplicate distance record with timestamp: ${record.startTime}")
+                    // Update existing record
+                    if (sensorReadingRepository.updateSensorReading(
+                        userId = userId,
+                        timestamp = record.startTime,
+                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+
+                        sensorType = "activity",
+                        activityType = "distance",
+                        newReadings = readings
+                    )) {
+                        syncCount++
+                        Log.d(TAG, "Updated distance record with timestamp: ${record.startTime}, new distance: ${record.distance.inMeters}")
+                    }
                 }
             }
             
             // Sync Calories
             val caloriesRecords = healthConnectRepository.getTotalCaloriesBurned(from, to)
             for (record in caloriesRecords) {
-                // Check if this calories record already exists by comparing timestamp
+                val readings = listOf(
+                    Reading("calories", ValueType.DoubleValue(record.energy.inKilocalories)),
+                    Reading("type", ValueType.StringValue("calories"))
+                )
+                
                 if (!existingCaloriesTimestamps.contains(record.startTime)) {
-                    val readings = listOf(
-                        Reading("calories", ValueType.DoubleValue(record.energy.inKilocalories)),
-                        Reading("type", ValueType.StringValue("calories"))
-                    )
+                    // Insert new record
                     val sensorReading = SensorReading(
                         timestamp = record.startTime,
                         metadata = Metadata(
@@ -374,7 +402,18 @@ class HealthDataSyncService : Service() {
                         Log.d(TAG, "Synced new calories record with timestamp: ${record.startTime}")
                     }
                 } else {
-                    Log.d(TAG, "Skipped duplicate calories record with timestamp: ${record.startTime}")
+                    // Update existing record
+                    if (sensorReadingRepository.updateSensorReading(
+                        userId = userId,
+                        timestamp = record.startTime,
+                        deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                        sensorType = "activity",
+                        activityType = "calories",
+                        newReadings = readings
+                    )) {
+                        syncCount++
+                        Log.d(TAG, "Updated calories record with timestamp: ${record.startTime}, new calories: ${record.energy.inKilocalories}")
+                    }
                 }
             }
             
