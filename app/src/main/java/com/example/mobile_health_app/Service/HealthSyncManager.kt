@@ -16,6 +16,7 @@ class HealthSyncManager {
         private const val KEY_SYNC_SLEEP = "sync_sleep"
         private const val KEY_SYNC_HEART_RATE = "sync_heart_rate"
         private const val KEY_SYNC_SPO2 = "sync_spo2"
+        private const val KEY_SYNC_EXERCISE = "sync_exercise"
         
         /**
          * Kiểm tra và khởi chạy service đồng bộ nếu có cấu hình
@@ -77,10 +78,11 @@ class HealthSyncManager {
             val hasSleep = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SLEEP, userId), false)
             val hasHeartRate = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userId), false)
             val hasSpO2 = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SPO2, userId), false)
+            val hasExercise = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userId), false)
             
-            val hasAnySyncEnabled = hasActivity || hasSleep || hasHeartRate || hasSpO2
+            val hasAnySyncEnabled = hasActivity || hasSleep || hasHeartRate || hasSpO2 || hasExercise
             
-            Log.d(TAG, "Sync config check - UserId: $userId, Activity: $hasActivity, Sleep: $hasSleep, HeartRate: $hasHeartRate, SpO2: $hasSpO2")
+            Log.d(TAG, "Sync config check - UserId: $userId, Activity: $hasActivity, Sleep: $hasSleep, HeartRate: $hasHeartRate, SpO2: $hasSpO2, Exercise: $hasExercise")
             
             return hasAnySyncEnabled
         }

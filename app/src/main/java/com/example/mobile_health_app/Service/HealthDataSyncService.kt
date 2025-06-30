@@ -33,6 +33,7 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.content.pm.ServiceInfo
+import androidx.health.connect.client.records.ExerciseSessionRecord
 
 class HealthDataSyncService : Service() {
 
@@ -49,6 +50,7 @@ class HealthDataSyncService : Service() {
         private const val KEY_SYNC_SLEEP = "sync_sleep"
         private const val KEY_SYNC_HEART_RATE = "sync_heart_rate"
         private const val KEY_SYNC_SPO2 = "sync_spo2"
+        private const val KEY_SYNC_EXERCISE = "sync_exercise"
         private const val KEY_LAST_SYNC_TIME = "last_sync_time"
         
         // Initial sync offset when service starts/restarts
@@ -149,8 +151,9 @@ class HealthDataSyncService : Service() {
             val hasSleep = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SLEEP, userId), false)
             val hasHeartRate = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userId), false)
             val hasSpO2 = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SPO2, userId), false)
+            val hasExercise = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userId), false)
             
-            return hasActivity || hasSleep || hasHeartRate || hasSpO2
+            return hasActivity || hasSleep || hasHeartRate || hasSpO2 || hasExercise
         }
         
         return false
@@ -242,6 +245,12 @@ class HealthDataSyncService : Service() {
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SPO2, userid), false)) {
                         val spo2SyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "spo2")
                         syncCount += syncSpO2Data(userId, spo2SyncTime, currentTime)
+                    }
+                    
+                    // Sync Exercise Data
+                    if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userid), false)) {
+                        val exerciseSyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "exercise")
+                        syncCount += syncExerciseData(userId, exerciseSyncTime.minusSeconds(60*60*24*20), currentTime)
                     }
                     
                     // Update last sync time
@@ -609,6 +618,73 @@ class HealthDataSyncService : Service() {
             }
         } catch (e: Exception) {
             Log.e(TAG, "Failed to sync SpO2 data", e)
+        }
+        
+        return syncCount
+    }
+
+    @SuppressLint("RestrictedApi")
+    private suspend fun syncExerciseData(userId: ObjectId, from: Instant, to: Instant): Int {
+        var syncCount = 0
+        
+        try {
+            // Get existing exercise records from database to check for duplicates
+            val existingExerciseRecords = sensorReadingRepository.getSensorReadings(
+                userId = userId,
+                deviceId = null,
+                from = from,
+                to = to
+            ).filter { sensorReading ->
+                sensorReading.metadata.sensorType == "exercise" &&
+                sensorReading.readings.any { it.key == "type" && 
+                    (it.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string == "exercise" }
+            }
+            
+            // Extract existing start times for comparison
+            val existingStartTimes = existingExerciseRecords.mapNotNull { sensorReading ->
+                sensorReading.readings.find { it.key == "start_time" }?.let { reading ->
+                    (reading.value as? com.example.mobile_health_app.data.model.ValueType.StringValue)?.string?.let { 
+                        try {
+                            Instant.parse(it)
+                        } catch (e: Exception) {
+                            null
+                        }
+                    }
+                }
+            }.toSet()
+            
+            val exerciseRecords = healthConnectRepository.getExerciseSessions(from, to)
+            for (record in exerciseRecords) {
+                // Check if this record already exists by comparing startTime
+                if (!existingStartTimes.contains(record.startTime)) {
+                    val durationMinutes = java.time.Duration.between(record.startTime, record.endTime).toMinutes()
+                    val readings = listOf(
+                        Reading("exercise_type", ValueType.StringValue(ExerciseSessionRecord.EXERCISE_TYPE_INT_TO_STRING_MAP[record.exerciseType] ?: "unknown")),
+                        Reading("duration_minutes", ValueType.IntValue(durationMinutes.toInt())),
+                        Reading("start_time", ValueType.StringValue(record.startTime.toString())),
+                        Reading("end_time", ValueType.StringValue(record.endTime.toString())),
+                        Reading("title", ValueType.StringValue(record.title ?: "")),
+                        Reading("type", ValueType.StringValue("exercise"))
+                    )
+                    val sensorReading = SensorReading(
+                        timestamp = record.startTime,
+                        metadata = Metadata(
+                            userId = userId,
+                            deviceId = android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+                            sensorType = "exercise"
+                        ),
+                        readings = readings
+                    )
+                    if (sensorReadingRepository.insertSensorReading(sensorReading)) {
+                        syncCount++
+                        Log.d(TAG, "Synced new exercise record with startTime: ${record.startTime}")
+                    }
+                } else {
+                    Log.d(TAG, "Skipped duplicate exercise record with startTime: ${record.startTime}")
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to sync exercise data", e)
         }
         
         return syncCount

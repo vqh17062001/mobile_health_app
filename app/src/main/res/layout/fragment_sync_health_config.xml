@@ -97,6 +97,25 @@
 
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Exercise Data -->
+            <com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="12dp" app:cardCornerRadius="8dp" app:cardElevation="2dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:padding="16dp" android:gravity="center_vertical">
+
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/exercise_data" android:textSize="16sp" android:textStyle="bold" android:textColor="@color/text_primary" />
+
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/exercise_data_description" android:textSize="12sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial android:id="@+id/switchExercise" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
     </ScrollView>

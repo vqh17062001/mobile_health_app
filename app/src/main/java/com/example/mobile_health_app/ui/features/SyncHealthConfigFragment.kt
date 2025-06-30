@@ -56,6 +56,7 @@ class SyncHealthConfigFragment : Fragment() {
             binding.switchSleep.isChecked = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SLEEP, userId), false)
             binding.switchHeartRate.isChecked = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userId), false)
             binding.switchSpO2.isChecked = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_SPO2, userId), false)
+            binding.switchExercise.isChecked = sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userId), false)
         }
     }
 
@@ -72,7 +73,9 @@ class SyncHealthConfigFragment : Fragment() {
                 putBoolean(getKeyForUser(KEY_SYNC_SLEEP, userId), binding.switchSleep.isChecked)
                 putBoolean(getKeyForUser(KEY_SYNC_HEART_RATE, userId), binding.switchHeartRate.isChecked)
                 putBoolean(getKeyForUser(KEY_SYNC_SPO2, userId), binding.switchSpO2.isChecked)
-                apply()            }
+                putBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userId), binding.switchExercise.isChecked)
+                apply()
+            }
 
             // Tự động khởi chạy hoặc dừng service dựa trên cấu hình trong một luồng riêng
             Thread {
@@ -85,6 +88,7 @@ class SyncHealthConfigFragment : Fragment() {
             if (binding.switchSleep.isChecked) enabledTypes.add(getString(R.string.sleep_data))
             if (binding.switchHeartRate.isChecked) enabledTypes.add(getString(R.string.heart_rate_data))
             if (binding.switchSpO2.isChecked) enabledTypes.add(getString(R.string.spo2_data))
+            if (binding.switchExercise.isChecked) enabledTypes.add(getString(R.string.exercise_data))
 
             val message = if (enabledTypes.isNotEmpty()) {
                 getString(R.string.sync_config_saved_with_types, enabledTypes.joinToString(", "))
@@ -112,6 +116,7 @@ class SyncHealthConfigFragment : Fragment() {
         const val KEY_SYNC_SLEEP = "sync_sleep"
         const val KEY_SYNC_HEART_RATE = "sync_heart_rate"
         const val KEY_SYNC_SPO2 = "sync_spo2"
+        const val KEY_SYNC_EXERCISE = "sync_exercise"
 
         @JvmStatic
         fun newInstance(userId: String? = null) = SyncHealthConfigFragment().apply {

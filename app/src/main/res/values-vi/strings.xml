@@ -168,7 +168,7 @@
     <string name="feature_device_inf_description">Xem thông tin thiết bị của bạn</string>
     <string name="sync_health_config_title">Cấu hình đồng bộ dữ liệu sức khỏe</string>
     <string name="sync_health_config_description">Chọn loại dữ liệu sức khỏe bạn muốn đồng bộ với máy chủ</string>
-    <string name="save_config">Lưu cấu hình</string>
+    <string name="save_config">Đồng bộ</string>
 
     <!-- Health data viewer strings -->
     <string name="close">Đóng</string>
@@ -317,5 +317,7 @@
 
     <!-- Fitbit Heart Rate specific string -->
     <string name="fitbit_heart_rate">✅ Cảm biến Nhịp Tim Fitbit\n• Công nghệ nhịp tim PurePulse\n• Theo dõi nhịp tim 24/7\n• Vùng nhịp tim\n• Điểm thể lực tim mạch</string>
+    <string name="exercise_data" >Dữ liệu các bài tập thể lực </string>
+    <string name="exercise_data_description" >Bao gồm nhiều môn thể thao như: Chạy, bơi, kéo xà, tạ, v..v</string>
 
 </resources>

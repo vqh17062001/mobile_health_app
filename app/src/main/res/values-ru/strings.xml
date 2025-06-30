@@ -158,7 +158,7 @@
     <string name="feature_device_inf_description">Просмотр информации о вашем устройстве</string>
     <string name="sync_health_config_title">Конфигурация синхронизации данных о здоровье</string>
     <string name="sync_health_config_description">Выберите, какие типы данных о здоровье вы хотите синхронизировать с сервером</string>
-    <string name="save_config">Сохранить конфигурацию</string>
+    <string name="save_config">Cинхронизировать</string>
 
     <!-- Health data viewer strings -->
     <string name="close">Закрыть</string>
@@ -309,5 +309,7 @@
     <string name="wearable_scan_error">Ошибка сканирования носимого устройства: %1$s</string>
     <string name="heart_rate_sensor_generic">❓ Датчик пульса\n• Подключите носимое устройство для просмотра информации о конкретном датчике\n• Большинство современных носимых устройств включают датчики пульса PPG</string>
     <string name="spo2_sensor_generic">❓ Датчик кислорода в крови\n• Подключите совместимое носимое устройство\n• Многие новые умные часы включают датчики SpO2</string>
+    <string name="exercise_data" >Данные о физических упражнениях </string>
+    <string name="exercise_data_description">Включает в себя множество видов спорта, таких как: бег, плавание, подтягивания, поднятие тяжестей и т. д.</string>
 
 </resources>
