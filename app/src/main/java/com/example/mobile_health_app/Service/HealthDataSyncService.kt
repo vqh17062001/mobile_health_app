@@ -250,7 +250,7 @@ class HealthDataSyncService : Service() {
                     // Sync Exercise Data
                     if (sharedPrefs.getBoolean(getKeyForUser(KEY_SYNC_EXERCISE, userid), false)) {
                         val exerciseSyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "exercise")
-                        syncCount += syncExerciseData(userId, exerciseSyncTime.minusSeconds(60*60*24*20), currentTime)
+                        syncCount += syncExerciseData(userId, exerciseSyncTime.minusSeconds(60*60*24), currentTime)
                     }
                     
                     // Update last sync time
