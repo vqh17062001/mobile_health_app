@@ -106,7 +106,7 @@ class LoginActivity : AppCompatActivity() {
                     if (existedDevice == null) {
                         deviceViewModel.insertDevice(device)
                     } else {
-                        deviceViewModel.updateDeviceStatus(deviceId, "online")
+                        deviceViewModel.updateDeviceStatus(deviceId,user._id , "online")
                     }
 
 

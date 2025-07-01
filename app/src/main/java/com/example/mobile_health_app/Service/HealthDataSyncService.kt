@@ -34,6 +34,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.content.pm.ServiceInfo
 import androidx.health.connect.client.records.ExerciseSessionRecord
+import com.example.mobile_health_app.data.repository.DeviceRepository
 
 class HealthDataSyncService : Service() {
 
@@ -252,7 +253,7 @@ class HealthDataSyncService : Service() {
                         val exerciseSyncTime = getAdjustedSyncTime(baseSyncTime, isServiceStartup, "exercise")
                         syncCount += syncExerciseData(userId, exerciseSyncTime.minusSeconds(60*60*24), currentTime)
                     }
-                    
+                    updateDeviceslastSyncTime(userId, currentTime)
                     // Update last sync time
                     saveLastSyncTime(userIdString, currentTime)
                     
@@ -270,6 +271,23 @@ class HealthDataSyncService : Service() {
             }
         }
     }
+
+    private suspend fun CoroutineScope.updateDeviceslastSyncTime(
+        userId: org.mongodb.kbson.ObjectId,
+        currentTime: java.time.Instant
+    ) {
+       var deviceRepository = com.example.mobile_health_app.data.repository.DeviceRepository()
+        // Update the last sync time for the device
+
+        deviceRepository.updateDeviceStatus(
+          deviceId =  android.provider.Settings.Secure.getString(contentResolver, android.provider.Settings.Secure.ANDROID_ID),
+          ownerId =  userId,
+          status =  "online"
+        )
+        Log.d(TAG, "Updating last sync time for user: $userId to $currentTime")
+    }
+
+
 
     fun bsonObjectIdToValue(s: String): String {
         return if (s.startsWith("BsonObjectId(") && s.endsWith(")")) {

@@ -11,6 +11,7 @@ import io.realm.kotlin.mongodb.ext.insertOne
 import io.realm.kotlin.mongodb.ext.findOne
 import io.realm.kotlin.mongodb.ext.find
 import io.realm.kotlin.mongodb.ext.updateOne
+import java.time.Instant
 
 @OptIn(ExperimentalKBsonSerializerApi::class)
 class DeviceRepository {
@@ -128,7 +129,7 @@ class DeviceRepository {
     }
 
     // Cập nhật trạng thái online/offline (có thể mở rộng thêm các cập nhật khác)
-    suspend fun updateDeviceStatus(deviceId: String, status: String): Boolean = withContext(Dispatchers.IO) {
+    suspend fun updateDeviceStatus(deviceId: String,ownerId: ObjectId, status: String): Boolean = withContext(Dispatchers.IO) {
         try {
             val app = RealmConfig.app
             val userAuth = app.login(Credentials.anonymous())
@@ -136,8 +137,15 @@ class DeviceRepository {
             val db = mgcli.database(databaseName)
             val devices = db.collection(collectionName)
 
-            val query = BsonDocument("deviceId", BsonString(deviceId))
-            val update = BsonDocument("\$set", BsonDocument("status", BsonString(status)))
+            val query = BsonDocument().apply {
+                put("deviceId", BsonString(deviceId))
+                put("ownerId", ownerId) // Chỉ add nếu ownerId khác null
+            }
+            val setDoc = BsonDocument().apply {
+                put("status", BsonString(status))
+                put("lastSyncAt", BsonString(Instant.now().toString())) // Cập nhật thời gian đồng bộ cuối cùng
+            }
+            val update = BsonDocument("\$set", setDoc)
 
             val result = devices.updateOne(query, update)
             Log.d(TAG, "Update device $deviceId status: $status")

@@ -79,11 +79,11 @@ class DeviceViewModel : ViewModel() {
     }
 
     // Cập nhật trạng thái thiết bị (online/offline)
-    fun updateDeviceStatus(deviceId: String, status: String) {
+    fun updateDeviceStatus(deviceId: String,ownerId: ObjectId, status: String) {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val result = repo.updateDeviceStatus(deviceId, status)
+                val result = repo.updateDeviceStatus(deviceId,ownerId, status)
                 if (result) {
                     fetchDeviceById(deviceId)
                 } else {
